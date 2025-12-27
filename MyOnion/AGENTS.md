@@ -5,7 +5,7 @@ The root `MyOnion.sln` wires the five onion layers: `MyOnion.Domain` holds entit
 
 ## Build, Test, and Development Commands
 - `dotnet restore MyOnion.sln` downloads NuGet packages for all projects.
-- `dotnet build MyOnion.sln -c Release` validates the full solution (net9.0 target) before committing.
+- `dotnet build MyOnion.sln -c Release` validates the full solution (net10.0 target) before committing.
 - `dotnet run --project MyOnion.WebApi/MyOnion.WebApi.csproj` serves the API; supply `ASPNETCORE_ENVIRONMENT=Development` for local testing.
 - `dotnet watch run --project MyOnion.WebApi/MyOnion.WebApi.csproj` hot-reloads while editing controllers, middleware, or configuration.
 
@@ -19,4 +19,4 @@ Add xUnit-based projects under a future `tests/` folder (e.g., `tests/MyOnion.Ap
 Existing history uses short imperative messages ("Add project files"), so continue that style: start with a verb, keep under 72 characters, and mention scope when useful (e.g., `Add customer filtering middleware`). PRs should describe the change, list validation commands, reference linked issues, and attach screenshots or sample responses whenever API contracts move. Ensure CI is green before requesting review.
 
 ## Security & Configuration Tips
-Never commit real connection strings or secrets; keep shared defaults in `MyOnion.WebApi/appsettings.Development.json` and override locally with `dotnet user-secrets` or environment variables. Validate that new settings are documented and loaded via strongly typed options classes in `Infrastructure.Shared` or `WebApi` extensions, and prefer IServiceCollection helpers over manual configuration lookups.
+Never commit real connection strings or secrets; keep shared defaults in `MyOnion.WebApi/appsettings.Development.json` and override locally with `dotnet user-secrets` or environment variables. Configure `Sts:ServerUrl`, `Sts:Audience`, and optional `Sts:ValidIssuer` before running so JWT validation stays strict. Define environment-specific CORS origins under `Cors:AllowedOrigins` to avoid the fallback permissive policy. Infrastructure persistence uses SQL connection resiliency + DbContext pooling, so prefer scoped services and avoid capturing contexts beyond a request. Validate that new settings are documented and loaded via strongly typed options classes in `Infrastructure.Shared` or `WebApi` extensions, and prefer IServiceCollection helpers over manual configuration lookups.

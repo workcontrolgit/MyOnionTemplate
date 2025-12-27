@@ -22,7 +22,7 @@ try
     builder.Services.AddSwaggerExtension();
     builder.Services.AddControllersExtension();
     // Configure CORS policies
-    builder.Services.AddCorsExtension();
+    builder.Services.AddCorsExtension(builder.Configuration);
     // Add Health Checks service
     builder.Services.AddHealthChecks();
     // Set up API security with JWT
