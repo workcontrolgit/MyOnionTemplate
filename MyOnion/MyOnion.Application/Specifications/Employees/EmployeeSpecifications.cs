@@ -1,6 +1,3 @@
-using LinqKit;
-using MyOnion.Application.Features.Employees.Queries.GetEmployees;
-using MyOnion.Domain.Entities;
 using System.Linq.Expressions;
 
 namespace MyOnion.Application.Specifications.Employees

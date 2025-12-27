@@ -5,7 +5,7 @@
     /// BaseRequestParameter - contains paging parameters
     /// To add filter/search parameters, add search properties to the body of this class
     /// </summary>
-    public class GetEmployeesQuery : QueryParameter, IRequest<PagedResponse<IEnumerable<Entity>>>
+    public class GetEmployeesQuery : QueryParameter, IRequest<PagedResult<IEnumerable<Entity>>>
     {
         //examples:
         public string LastName { get; set; }
@@ -18,7 +18,7 @@
         public ListParameter ShapeParameter { get; set; }
     }
 
-    public class GetAllEmployeesQueryHandler : IRequestHandler<GetEmployeesQuery, PagedResponse<IEnumerable<Entity>>>
+    public class GetAllEmployeesQueryHandler : IRequestHandler<GetEmployeesQuery, PagedResult<IEnumerable<Entity>>>
     {
         private readonly IEmployeeRepositoryAsync _repository;
         private readonly IModelHelper _modelHelper;
@@ -38,12 +38,12 @@
         }
 
         /// <summary>
-        /// Handles the GetEmployeesQuery request and returns a PagedResponse containing the requested data.
+        /// Handles the GetEmployeesQuery request and returns a PagedResult containing the requested data.
         /// </summary>
         /// <param name="request">The GetEmployeesQuery request.</param>
         /// <param name="cancellationToken">The cancellation token.</param>
-        /// <returns>A PagedResponse containing the requested data.</returns>
-        public async Task<PagedResponse<IEnumerable<Entity>>> Handle(GetEmployeesQuery request, CancellationToken cancellationToken)
+        /// <returns>A PagedResult containing the requested data.</returns>
+        public async Task<PagedResult<IEnumerable<Entity>>> Handle(GetEmployeesQuery request, CancellationToken cancellationToken)
         {
             var objRequest = request;
             //filtered fields security
@@ -63,7 +63,7 @@
             RecordsCount recordCount = qryResult.recordsCount;
 
             // response wrapper
-            return new PagedResponse<IEnumerable<Entity>>(data, objRequest.PageNumber, objRequest.PageSize, recordCount);
+            return PagedResult<IEnumerable<Entity>>.Success(data, objRequest.PageNumber, objRequest.PageSize, recordCount);
         }
     }
 }

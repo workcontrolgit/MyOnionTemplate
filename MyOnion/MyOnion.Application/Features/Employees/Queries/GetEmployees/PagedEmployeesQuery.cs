@@ -1,7 +1,7 @@
 ﻿namespace MyOnion.Application.Features.Employees.Queries.GetEmployees
 {
     // This class represents a query for paginated employee data.
-    public partial class PagedEmployeesQuery : QueryParameter, IRequest<PagedDataTableResponse<IEnumerable<Entity>>>
+    public partial class PagedEmployeesQuery : QueryParameter, IRequest<PagedDataTableResult<IEnumerable<Entity>>>
     {
         // The page number to retrieve. 0-indexed.
         public int Draw { get; set; }
@@ -23,7 +23,7 @@
     }
 
     // This class handles requests for paginated employee data.
-    public class PageEmployeeQueryHandler : IRequestHandler<PagedEmployeesQuery, PagedDataTableResponse<IEnumerable<Entity>>>
+    public class PageEmployeeQueryHandler : IRequestHandler<PagedEmployeesQuery, PagedDataTableResult<IEnumerable<Entity>>>
     {
         // The repository used to retrieve employee data.
         private readonly IEmployeeRepositoryAsync _repository;
@@ -43,12 +43,12 @@
         }
 
         /// <summary>
-        /// Handles the PagedEmployeesQuery request and returns a PagedDataTableResponse.
+        /// Handles the PagedEmployeesQuery request and returns a PagedDataTableResult.
         /// </summary>
         /// <param name="request">The PagedEmployeesQuery request.</param>
         /// <param name="cancellationToken">The cancellation token.</param>
-        /// <returns>A PagedDataTableResponse.</returns>
-        public async Task<PagedDataTableResponse<IEnumerable<Entity>>> Handle(PagedEmployeesQuery request, CancellationToken cancellationToken)
+        /// <returns>A PagedDataTableResult.</returns>
+        public async Task<PagedDataTableResult<IEnumerable<Entity>>> Handle(PagedEmployeesQuery request, CancellationToken cancellationToken)
         {
             var objRequest = request;
 
@@ -92,8 +92,8 @@
             var data = qryResult.data;
             RecordsCount recordCount = qryResult.recordsCount;
 
-            // Return a PagedDataTableResponse containing the retrieved data.
-            return new PagedDataTableResponse<IEnumerable<Entity>>(data, request.Draw, recordCount);
+            // Return a PagedDataTableResult containing the retrieved data.
+            return PagedDataTableResult<IEnumerable<Entity>>.Success(data, request.Draw, recordCount);
         }
     }
 }

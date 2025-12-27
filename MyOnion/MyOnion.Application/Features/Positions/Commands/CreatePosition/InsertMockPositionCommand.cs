@@ -1,14 +1,14 @@
 ﻿namespace MyOnion.Application.Features.Positions.Commands.CreatePosition
 {
     // Represents a command to insert mock position data into the database
-    public partial class InsertMockPositionCommand : IRequest<Response<int>>
+    public partial class InsertMockPositionCommand : IRequest<Result<int>>
     {
         // The number of rows to insert into the database
         public int RowCount { get; set; }
     }
 
     // Handles requests for inserting mock position data
-    public class SeedPositionCommandHandler : IRequestHandler<InsertMockPositionCommand, Response<int>>
+    public class SeedPositionCommandHandler : IRequestHandler<InsertMockPositionCommand, Result<int>>
     {
         // Repository used for interacting with position data in the database
         private readonly IPositionRepositoryAsync _repository;
@@ -28,7 +28,7 @@
         }
 
         // Handle method for processing the InsertMockPositionCommand request
-        public async Task<Response<int>> Handle(InsertMockPositionCommand request, CancellationToken cancellationToken)
+        public async Task<Result<int>> Handle(InsertMockPositionCommand request, CancellationToken cancellationToken)
         {
             // Get all departments from the database
             var departments = await _repositoryDepartment.GetAllAsync();
@@ -40,7 +40,7 @@
             await _repository.SeedDataAsync(request.RowCount, departments, salaryRanges);
 
             // Return a response containing the number of rows inserted
-            return new Response<int>(request.RowCount);
+            return Result<int>.Success(request.RowCount);
         }
     }
 }

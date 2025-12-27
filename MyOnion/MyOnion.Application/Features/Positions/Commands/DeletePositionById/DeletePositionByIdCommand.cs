@@ -1,13 +1,13 @@
 ﻿namespace MyOnion.Application.Features.Positions.Commands.DeletePositionById
 {
     // Represents a command to delete a position by its ID.
-    public class DeletePositionByIdCommand : IRequest<Response<Guid>>
+    public class DeletePositionByIdCommand : IRequest<Result<Guid>>
     {
         // The ID of the position to be deleted.
         public Guid Id { get; set; }
 
         // Represents the handler for deleting a position by its ID.
-        public class DeletePositionByIdCommandHandler : IRequestHandler<DeletePositionByIdCommand, Response<Guid>>
+        public class DeletePositionByIdCommandHandler : IRequestHandler<DeletePositionByIdCommand, Result<Guid>>
         {
             // The repository used to access and manipulate position data.
             private readonly IPositionRepositoryAsync _repository;
@@ -19,7 +19,7 @@
             }
 
             // Handles the command by deleting the specified position from the repository.
-            public async Task<Response<Guid>> Handle(DeletePositionByIdCommand command, CancellationToken cancellationToken)
+            public async Task<Result<Guid>> Handle(DeletePositionByIdCommand command, CancellationToken cancellationToken)
             {
                 // Retrieves the position with the specified ID from the repository.
                 var entity = await _repository.GetByIdAsync(command.Id);
@@ -27,7 +27,7 @@
                 // Deletes the retrieved position from the repository.
                 await _repository.DeleteAsync(entity);
                 // Returns a response indicating the successful deletion of the position.
-                return new Response<Guid>(entity.Id);
+                return Result<Guid>.Success(entity.Id);
             }
         }
     }
