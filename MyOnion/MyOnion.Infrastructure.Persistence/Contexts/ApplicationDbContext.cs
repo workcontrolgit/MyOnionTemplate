@@ -46,11 +46,5 @@
             ApplicationDbContextHelpers.DatabaseModelCreating(modelBuilder);
         }
 
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        {
-            optionsBuilder.UseLoggerFactory(_loggerFactory) // Use specified logger factory for logging operations
-                .EnableSensitiveDataLogging() // Enable sensitive data logging for debugging purposes
-                .EnableDetailedErrors(); // Enable detailed error messages when an exception occurs during database operation
-        }
     }
 }

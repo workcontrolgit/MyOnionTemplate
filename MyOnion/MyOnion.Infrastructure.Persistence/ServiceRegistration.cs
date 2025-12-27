@@ -6,15 +6,28 @@
         {
             if (configuration.GetValue<bool>("UseInMemoryDatabase"))
             {
-                services.AddDbContext<ApplicationDbContext>(options =>
-                    options.UseInMemoryDatabase("ApplicationDb"));
+                services.AddDbContext<ApplicationDbContext>((provider, options) =>
+                {
+                    options.UseInMemoryDatabase("ApplicationDb");
+                    ConfigureCommonOptions(provider, options);
+                });
             }
             else
             {
-                services.AddDbContext<ApplicationDbContext>(options =>
-               options.UseSqlServer(
-                   configuration.GetConnectionString("DefaultConnection"),
-                   b => b.MigrationsAssembly(typeof(ApplicationDbContext).Assembly.FullName)));
+                services.AddDbContextPool<ApplicationDbContext>((provider, options) =>
+                {
+                    options.UseSqlServer(
+                        configuration.GetConnectionString("DefaultConnection"),
+                        sqlOptions =>
+                        {
+                            sqlOptions.MigrationsAssembly(typeof(ApplicationDbContext).Assembly.FullName);
+                            sqlOptions.EnableRetryOnFailure(
+                                maxRetryCount: 5,
+                                maxRetryDelay: TimeSpan.FromSeconds(15),
+                                errorNumbersToAdd: null);
+                        });
+                    ConfigureCommonOptions(provider, options);
+                });
             }
 
             #region Repositories
@@ -28,6 +41,14 @@
                 );
 
             #endregion Repositories
+        }
+
+        private static void ConfigureCommonOptions(IServiceProvider provider, DbContextOptionsBuilder options)
+        {
+            var loggerFactory = provider.GetRequiredService<ILoggerFactory>();
+            options.UseLoggerFactory(loggerFactory)
+                .EnableSensitiveDataLogging()
+                .EnableDetailedErrors();
         }
     }
 }
