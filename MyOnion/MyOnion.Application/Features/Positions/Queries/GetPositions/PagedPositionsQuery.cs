@@ -1,6 +1,6 @@
 ﻿namespace MyOnion.Application.Features.Positions.Queries.GetPositions
 {
-    public partial class PagedPositionsQuery : QueryParameter, IRequest<PagedDataTableResponse<IEnumerable<Entity>>>
+    public partial class PagedPositionsQuery : QueryParameter, IRequest<PagedDataTableResult<IEnumerable<Entity>>>
     {
 
         //strong type input parameters
@@ -13,7 +13,7 @@
         public IList<Column> Columns { get; set; } //select fields
     }
 
-    public class PagePositionQueryHandler : IRequestHandler<PagedPositionsQuery, PagedDataTableResponse<IEnumerable<Entity>>>
+    public class PagePositionQueryHandler : IRequestHandler<PagedPositionsQuery, PagedDataTableResult<IEnumerable<Entity>>>
     {
         private readonly IPositionRepositoryAsync _repository;
         private readonly IModelHelper _modelHelper;
@@ -24,7 +24,7 @@
             _modelHelper = modelHelper;
         }
 
-        public async Task<PagedDataTableResponse<IEnumerable<Entity>>> Handle(PagedPositionsQuery request, CancellationToken cancellationToken)
+        public async Task<PagedDataTableResult<IEnumerable<Entity>>> Handle(PagedPositionsQuery request, CancellationToken cancellationToken)
         {
             var objRequest = request;
 
@@ -61,7 +61,7 @@
             RecordsCount recordCount = qryResult.recordsCount;
 
             // response wrapper
-            return new PagedDataTableResponse<IEnumerable<Entity>>(data, request.Draw, recordCount);
+            return PagedDataTableResult<IEnumerable<Entity>>.Success(data, request.Draw, recordCount);
         }
     }
 }

@@ -1,9 +1,9 @@
 ﻿namespace MyOnion.Application.Features.Positions.Queries.GetPositions
 {
     /// <summary>
-    /// Definition of GetPositionsQuery class that inherits from QueryParameter and implements IRequest<PagedResponse<IEnumerable<Entity>>>
+    /// Definition of GetPositionsQuery class that inherits from QueryParameter and implements IRequest<PagedResult<IEnumerable<Entity>>>
     /// </summary>
-    public class GetPositionsQuery : QueryParameter, IRequest<PagedResponse<IEnumerable<Entity>>>
+    public class GetPositionsQuery : QueryParameter, IRequest<PagedResult<IEnumerable<Entity>>>
     {
         /// <summary>
         /// Property to hold the position number as a string.
@@ -22,9 +22,9 @@
     }
 
     /// <summary>
-    /// Definition of GetAllPositionsQueryHandler class that implements IRequestHandler<GetPositionsQuery, PagedResponse<IEnumerable<Entity>>>
+    /// Definition of GetAllPositionsQueryHandler class that implements IRequestHandler<GetPositionsQuery, PagedResult<IEnumerable<Entity>>>
     /// </summary>
-    public class GetAllPositionsQueryHandler : IRequestHandler<GetPositionsQuery, PagedResponse<IEnumerable<Entity>>>
+    public class GetAllPositionsQueryHandler : IRequestHandler<GetPositionsQuery, PagedResult<IEnumerable<Entity>>>
     {
         private readonly IPositionRepositoryAsync _repository;
         private readonly IModelHelper _modelHelper;
@@ -41,12 +41,12 @@
         }
 
         /// <summary>
-        /// Handle method that takes in a GetPositionsQuery and CancellationToken and returns a PagedResponse<IEnumerable<Entity>>.
+        /// Handle method that takes in a GetPositionsQuery and CancellationToken and returns a PagedResult<IEnumerable<Entity>>.
         /// </summary>
         /// <param name="request">GetPositionsQuery object.</param>
         /// <param name="cancellationToken">CancellationToken object.</param>
-        /// <returns>PagedResponse<IEnumerable<Entity>> object.</returns>
-        public async Task<PagedResponse<IEnumerable<Entity>>> Handle(GetPositionsQuery request, CancellationToken cancellationToken)
+        /// <returns>PagedResult<IEnumerable<Entity>> object.</returns>
+        public async Task<PagedResult<IEnumerable<Entity>>> Handle(GetPositionsQuery request, CancellationToken cancellationToken)
         {
             var objRequest = request;
             // verify request fields are valid field and exist in the DTO
@@ -72,7 +72,7 @@
             var data = qryResult.data;
             RecordsCount recordCount = qryResult.recordsCount;
             // response wrapper
-            return new PagedResponse<IEnumerable<Entity>>(data, objRequest.PageNumber, objRequest.PageSize, recordCount);
+            return PagedResult<IEnumerable<Entity>>.Success(data, objRequest.PageNumber, objRequest.PageSize, recordCount);
         }
     }
 }

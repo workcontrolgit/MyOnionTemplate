@@ -28,7 +28,7 @@
                 response.ContentType = "application/json"; // Set the response content type to JSON
 
                 // Create a response model indicating failure and capturing the error message
-                var responseModel = new Response<string>() { Succeeded = false, Message = error?.Message };
+                var responseModel = Result<string>.Failure(error?.Message ?? "An error occurred");
 
                 // Determine the status code based on the error type
                 switch (error)
@@ -41,7 +41,7 @@
                     case ValidationException e:
                         // Custom application error with validation errors, set status code to 400
                         response.StatusCode = (int)HttpStatusCode.BadRequest;
-                        responseModel.Errors = e.Errors; // Capture validation errors
+                        responseModel = Result<string>.Failure("Validation failed", e.Errors);
                         break;
 
                     case KeyNotFoundException:

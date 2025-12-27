@@ -1,7 +1,7 @@
 ﻿namespace MyOnion.Application.Features.Positions.Commands.UpdatePosition
 {
     // Define a command class for updating a position
-    public class UpdatePositionCommand : IRequest<Response<Guid>>
+    public class UpdatePositionCommand : IRequest<Result<Guid>>
     {
         public Guid Id { get; set; } // Unique identifier of the position to be updated
         public string PositionTitle { get; set; } // New title for the position
@@ -11,7 +11,7 @@
         public Guid SalaryRangeId { get; set; } // ID of the salary range for the position
 
         // Define a handler class for processing the update command
-        public class UpdatePositionCommandHandler : IRequestHandler<UpdatePositionCommand, Response<Guid>>
+        public class UpdatePositionCommandHandler : IRequestHandler<UpdatePositionCommand, Result<Guid>>
         {
             private readonly IPositionRepositoryAsync _repository; // Repository for accessing positions
 
@@ -22,7 +22,7 @@
             }
 
             // Handle method to process the update command
-            public async Task<Response<Guid>> Handle(UpdatePositionCommand command, CancellationToken cancellationToken)
+            public async Task<Result<Guid>> Handle(UpdatePositionCommand command, CancellationToken cancellationToken)
             {
                 var position = await _repository.GetByIdAsync(command.Id); // Get the position by ID
 
@@ -38,7 +38,7 @@
 
                     await _repository.UpdateAsync(position); // Save the updated position to the repository
 
-                    return new Response<Guid>(position.Id); // Return a response containing the ID of the updated position
+                    return Result<Guid>.Success(position.Id); // Return a response containing the ID of the updated position
                 }
             }
         }

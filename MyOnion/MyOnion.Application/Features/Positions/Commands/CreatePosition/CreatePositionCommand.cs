@@ -1,7 +1,7 @@
 ﻿namespace MyOnion.Application.Features.Positions.Commands.CreatePosition
 {
     // This class represents a command to create a new position.
-    public partial class CreatePositionCommand : IRequest<Response<Guid>>
+    public partial class CreatePositionCommand : IRequest<Result<Guid>>
     {
         // The title of the position being created.
         public string PositionTitle { get; set; }
@@ -21,7 +21,7 @@
     }
 
     // This class handles the logic for creating a new position.
-    public class CreatePositionCommandHandler : IRequestHandler<CreatePositionCommand, Response<Guid>>
+    public class CreatePositionCommandHandler : IRequestHandler<CreatePositionCommand, Result<Guid>>
     {
         // A repository to interact with the database for positions.
         private readonly IPositionRepositoryAsync _repository;
@@ -37,7 +37,7 @@
         }
 
         // This method is called when a new position creation command is issued.
-        public async Task<Response<Guid>> Handle(CreatePositionCommand request, CancellationToken cancellationToken)
+        public async Task<Result<Guid>> Handle(CreatePositionCommand request, CancellationToken cancellationToken)
         {
             // Maps the incoming command to a Position object using the mapper.
             var position = _mapper.Map<Position>(request);
@@ -46,7 +46,7 @@
             await _repository.AddAsync(position);
 
             // Returns a response containing the ID of the newly created position.
-            return new Response<Guid>(position.Id);
+            return Result<Guid>.Success(position.Id);
         }
     }
 }

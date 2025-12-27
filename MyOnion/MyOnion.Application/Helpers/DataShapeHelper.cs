@@ -1,103 +1,127 @@
-﻿namespace MyOnion.Application.Helpers
+using System.Collections.Concurrent;
+using System.Collections.Generic;
+using System.Linq;
+using System.Linq.Expressions;
+using System.Reflection;
+using System.Threading.Tasks;
+using MyOnion.Application.Interfaces;
+using MyOnion.Domain.Common;
+
+namespace MyOnion.Application.Helpers
 {
     public class DataShapeHelper<T> : IDataShapeHelper<T>
     {
-        // A collection of PropertyInfo objects that represents all the properties of type T.
-        public PropertyInfo[] Properties { get; set; }
+        private const string AllFieldsKey = "*";
 
-        public DataShapeHelper()
-        {
-            // Get all public instance properties of type T.
-            Properties = typeof(T).GetProperties(BindingFlags.Public | BindingFlags.Instance);
-        }
+        private static readonly PropertyInfo[] Properties = typeof(T)
+            .GetProperties(BindingFlags.Public | BindingFlags.Instance);
 
-        // Returns a collection of Entity objects that contain only the specified fields from the given entities.
+        private static readonly IReadOnlyList<PropertyAccessor> AllAccessors = Properties
+            .Select(CreateAccessor)
+            .ToArray();
+
+        private static readonly IReadOnlyDictionary<string, PropertyAccessor> AccessorLookup =
+            AllAccessors.ToDictionary(a => a.Name.ToLowerInvariant());
+
+        private static readonly ConcurrentDictionary<string, IReadOnlyList<PropertyAccessor>> AccessorCache = new();
+
         public IEnumerable<Entity> ShapeData(IEnumerable<T> entities, string fieldsString)
         {
-            // Get the required properties based on the fieldsString parameter.
-            var requiredProperties = GetRequiredProperties(fieldsString);
-
-            // Fetch the data and return it as a collection of Entity objects.
-            return FetchData(entities, requiredProperties);
+            var accessors = ResolveAccessors(fieldsString);
+            return FetchData(entities, accessors);
         }
 
-        public async Task<IEnumerable<Entity>> ShapeDataAsync(IEnumerable<T> entities, string fieldsString)
+        public Task<IEnumerable<Entity>> ShapeDataAsync(IEnumerable<T> entities, string fieldsString)
         {
-            // Get the required properties based on the fieldsString parameter.
-            var requiredProperties = GetRequiredProperties(fieldsString);
-
-            // Fetch the data and return it as a collection of Entity objects using Task.Run().
-            return await Task.Run(() => FetchData(entities, requiredProperties));
+            return Task.FromResult(ShapeData(entities, fieldsString));
         }
 
-        // Returns an Entity object that contains only the specified fields from the given entity.
         public Entity ShapeData(T entity, string fieldsString)
         {
-            // Get the required properties based on the fieldsString parameter.
-            var requiredProperties = GetRequiredProperties(fieldsString);
-
-            // Fetch and return the data for a single entity.
-            return FetchDataForEntity(entity, requiredProperties);
+            var accessors = ResolveAccessors(fieldsString);
+            return FetchDataForEntity(entity, accessors);
         }
 
-        // Returns a collection of PropertyInfo objects that represent the specified fields in type T.
-        private IEnumerable<PropertyInfo> GetRequiredProperties(string fieldsString)
+        private static IReadOnlyList<PropertyAccessor> ResolveAccessors(string fieldsString)
         {
-            var requiredProperties = new List<PropertyInfo>();
-
-            if (!string.IsNullOrWhiteSpace(fieldsString))
+            var normalizedKey = NormalizeFields(fieldsString);
+            if (normalizedKey == AllFieldsKey)
             {
-                // Split the fieldsString parameter by commas and remove any empty entries.
-                var fields = fieldsString.Split(',', StringSplitOptions.RemoveEmptyEntries);
+                return AllAccessors;
+            }
 
-                foreach (var field in fields)
+            return AccessorCache.GetOrAdd(normalizedKey, BuildAccessorList);
+        }
+
+        private static IReadOnlyList<PropertyAccessor> BuildAccessorList(string normalizedKey)
+        {
+            var tokens = normalizedKey.Split(',', StringSplitOptions.RemoveEmptyEntries);
+            var accessors = new List<PropertyAccessor>(tokens.Length);
+
+            foreach (var token in tokens)
+            {
+                if (AccessorLookup.TryGetValue(token, out var accessor))
                 {
-                    // Find the PropertyInfo object that matches the current field name, ignoring case.
-                    var property = Properties.FirstOrDefault(pi => pi.Name.Equals(field.Trim(), StringComparison.InvariantCultureIgnoreCase));
-
-                    if (property == null)
-                        continue;
-
-                    requiredProperties.Add(property);
+                    accessors.Add(accessor);
                 }
             }
-            else
-            {
-                // If no fieldsString parameter was provided, return all properties in type T.
-                requiredProperties = Properties.ToList();
-            }
 
-            return requiredProperties;
+            return accessors;
         }
 
-        // Returns a collection of Entity objects that contain only the specified fields from the given entities.
-        private IEnumerable<Entity> FetchData(IEnumerable<T> entities, IEnumerable<PropertyInfo> requiredProperties)
+        private static string NormalizeFields(string fieldsString)
+        {
+            if (string.IsNullOrWhiteSpace(fieldsString))
+            {
+                return AllFieldsKey;
+            }
+
+            var fields = fieldsString
+                .Split(',', StringSplitOptions.RemoveEmptyEntries)
+                .Select(f => f.Trim())
+                .Where(f => !string.IsNullOrEmpty(f))
+                .Select(f => f.ToLowerInvariant())
+                .ToArray();
+
+            return fields.Length == 0 ? AllFieldsKey : string.Join(",", fields);
+        }
+
+        private static IEnumerable<Entity> FetchData(IEnumerable<T> entities, IReadOnlyList<PropertyAccessor> accessors)
         {
             var shapedData = new List<Entity>();
 
             foreach (var entity in entities)
             {
-                // Fetch and add the data for each entity to the shapedData collection.
-                var shapedObject = FetchDataForEntity(entity, requiredProperties);
+                var shapedObject = FetchDataForEntity(entity, accessors);
                 shapedData.Add(shapedObject);
             }
 
             return shapedData;
         }
 
-        // Returns an Entity object that contains only the specified fields from the given entity.
-        private Entity FetchDataForEntity(T entity, IEnumerable<PropertyInfo> requiredProperties)
+        private static Entity FetchDataForEntity(T entity, IReadOnlyList<PropertyAccessor> accessors)
         {
             var shapedObject = new Entity();
 
-            foreach (var property in requiredProperties)
+            foreach (var accessor in accessors)
             {
-                // Get the value of the current property from the entity and add it to the shapedObject.
-                var objectPropertyValue = property.GetValue(entity);
-                shapedObject.TryAdd(property.Name, objectPropertyValue);
+                var value = accessor.Getter(entity);
+                shapedObject.TryAdd(accessor.Name, value);
             }
 
             return shapedObject;
         }
+
+        private static PropertyAccessor CreateAccessor(PropertyInfo property)
+        {
+            var parameter = Expression.Parameter(typeof(T), "entity");
+            var propertyExpression = Expression.Property(parameter, property);
+            var convertExpression = Expression.Convert(propertyExpression, typeof(object));
+            var getter = Expression.Lambda<Func<T, object>>(convertExpression, parameter).Compile();
+
+            return new PropertyAccessor(property.Name, getter);
+        }
+
+        private sealed record PropertyAccessor(string Name, Func<T, object> Getter);
     }
 }
