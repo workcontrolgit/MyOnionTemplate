@@ -62,16 +62,31 @@
         }
 
         // Extension method to configure CORS with a policy to allow any origin, header, and method
-        public static void AddCorsExtension(this IServiceCollection services)
+        public static void AddCorsExtension(this IServiceCollection services, IConfiguration configuration)
         {
+            var configuredOrigins = configuration.GetSection("Cors:AllowedOrigins").Get<string[]>()?
+                .Where(origin => !string.IsNullOrWhiteSpace(origin))
+                .Select(origin => origin.Trim())
+                .ToArray() ?? Array.Empty<string>();
+
             services.AddCors(options =>
             {
                 options.AddPolicy("AllowAll",
                 builder =>
                 {
-                    builder.AllowAnyOrigin()
-                           .AllowAnyHeader()
-                           .AllowAnyMethod();
+                    if (configuredOrigins.Length > 0)
+                    {
+                        builder.WithOrigins(configuredOrigins)
+                               .AllowAnyHeader()
+                               .AllowAnyMethod()
+                               .AllowCredentials();
+                    }
+                    else
+                    {
+                        builder.AllowAnyOrigin()
+                               .AllowAnyHeader()
+                               .AllowAnyMethod();
+                    }
                 });
             });
         }
@@ -109,12 +124,33 @@
         // Extension method to set up JWT authentication
         public static void AddJWTAuthentication(this IServiceCollection services, IConfiguration configuration)
         {
+            var authority = configuration["Sts:ServerUrl"];
+            var audience = configuration["Sts:Audience"];
+
+            if (string.IsNullOrWhiteSpace(authority) || string.IsNullOrWhiteSpace(audience))
+            {
+                throw new InvalidOperationException("JWT configuration is missing required Sts:ServerUrl or Sts:Audience values.");
+            }
+
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                 .AddJwtBearer(options =>
                 {
-                    options.RequireHttpsMetadata = false;
-                    options.Authority = configuration["Sts:ServerUrl"];
-                    options.Audience = configuration["Sts:Audience"];
+                    options.RequireHttpsMetadata = true;
+                    options.Authority = authority;
+                    options.Audience = audience;
+                    options.SaveToken = true;
+
+                    var explicitIssuer = configuration["Sts:ValidIssuer"];
+                    options.TokenValidationParameters = new TokenValidationParameters
+                    {
+                        ValidateIssuer = true,
+                        ValidIssuer = string.IsNullOrWhiteSpace(explicitIssuer) ? authority : explicitIssuer,
+                        ValidateAudience = true,
+                        ValidAudience = audience,
+                        ValidateIssuerSigningKey = true,
+                        ValidateLifetime = true,
+                        ClockSkew = TimeSpan.FromMinutes(2)
+                    };
                 });
         }
 
