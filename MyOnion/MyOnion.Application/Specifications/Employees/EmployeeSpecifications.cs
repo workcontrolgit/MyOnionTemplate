@@ -1,5 +1,3 @@
-using System.Linq.Expressions;
-
 namespace MyOnion.Application.Specifications.Employees
 {
     public class EmployeesByFiltersSpecification : BaseSpecification<Employee>

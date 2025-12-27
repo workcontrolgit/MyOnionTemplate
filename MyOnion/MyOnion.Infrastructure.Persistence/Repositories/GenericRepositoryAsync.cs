@@ -1,11 +1,3 @@
-using LinqKit;
-using Microsoft.EntityFrameworkCore;
-using MyOnion.Application.Interfaces;
-using MyOnion.Application.Specifications;
-using MyOnion.Infrastructure.Persistence.Contexts;
-using MyOnion.Infrastructure.Persistence.Specifications;
-using System.Linq.Dynamic.Core;
-
 namespace MyOnion.Infrastructure.Persistence.Repository
 {
     public class GenericRepositoryAsync<T> : IGenericRepositoryAsync<T> where T : class

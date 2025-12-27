@@ -1,5 +1,3 @@
-using MyOnion.Application.Parameters;
-
 namespace MyOnion.Application.Common.Results
 {
     public class PagedDataTableResult<T> : Result<T>

@@ -1,14 +1,3 @@
-using Microsoft.EntityFrameworkCore;
-using MyOnion.Application.Features.Positions.Queries.GetPositions;
-using MyOnion.Application.Interfaces;
-using MyOnion.Application.Interfaces.Repositories;
-using MyOnion.Application.Parameters;
-using MyOnion.Application.Specifications.Positions;
-using MyOnion.Domain.Common;
-using MyOnion.Domain.Entities;
-using MyOnion.Infrastructure.Persistence.Contexts;
-using MyOnion.Infrastructure.Shared.Services;
-
 namespace MyOnion.Infrastructure.Persistence.Repositories
 {
     public class PositionRepositoryAsync : GenericRepositoryAsync<Position>, IPositionRepositoryAsync

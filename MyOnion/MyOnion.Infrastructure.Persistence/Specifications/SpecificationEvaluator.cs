@@ -1,8 +1,3 @@
-using Microsoft.EntityFrameworkCore;
-using MyOnion.Application.Specifications;
-using System.Linq;
-using System.Linq.Dynamic.Core;
-
 namespace MyOnion.Infrastructure.Persistence.Specifications
 {
     public static class SpecificationEvaluator<T> where T : class

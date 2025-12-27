@@ -1,13 +1,3 @@
-using Microsoft.EntityFrameworkCore;
-using MyOnion.Application.Features.Employees.Queries.GetEmployees;
-using MyOnion.Application.Interfaces;
-using MyOnion.Application.Interfaces.Repositories;
-using MyOnion.Application.Parameters;
-using MyOnion.Application.Specifications.Employees;
-using MyOnion.Domain.Common;
-using MyOnion.Domain.Entities;
-using MyOnion.Infrastructure.Persistence.Contexts;
-
 namespace MyOnion.Infrastructure.Persistence.Repositories
 {
     public class EmployeeRepositoryAsync : GenericRepositoryAsync<Employee>, IEmployeeRepositoryAsync

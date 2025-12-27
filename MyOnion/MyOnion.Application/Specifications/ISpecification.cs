@@ -1,5 +1,3 @@
-using System.Linq.Expressions;
-
 namespace MyOnion.Application.Specifications
 {
     public interface ISpecification<T>

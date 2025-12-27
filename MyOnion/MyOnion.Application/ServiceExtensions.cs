@@ -1,12 +1,3 @@
-﻿using System.Reflection;
-using FluentValidation;
-using MediatR;
-using Microsoft.Extensions.DependencyInjection;
-using MyOnion.Application.Behaviours;
-using MyOnion.Application.Helpers;
-using MyOnion.Application.Interfaces;
-using MyOnion.Domain.Entities;
-
 namespace MyOnion.Application
 {
     public static class ServiceExtensions

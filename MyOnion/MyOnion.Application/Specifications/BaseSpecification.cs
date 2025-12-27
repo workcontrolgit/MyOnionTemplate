@@ -1,5 +1,3 @@
-using System.Linq.Expressions;
-
 namespace MyOnion.Application.Specifications
 {
     public abstract class BaseSpecification<T> : ISpecification<T>

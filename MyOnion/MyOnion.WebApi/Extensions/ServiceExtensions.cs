@@ -1,5 +1,3 @@
-﻿using System.Text.Json.Serialization;
-
 namespace MyOnion.WebApi.Extensions
 {
     public static class ServiceExtensions

@@ -1,6 +1,3 @@
-using LinqKit;
-using MyOnion.Application.Specifications;
-
 namespace MyOnion.Application.Interfaces
 {
     /// <summary>

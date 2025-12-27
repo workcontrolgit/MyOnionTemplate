@@ -1,12 +1,3 @@
-using System.Collections.Concurrent;
-using System.Collections.Generic;
-using System.Linq;
-using System.Linq.Expressions;
-using System.Reflection;
-using System.Threading.Tasks;
-using MyOnion.Application.Interfaces;
-using MyOnion.Domain.Common;
-
 namespace MyOnion.Application.Helpers
 {
     public class DataShapeHelper<T> : IDataShapeHelper<T>

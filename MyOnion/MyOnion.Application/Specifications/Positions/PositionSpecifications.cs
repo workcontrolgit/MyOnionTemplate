@@ -1,5 +1,3 @@
-using System.Linq.Expressions;
-
 namespace MyOnion.Application.Specifications.Positions
 {
     public class PositionsByFiltersSpecification : BaseSpecification<Position>
