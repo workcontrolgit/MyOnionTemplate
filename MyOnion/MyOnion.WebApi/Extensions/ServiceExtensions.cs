@@ -1,4 +1,6 @@
-﻿namespace MyOnion.WebApi.Extensions
+﻿using System.Text.Json.Serialization;
+
+namespace MyOnion.WebApi.Extensions
 {
     public static class ServiceExtensions
     {
@@ -58,6 +60,7 @@
                     // Configure JSON serializer to use camelCase
                     options.JsonSerializerOptions.DictionaryKeyPolicy = JsonNamingPolicy.CamelCase;
                     options.JsonSerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
+                    options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
                 });
         }
 
