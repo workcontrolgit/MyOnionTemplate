@@ -1,4 +1,6 @@
-﻿namespace MyOnion.Application.Mappings
+using MyOnion.Application.Features.Positions.DTOs;
+
+namespace MyOnion.Application.Mappings
 {
     // Defines a mapping profile for general mappings between entities and view models.
     public class GeneralProfile : Profile
