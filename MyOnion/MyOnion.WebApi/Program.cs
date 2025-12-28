@@ -92,9 +92,15 @@ catch (Exception ex)
 {
     // Log warning with exception details
     Log.Warning(ex, "An error occurred starting the application");
+    throw;
 }
 // Ensure the log is flushed properly
 finally
 {
     Log.CloseAndFlush();
 }
+
+/// <summary>
+/// Partial Program class exposed for functional testing.
+/// </summary>
+public partial class Program { }
