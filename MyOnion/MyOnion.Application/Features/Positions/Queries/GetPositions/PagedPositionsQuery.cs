@@ -53,7 +53,7 @@
             if (string.IsNullOrEmpty(objRequest.Fields))
             {
                 //default fields from view model
-                objRequest.Fields = _modelHelper.GetModelFields<GetPositionsViewModel>();
+                objRequest.Fields = _modelHelper.GetModelFields<PositionSummaryDto>();
             }
             // query based on filter
             var qryResult = await _repository.PagedPositionReponseAsync(objRequest);

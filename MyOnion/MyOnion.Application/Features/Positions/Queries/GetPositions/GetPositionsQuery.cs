@@ -53,18 +53,18 @@
             if (!string.IsNullOrEmpty(objRequest.Fields))
             {
                 //limit to fields in view model
-                objRequest.Fields = _modelHelper.ValidateModelFields<GetPositionsViewModel>(objRequest.Fields);
+                objRequest.Fields = _modelHelper.ValidateModelFields<PositionSummaryDto>(objRequest.Fields);
             }
             if (string.IsNullOrEmpty(objRequest.Fields))
             {
                 //default fields from view model
-                objRequest.Fields = _modelHelper.GetModelFields<GetPositionsViewModel>();
+                objRequest.Fields = _modelHelper.GetModelFields<PositionSummaryDto>();
             }
             // verify orderby a valid field and exist in the DTO GetPositionsViewModel
             if (!string.IsNullOrEmpty(objRequest.OrderBy))
             {
                 //limit to fields in view model
-                objRequest.OrderBy = _modelHelper.ValidateModelFields<GetPositionsViewModel>(objRequest.OrderBy);
+                objRequest.OrderBy = _modelHelper.ValidateModelFields<PositionSummaryDto>(objRequest.OrderBy);
             }
 
             // query based on filter

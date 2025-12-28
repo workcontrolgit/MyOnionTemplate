@@ -9,8 +9,8 @@
             // Maps an Employee entity to a GetEmployeesViewModel, and vice versa.
             CreateMap<Employee, GetEmployeesViewModel>().ReverseMap();
 
-            // Maps a Position entity to a GetPositionsViewModel, and vice versa.
-            CreateMap<Position, GetPositionsViewModel>().ReverseMap();
+            // Maps a Position entity to a PositionSummaryDto, and vice versa.
+            CreateMap<Position, PositionSummaryDto>().ReverseMap();
             // Maps a Department entity to a GetDepartmentsViewModel, and vice versa.
             CreateMap<Department, GetDepartmentsViewModel>().ReverseMap();
 
