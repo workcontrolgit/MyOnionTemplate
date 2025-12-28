@@ -30,7 +30,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		MyOnion\docs\SpecificationUpgradePlan.md = MyOnion\docs\SpecificationUpgradePlan.md
 	EndProjectSection
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{DB82AE70-76E5-D76A-C66A-5F02FE794F50}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{DB82AE70-76E5-D76A-C66A-5F02FE794F50}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MyOnion.Application.Tests", "MyOnion\tests\MyOnion.Application.Tests\MyOnion.Application.Tests.csproj", "{795F5FF7-D863-4F17-8724-AF63171D062B}"
 EndProject
