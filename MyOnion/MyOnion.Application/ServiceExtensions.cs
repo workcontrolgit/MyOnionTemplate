@@ -1,3 +1,13 @@
+using System.Reflection;
+using AutoMapper;
+using FluentValidation;
+using MediatR;
+using Microsoft.Extensions.DependencyInjection;
+using MyOnion.Application.Behaviours;
+using MyOnion.Application.Helpers;
+using MyOnion.Application.Interfaces;
+using MyOnion.Domain.Entities;
+
 namespace MyOnion.Application
 {
     public static class ServiceExtensions
@@ -11,9 +21,9 @@ namespace MyOnion.Application
             services.AddScoped<IDataShapeHelper<Position>, DataShapeHelper<Position>>();
             services.AddScoped<IDataShapeHelper<Employee>, DataShapeHelper<Employee>>();
             services.AddScoped<IModelHelper, ModelHelper>();
-            // * use Scutor to register generic IDataShapeHelper interface for DI and specifying the lifetime of dependencies
+            // Register IDataShapeHelper implementations without relying on deprecated API surface.
             services.Scan(selector => selector
-                .FromCallingAssembly()
+                .FromAssemblies(Assembly.GetExecutingAssembly())
                 .AddClasses(classSelector => classSelector.AssignableTo(typeof(IDataShapeHelper<>)))
                 .AsImplementedInterfaces()
                 .WithTransientLifetime());

@@ -1,4 +1,5 @@
-﻿namespace MyOnion.Infrastructure.Persistence
+using System.Reflection;
+namespace MyOnion.Infrastructure.Persistence
 {
     public static class ServiceRegistration
     {
@@ -34,7 +35,7 @@
 
             // * use Scutor to register generic repository interface for DI and specifying the lifetime of dependencies
             services.Scan(selector => selector
-                .FromCallingAssembly()
+                .FromAssemblies(Assembly.GetExecutingAssembly())
                 .AddClasses(classSelector => classSelector.AssignableTo(typeof(IGenericRepositoryAsync<>)))
                 .AsImplementedInterfaces()
                 .WithTransientLifetime()
@@ -52,3 +53,4 @@
         }
     }
 }
+

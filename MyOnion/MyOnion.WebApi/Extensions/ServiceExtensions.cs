@@ -1,3 +1,5 @@
+using Microsoft.OpenApi.Models;
+
 namespace MyOnion.WebApi.Extensions
 {
     public static class ServiceExtensions
