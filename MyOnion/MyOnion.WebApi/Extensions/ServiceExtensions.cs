@@ -1,4 +1,5 @@
-using Microsoft.OpenApi.Models;
+using NSwag;
+using NSwag.Generation.Processors.Security;
 using MyOnion.WebApi.Filters;
 using MyOnion.WebApi.Options;
 
@@ -9,47 +10,32 @@ namespace MyOnion.WebApi.Extensions
         // Extension method to add Swagger documentation to the service collection
         public static void AddSwaggerExtension(this IServiceCollection services)
         {
-            services.AddSwaggerGen(c =>
+            services.AddOpenApiDocument(config =>
             {
-                c.SwaggerDoc("v1", new OpenApiInfo
+                config.DocumentName = "v1";
+                config.Version = "v1";
+                config.Title = "Clean Architecture - MyOnion.WebApi";
+                config.Description = "This Api will be responsible for overall data distribution and authorization.";
+                config.PostProcess = document =>
                 {
-                    Version = "v1",
-                    Title = "Clean Architecture - MyOnion.WebApi",
-                    Description = "This Api will be responsible for overall data distribution and authorization.",
-                    Contact = new OpenApiContact
+                    document.Info.Contact = new OpenApiContact
                     {
                         Name = "Jane Doe",
                         Email = "jdoe@janedoe.com",
-                        Url = new Uri("https://janedoe.com/contact"),
-                    }
-                });
-                // Add security definition for JWT Bearer
-                c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+                        Url = "https://janedoe.com/contact",
+                    };
+                };
+
+                config.AddSecurity("Bearer", new OpenApiSecurityScheme
                 {
-                    Name = "Authorization",
-                    In = ParameterLocation.Header,
-                    Type = SecuritySchemeType.ApiKey,
+                    Type = OpenApiSecuritySchemeType.Http,
                     Scheme = "Bearer",
                     BearerFormat = "JWT",
+                    In = OpenApiSecurityApiKeyLocation.Header,
+                    Name = "Authorization",
                     Description = "Input your Bearer token in this format - Bearer {your token here} to access this API",
                 });
-                // Add security requirement to enforce Bearer token use
-                c.AddSecurityRequirement(new OpenApiSecurityRequirement
-                {
-                    {
-                        new OpenApiSecurityScheme
-                        {
-                            Reference = new OpenApiReference
-                            {
-                                Type = ReferenceType.SecurityScheme,
-                                Id = "Bearer",
-                            },
-                            Scheme = "Bearer",
-                            Name = "Bearer",
-                            In = ParameterLocation.Header,
-                        }, new List<string>()
-                    },
-                });
+                config.OperationProcessors.Add(new AspNetCoreOperationSecurityScopeProcessor("Bearer"));
             });
         }
 

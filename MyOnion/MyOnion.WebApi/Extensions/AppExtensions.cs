@@ -1,4 +1,5 @@
 using MyOnion.WebApi.Middlewares;
+using NSwag.AspNetCore;
 
 namespace MyOnion.WebApi.Extensions
 {
@@ -8,14 +9,16 @@ namespace MyOnion.WebApi.Extensions
         // Extension method to configure and use Swagger for API documentation
         public static void UseSwaggerExtension(this IApplicationBuilder app)
         {
-            // Enables middleware to serve generated Swagger as a JSON endpoint
-            app.UseSwagger();
-
-            // Enables middleware to serve Swagger UI at the specified endpoint
-            app.UseSwaggerUI(c =>
+            // Serve the generated OpenAPI document and Swagger UI via NSwag.
+            app.UseOpenApi(settings =>
             {
-                // Configures the Swagger endpoint with a name and location of the JSON file
-                c.SwaggerEndpoint("/swagger/v1/swagger.json", "CleanArchitecture.MyOnion.WebApi");
+                settings.Path = "/swagger/{documentName}/swagger.json";
+            });
+
+            app.UseSwaggerUi(settings =>
+            {
+                settings.Path = "/swagger";
+                settings.DocumentPath = "/swagger/{documentName}/swagger.json";
             });
         }
 
