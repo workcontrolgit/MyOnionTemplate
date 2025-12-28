@@ -40,6 +40,5 @@
         /// <returns>
         /// Task containing the paged list of Position records and the total number of records found.
         /// </returns>    
-        Task<(IEnumerable<Entity> data, RecordsCount recordsCount)> PagedPositionReponseAsync(PagedPositionsQuery requestParameters);
     }
 }
