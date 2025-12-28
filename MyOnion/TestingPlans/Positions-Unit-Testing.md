@@ -1,35 +1,35 @@
 # Position Feature Testing Plan
 
-Goal: introduce automated tests covering the Positions feature across application, infrastructure, and API layers.
+Goal: provide automated coverage for the Positions feature across application, infrastructure, and API layers.
 
 ## Scope
-1. **Domain/Application layer**
-   - Validate `CreatePositionCommandHandler`, `UpdatePositionCommandHandler`, and `DeletePositionByIdCommandHandler`.
-   - Verify `GetPositionsQueryHandler` filtering/field validation logic and `GetPositionByIdQueryHandler`.
-   - Exercise `PositionRepositoryAsync` mock interactions and AutoMapper profiles.
+1. **Application layer**
+   - Command handlers: create, update, delete (happy path + error conditions).
+   - Query handlers: get-by-id and list (filtering, field validation, error paths).
+   - AutoMapper profile validation and ValidationBehavior interactions.
 2. **Infrastructure layer**
-   - Cover `PositionRepositoryAsync` using an EF Core in-memory context (read/write, data shaping).
-   - Seed/mock data validation (bulk insert + spec evaluation).
+   - `PositionRepositoryAsync` read/write operations using EF Core InMemory provider.
+   - Data shaping utilities and specification filters.
 3. **Web API layer**
-   - Controller action tests using `WebApplicationFactory` / `TestServer` to ensure endpoints accept/return expected contracts (DTOs, status codes, validation errors).
+   - Controller endpoints via `WebApplicationFactory` to verify payloads, status codes, and middleware (e.g., execution timing header).
 
 ## Tasks
-1. **Test project setup**
-   - Add `tests/MyOnion.Application.Tests`, `tests/MyOnion.Infrastructure.Tests`, and `tests/MyOnion.WebApi.Tests` projects targeting `net10.0`.
-   - Reference corresponding production projects and common test packages (xUnit, FluentAssertions, Moq, Microsoft.AspNetCore.Mvc.Testing).
+1. **Add test projects**
+   - `tests/MyOnion.Application.Tests`, `tests/MyOnion.Infrastructure.Tests`, `tests/MyOnion.WebApi.Tests` targeting `net10.0`.
+   - Reference production projects and install xUnit, FluentAssertions, Moq, Microsoft.AspNetCore.Mvc.Testing as needed.
 2. **Application tests**
-   - Mock `IPositionRepositoryAsync`, `IMapper`, and `IModelHelper` to isolate handlers.
-   - Write test cases for success/failure paths (e.g., duplicate position number, validation behavior).
+   - Mock repositories/mappers and assert handler outputs, exceptions, and validation.
+   - Cover `GetPositionsQueryHandler` field filtering + paging logic.
 3. **Infrastructure tests**
-   - Spin up `ApplicationDbContext` with `UseInMemoryDatabase`.
-   - Test repository methods (`IsUniquePositionNumberAsync`, `GetPositionReponseAsync`) for correct data shaping and record counts.
+   - Seed real entities via InMemory context and evaluate repository/specification behavior.
 4. **Web API tests**
-   - Use `WebApplicationFactory<MyOnion.WebApi.Program>` to send HTTP requests to `/api/v1/positions`.
-   - Assert payloads map to `PositionSummaryDto`, authorization/validation responses, and middleware behaviors (e.g., execution timing header if feasible).
+   - Use `WebApplicationFactory` to issue HTTP requests against `/api/v1/positions`.
+   - Assert DTO shapes (`PositionSummaryDto`), validation responses, and headers.
 5. **CI integration**
-   - Update solution to include new test projects.
-   - Add `dotnet test` invocation to build scripts/pipelines.
+   - Include new test projects in solution.
+   - Update build pipeline to run `dotnet test` across all test projects.
 
 ## Deliverables
-- Three test projects with comprehensive coverage of Position feature.
-- Documentation (README/TestPlan) describing how to run tests and expected coverage.
+- Documented testing approach (this file) linked in Solution Items.
+- Test projects with suites covering the above scope.
+- Updated CI configuration to execute the tests.
