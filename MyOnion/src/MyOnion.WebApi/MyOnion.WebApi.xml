@@ -78,7 +78,7 @@
         </member>
         <member name="T:Program">
             <summary>
-            Partial Program class exposed for integration testing.
+            Partial Program class exposed for functional testing.
             </summary>
         </member>
     </members>

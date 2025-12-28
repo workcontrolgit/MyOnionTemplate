@@ -21,10 +21,10 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\MyOnion.Application\MyOnion.Application.csproj" />
-    <ProjectReference Include="..\..\MyOnion.Infrastructure.Persistence\MyOnion.Infrastructure.Persistence.csproj" />
-    <ProjectReference Include="..\..\MyOnion.Infrastructure.Shared\MyOnion.Infrastructure.Shared.csproj" />
-    <ProjectReference Include="..\..\MyOnion.Domain\MyOnion.Domain.csproj" />
+    <ProjectReference Include="..\..\src\MyOnion.Application\MyOnion.Application.csproj" />
+    <ProjectReference Include="..\..\src\MyOnion.Infrastructure.Persistence\MyOnion.Infrastructure.Persistence.csproj" />
+    <ProjectReference Include="..\..\src\MyOnion.Infrastructure.Shared\MyOnion.Infrastructure.Shared.csproj" />
+    <ProjectReference Include="..\..\src\MyOnion.Domain\MyOnion.Domain.csproj" />
   </ItemGroup>
 
 </Project>

@@ -20,8 +20,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\MyOnion.Application\MyOnion.Application.csproj" />
-    <ProjectReference Include="..\..\MyOnion.WebApi\MyOnion.WebApi.csproj" />
+    <ProjectReference Include="..\..\src\MyOnion.Application\MyOnion.Application.csproj" />
+    <ProjectReference Include="..\..\src\MyOnion.WebApi\MyOnion.WebApi.csproj" />
   </ItemGroup>
 
 </Project>
