@@ -17,6 +17,13 @@ namespace MyOnion.Application.Common.Results
 
         public IReadOnlyCollection<string> Errors { get; }
 
+        public double? ExecutionTimeMs { get; private set; }
+
+        public void SetExecutionTime(double? executionTimeMs)
+        {
+            ExecutionTimeMs = executionTimeMs;
+        }
+
         public static Result Success(string message = null)
         {
             return new Result(true, message, Array.Empty<string>());

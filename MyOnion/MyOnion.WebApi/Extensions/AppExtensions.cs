@@ -1,4 +1,6 @@
-﻿namespace MyOnion.WebApi.Extensions
+using MyOnion.WebApi.Middlewares;
+
+namespace MyOnion.WebApi.Extensions
 {
     // Static class containing extension methods for IApplicationBuilder
     public static class AppExtensions
@@ -24,5 +26,9 @@
             app.UseMiddleware<ErrorHandlerMiddleware>();
         }
 
+        public static void UseRequestTimingMiddleware(this IApplicationBuilder app)
+        {
+            app.UseMiddleware<RequestTimingMiddleware>();
+        }
     }
 }

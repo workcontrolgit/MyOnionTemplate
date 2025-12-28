@@ -20,7 +20,7 @@ try
     builder.Services.AddPersistenceInfrastructure(builder.Configuration);
     builder.Services.AddSharedInfrastructure(builder.Configuration);
     builder.Services.AddSwaggerExtension();
-    builder.Services.AddControllersExtension();
+    builder.Services.AddControllersExtension(builder.Configuration);
     // Configure CORS policies
     builder.Services.AddCorsExtension(builder.Configuration);
     // Add Health Checks service
@@ -67,6 +67,7 @@ try
     app.UseHttpsRedirection();
     // Configure request routing
     app.UseRouting();
+    app.UseRequestTimingMiddleware();
     // Enable configured CORS policy ("AllowAll" in this case)
     app.UseCors("AllowAll");
     // Use Authentication middleware

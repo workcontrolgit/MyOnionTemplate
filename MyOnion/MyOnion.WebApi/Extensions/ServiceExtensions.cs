@@ -1,4 +1,6 @@
 using Microsoft.OpenApi.Models;
+using MyOnion.WebApi.Filters;
+using MyOnion.WebApi.Options;
 
 namespace MyOnion.WebApi.Extensions
 {
@@ -52,8 +54,11 @@ namespace MyOnion.WebApi.Extensions
         }
 
         // Extension method to add and configure controllers with JSON options
-        public static void AddControllersExtension(this IServiceCollection services)
+        public static void AddControllersExtension(this IServiceCollection services, IConfiguration configuration)
         {
+            services.Configure<ExecutionTimingOptions>(configuration.GetSection(ExecutionTimingOptions.SectionName));
+            services.AddScoped<ExecutionTimeResultFilter>();
+
             services.AddControllers()
                 .AddJsonOptions(options =>
                 {
@@ -61,6 +66,10 @@ namespace MyOnion.WebApi.Extensions
                     options.JsonSerializerOptions.DictionaryKeyPolicy = JsonNamingPolicy.CamelCase;
                     options.JsonSerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
                     options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
+                })
+                .AddMvcOptions(options =>
+                {
+                    options.Filters.AddService<ExecutionTimeResultFilter>();
                 });
         }
 
