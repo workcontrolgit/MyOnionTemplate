@@ -1,8 +1,8 @@
-# Endpoint Timing & Header Timestamp Plan
+# Endpoint Timing Plan
 
 ## Objectives
 - Capture a precise elapsed time for every API endpoint execution.
-- Surface per-request timing information in responses and inject the current server time into the HTML `<head>` of any rendered views.
+- Surface per-request timing information in responses and Result payloads.
 - Provide a structured approach for implementation, review, and rollout with minimal performance overhead.
 
 ## Scope
@@ -19,9 +19,8 @@
    - Provide configuration flags to enable/disable timing and header injection per environment.
    - Emit structured logs (with endpoint name + elapsed time) for later analysis.
 
-5. **Testing & Validation**
+4. **Testing & Validation**
    - Unit tests for middleware to ensure elapsed time is calculated and headers are set.
-   - Integration or functional tests covering HTML output to confirm `<head>` injections.
    - Performance validation to ensure minimal overhead (<1ms median) under typical loads.
 
 ## Implementation Steps
