@@ -56,19 +56,6 @@
         }
 
         /// <summary>
-        /// Retrieves a paged list of positions.
-        /// </summary>
-        /// <param name="query">The query parameters for the paged list.</param>
-        /// <returns>A paged list of positions.</returns>
-        [HttpPost]
-        //[Authorize]
-        [Route("Paged")]
-        public async Task<IActionResult> Paged(PagedPositionsQuery query)
-        {
-            return Ok(await Mediator.Send(query));
-        }
-
-        /// <summary>
         /// Updates a position with the given id using the provided command.
         /// </summary>
         /// <param name="id">The id of the position to update.</param>
