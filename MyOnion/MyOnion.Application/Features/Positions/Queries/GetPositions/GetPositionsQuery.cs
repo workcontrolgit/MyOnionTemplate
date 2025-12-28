@@ -1,4 +1,5 @@
-﻿namespace MyOnion.Application.Features.Positions.Queries.GetPositions
+using MyOnion.Application.Features.Positions.DTOs;
+namespace MyOnion.Application.Features.Positions.Queries.GetPositions
 {
     /// <summary>
     /// Definition of GetPositionsQuery class that inherits from QueryParameter and implements IRequest<PagedResult<IEnumerable<Entity>>>
@@ -76,3 +77,4 @@
         }
     }
 }
+
