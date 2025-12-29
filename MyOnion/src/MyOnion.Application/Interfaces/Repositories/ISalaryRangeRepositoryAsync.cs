@@ -5,6 +5,6 @@
     /// </summary>
     public interface ISalaryRangeRepositoryAsync : IGenericRepositoryAsync<SalaryRange>
     {
-        // Interface members are defined in the base interface, which is IGenericRepositoryAsync
+        Task<(IEnumerable<Entity> data, RecordsCount recordsCount)> GetSalaryRangeResponseAsync(GetSalaryRangesQuery requestParameters);
     }
 }

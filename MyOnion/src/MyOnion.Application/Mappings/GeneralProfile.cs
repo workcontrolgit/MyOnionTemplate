@@ -1,4 +1,7 @@
+using MyOnion.Application.Features.Departments.Commands.CreateDepartment;
+using MyOnion.Application.Features.Employees.Commands.CreateEmployee;
 using MyOnion.Application.Features.Positions.DTOs;
+using MyOnion.Application.Features.SalaryRanges.Commands.CreateSalaryRange;
 
 namespace MyOnion.Application.Mappings
 {
@@ -20,6 +23,12 @@ namespace MyOnion.Application.Mappings
             CreateMap<SalaryRange, GetSalaryRangesViewModel>().ReverseMap();
             // Maps a CreatePositionCommand to a Position entity.
             CreateMap<CreatePositionCommand, Position>();
+            // Maps a CreateDepartmentCommand to a Department entity.
+            CreateMap<CreateDepartmentCommand, Department>();
+            // Maps a CreateEmployeeCommand to an Employee entity.
+            CreateMap<CreateEmployeeCommand, Employee>();
+            // Maps a CreateSalaryRangeCommand to a SalaryRange entity.
+            CreateMap<CreateSalaryRangeCommand, SalaryRange>();
         }
     }
 }

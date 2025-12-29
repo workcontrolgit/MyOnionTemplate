@@ -16,6 +16,16 @@
         }
 
         /// <summary>
+        /// Gets an employee by identifier.
+        /// </summary>
+        /// <param name="id">Employee identifier.</param>
+        [HttpGet("{id}")]
+        public async Task<IActionResult> Get(Guid id)
+        {
+            return Ok(await Mediator.Send(new GetEmployeeByIdQuery { Id = id }));
+        }
+
+        /// <summary>
         /// Retrieves a paged list of employees.
         /// Support Ngx-DataTables https://medium.com/scrum-and-coke/angular-11-pagination-of-zillion-rows-45d8533538c0
         /// </summary>
@@ -28,5 +38,43 @@
             return Ok(await Mediator.Send(query));
         }
 
+        /// <summary>
+        /// Creates a new employee.
+        /// </summary>
+        /// <param name="command">Employee payload.</param>
+        [HttpPost]
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<IActionResult> Post(CreateEmployeeCommand command)
+        {
+            var result = await Mediator.Send(command);
+            return CreatedAtAction(nameof(Get), new { id = result.Value }, result);
+        }
+
+        /// <summary>
+        /// Updates an existing employee.
+        /// </summary>
+        /// <param name="id">Employee identifier.</param>
+        /// <param name="command">Update payload.</param>
+        [HttpPut("{id}")]
+        public async Task<IActionResult> Put(Guid id, UpdateEmployeeCommand command)
+        {
+            if (id != command.Id)
+            {
+                return BadRequest();
+            }
+
+            return Ok(await Mediator.Send(command));
+        }
+
+        /// <summary>
+        /// Deletes an employee by identifier.
+        /// </summary>
+        /// <param name="id">Employee identifier.</param>
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> Delete(Guid id)
+        {
+            return Ok(await Mediator.Send(new DeleteEmployeeByIdCommand { Id = id }));
+        }
     }
 }
