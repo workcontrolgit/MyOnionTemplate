@@ -5,15 +5,15 @@
     /// BaseRequestParameter - contains paging parameters
     /// To add filter/search parameters, add search properties to the body of this class
     /// </summary>
-    public class GetSalaryRangesQuery : ListParameter, IRequest<IEnumerable<GetSalaryRangesViewModel>>
+    public class GetSalaryRangesQuery : QueryParameter, IRequest<PagedResult<IEnumerable<Entity>>>
     {
+        public string Name { get; set; }
     }
 
-    public class GetAllSalaryRangesQueryHandler : IRequestHandler<GetSalaryRangesQuery, IEnumerable<GetSalaryRangesViewModel>>
+    public class GetAllSalaryRangesQueryHandler : IRequestHandler<GetSalaryRangesQuery, PagedResult<IEnumerable<Entity>>>
     {
         private readonly ISalaryRangeRepositoryAsync _repository;
         private readonly IModelHelper _modelHelper;
-        private readonly IMapper _mapper;
 
         /// <summary>
         /// Constructor for GetAllSalaryRangesQueryHandler class.
@@ -23,11 +23,10 @@
         /// <returns>
         /// GetAllSalaryRangesQueryHandler object.
         /// </returns>
-        public GetAllSalaryRangesQueryHandler(ISalaryRangeRepositoryAsync repository, IModelHelper modelHelper, IMapper mapper)
+        public GetAllSalaryRangesQueryHandler(ISalaryRangeRepositoryAsync repository, IModelHelper modelHelper)
         {
             _repository = repository;
             _modelHelper = modelHelper;
-            _mapper = mapper;
         }
 
         /// <summary>
@@ -36,33 +35,26 @@
         /// <param name="request">The GetSalaryRangesQuery request.</param>
         /// <param name="cancellationToken">The cancellation token.</param>
         /// <returns>A PagedResponse containing the requested data.</returns>
-        public async Task<IEnumerable<GetSalaryRangesViewModel>> Handle(GetSalaryRangesQuery request, CancellationToken cancellationToken)
+        public async Task<PagedResult<IEnumerable<Entity>>> Handle(GetSalaryRangesQuery request, CancellationToken cancellationToken)
         {
-            string fields = _modelHelper.GetModelFields<GetSalaryRangesViewModel>();
-            string defaultOrderByColumn = "Name";
-
-            string orderBy = string.Empty;
-
-            // if the request orderby is not null
-            if (!string.IsNullOrEmpty(request.OrderBy))
+            var objRequest = request;
+            if (!string.IsNullOrEmpty(objRequest.Fields))
             {
-                // check to make sure order by field is valid and in the view model
-                orderBy = _modelHelper.ValidateModelFields<GetSalaryRangesViewModel>(request.OrderBy);
+                objRequest.Fields = _modelHelper.ValidateModelFields<GetSalaryRangesViewModel>(objRequest.Fields);
+            }
+            else
+            {
+                objRequest.Fields = _modelHelper.GetModelFields<GetSalaryRangesViewModel>();
             }
 
-            // if the order by is invalid
-            if (string.IsNullOrEmpty(orderBy))
+            if (!string.IsNullOrEmpty(objRequest.OrderBy))
             {
-                //default fields from view model
-                orderBy = defaultOrderByColumn;
+                objRequest.OrderBy = _modelHelper.ValidateModelFields<GetSalaryRangesViewModel>(objRequest.OrderBy);
             }
 
-            var data = await _repository.GetAllShapeAsync(orderBy, fields);
+            var result = await _repository.GetSalaryRangeResponseAsync(objRequest);
 
-            // automap to ViewModel
-            var viewModel = _mapper.Map<IEnumerable<GetSalaryRangesViewModel>>(data);
-
-            return viewModel;
+            return PagedResult<IEnumerable<Entity>>.Success(result.data, objRequest.PageNumber, objRequest.PageSize, result.recordsCount);
         }
     }
 }

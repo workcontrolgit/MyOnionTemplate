@@ -20,6 +20,8 @@ namespace MyOnion.Application
             services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationBehavior<,>));
             services.AddScoped<IDataShapeHelper<Position>, DataShapeHelper<Position>>();
             services.AddScoped<IDataShapeHelper<Employee>, DataShapeHelper<Employee>>();
+            services.AddScoped<IDataShapeHelper<Department>, DataShapeHelper<Department>>();
+            services.AddScoped<IDataShapeHelper<SalaryRange>, DataShapeHelper<SalaryRange>>();
             services.AddScoped<IModelHelper, ModelHelper>();
             // Register IDataShapeHelper implementations without relying on deprecated API surface.
             services.Scan(selector => selector

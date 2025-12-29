@@ -6,10 +6,35 @@
     <members>
         <member name="M:MyOnion.WebApi.Controllers.v1.DepartmentsController.Get(MyOnion.Application.Features.Departments.Queries.GetDepartments.GetDepartmentsQuery)">
             <summary>
-            Gets a list of employees based on the specified filter.
+            Gets a list of departments based on the specified filter.
             </summary>
-            <param name="filter">The filter used to get the list of employees.</param>
-            <returns>A list of employees.</returns>
+            <param name="filter">The filter used to get the list of departments.</param>
+            <returns>A list of departments.</returns>
+        </member>
+        <member name="M:MyOnion.WebApi.Controllers.v1.DepartmentsController.Get(System.Guid)">
+            <summary>
+            Gets a single department by identifier.
+            </summary>
+            <param name="id">Department identifier.</param>
+        </member>
+        <member name="M:MyOnion.WebApi.Controllers.v1.DepartmentsController.Post(MyOnion.Application.Features.Departments.Commands.CreateDepartment.CreateDepartmentCommand)">
+            <summary>
+            Creates a new department.
+            </summary>
+            <param name="command">Department payload.</param>
+        </member>
+        <member name="M:MyOnion.WebApi.Controllers.v1.DepartmentsController.Put(System.Guid,MyOnion.Application.Features.Departments.Commands.UpdateDepartment.UpdateDepartmentCommand)">
+            <summary>
+            Updates the specified department.
+            </summary>
+            <param name="id">Department identifier.</param>
+            <param name="command">Update payload.</param>
+        </member>
+        <member name="M:MyOnion.WebApi.Controllers.v1.DepartmentsController.Delete(System.Guid)">
+            <summary>
+            Deletes the specified department.
+            </summary>
+            <param name="id">Department identifier.</param>
         </member>
         <member name="M:MyOnion.WebApi.Controllers.v1.EmployeesController.Get(MyOnion.Application.Features.Employees.Queries.GetEmployees.GetEmployeesQuery)">
             <summary>
@@ -18,6 +43,12 @@
             <param name="filter">The filter used to get the list of employees.</param>
             <returns>A list of employees.</returns>
         </member>
+        <member name="M:MyOnion.WebApi.Controllers.v1.EmployeesController.Get(System.Guid)">
+            <summary>
+            Gets an employee by identifier.
+            </summary>
+            <param name="id">Employee identifier.</param>
+        </member>
         <member name="M:MyOnion.WebApi.Controllers.v1.EmployeesController.Paged(MyOnion.Application.Features.Employees.Queries.GetEmployees.PagedEmployeesQuery)">
             <summary>
             Retrieves a paged list of employees.
@@ -25,6 +56,25 @@
             </summary>
             <param name="query">The query parameters for the paged list.</param>
             <returns>A paged list of employees.</returns>
+        </member>
+        <member name="M:MyOnion.WebApi.Controllers.v1.EmployeesController.Post(MyOnion.Application.Features.Employees.Commands.CreateEmployee.CreateEmployeeCommand)">
+            <summary>
+            Creates a new employee.
+            </summary>
+            <param name="command">Employee payload.</param>
+        </member>
+        <member name="M:MyOnion.WebApi.Controllers.v1.EmployeesController.Put(System.Guid,MyOnion.Application.Features.Employees.Commands.UpdateEmployee.UpdateEmployeeCommand)">
+            <summary>
+            Updates an existing employee.
+            </summary>
+            <param name="id">Employee identifier.</param>
+            <param name="command">Update payload.</param>
+        </member>
+        <member name="M:MyOnion.WebApi.Controllers.v1.EmployeesController.Delete(System.Guid)">
+            <summary>
+            Deletes an employee by identifier.
+            </summary>
+            <param name="id">Employee identifier.</param>
         </member>
         <member name="M:MyOnion.WebApi.Controllers.v1.PositionsController.Get(MyOnion.Application.Features.Positions.Queries.GetPositions.GetPositionsQuery)">
             <summary>
@@ -71,10 +121,35 @@
         </member>
         <member name="M:MyOnion.WebApi.Controllers.v1.SalaryRangesController.Get(MyOnion.Application.Features.SalaryRanges.Queries.GetSalaryRanges.GetSalaryRangesQuery)">
             <summary>
-            Gets a list of employees based on the specified filter.
+            Gets a list of salary ranges based on the specified filter.
             </summary>
-            <param name="filter">The filter used to get the list of employees.</param>
-            <returns>A list of employees.</returns>
+            <param name="filter">The filter used to get the list of salary ranges.</param>
+            <returns>A list of salary ranges.</returns>
+        </member>
+        <member name="M:MyOnion.WebApi.Controllers.v1.SalaryRangesController.Get(System.Guid)">
+            <summary>
+            Gets a salary range by identifier.
+            </summary>
+            <param name="id">Salary range identifier.</param>
+        </member>
+        <member name="M:MyOnion.WebApi.Controllers.v1.SalaryRangesController.Post(MyOnion.Application.Features.SalaryRanges.Commands.CreateSalaryRange.CreateSalaryRangeCommand)">
+            <summary>
+            Creates a new salary range.
+            </summary>
+            <param name="command">Salary range payload.</param>
+        </member>
+        <member name="M:MyOnion.WebApi.Controllers.v1.SalaryRangesController.Put(System.Guid,MyOnion.Application.Features.SalaryRanges.Commands.UpdateSalaryRange.UpdateSalaryRangeCommand)">
+            <summary>
+            Updates an existing salary range.
+            </summary>
+            <param name="id">Salary range identifier.</param>
+            <param name="command">Update payload.</param>
+        </member>
+        <member name="M:MyOnion.WebApi.Controllers.v1.SalaryRangesController.Delete(System.Guid)">
+            <summary>
+            Deletes a salary range.
+            </summary>
+            <param name="id">Salary range identifier.</param>
         </member>
         <member name="T:Program">
             <summary>
