@@ -46,6 +46,32 @@ public class DepartmentRepositoryAsyncTests : IDisposable
         count.RecordsTotal.Should().Be(1);
     }
 
+    [Fact]
+    public async Task UpdateAsync_ShouldPersistChanges()
+    {
+        var department = new Department { Id = Guid.NewGuid(), Name = "Ops" };
+        _context.Departments.Add(department);
+        await _context.SaveChangesAsync();
+
+        department.Name = "Operations";
+        await _repository.UpdateAsync(department);
+
+        var updated = await _context.Departments.FindAsync(department.Id);
+        updated!.Name.Should().Be("Operations");
+    }
+
+    [Fact]
+    public async Task DeleteAsync_ShouldRemoveDepartment()
+    {
+        var department = new Department { Id = Guid.NewGuid(), Name = "Temp" };
+        _context.Departments.Add(department);
+        await _context.SaveChangesAsync();
+
+        await _repository.DeleteAsync(department);
+
+        (await _context.Departments.FindAsync(department.Id)).Should().BeNull();
+    }
+
     public void Dispose()
     {
         _context.Database.EnsureDeleted();

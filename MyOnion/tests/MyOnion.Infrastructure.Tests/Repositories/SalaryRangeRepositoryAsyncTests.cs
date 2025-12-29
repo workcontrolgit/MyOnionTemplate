@@ -46,6 +46,32 @@ public class SalaryRangeRepositoryAsyncTests : IDisposable
         count.RecordsTotal.Should().Be(1);
     }
 
+    [Fact]
+    public async Task UpdateAsync_ShouldPersistChanges()
+    {
+        var salaryRange = new SalaryRange { Id = Guid.NewGuid(), Name = "L1", MinSalary = 500, MaxSalary = 1000 };
+        _context.SalaryRanges.Add(salaryRange);
+        await _context.SaveChangesAsync();
+
+        salaryRange.Name = "L1 Updated";
+        await _repository.UpdateAsync(salaryRange);
+
+        var updated = await _context.SalaryRanges.FindAsync(salaryRange.Id);
+        updated!.Name.Should().Be("L1 Updated");
+    }
+
+    [Fact]
+    public async Task DeleteAsync_ShouldRemoveSalaryRange()
+    {
+        var salaryRange = new SalaryRange { Id = Guid.NewGuid(), Name = "L2", MinSalary = 1500, MaxSalary = 2500 };
+        _context.SalaryRanges.Add(salaryRange);
+        await _context.SaveChangesAsync();
+
+        await _repository.DeleteAsync(salaryRange);
+
+        (await _context.SalaryRanges.FindAsync(salaryRange.Id)).Should().BeNull();
+    }
+
     public void Dispose()
     {
         _context.Database.EnsureDeleted();

@@ -86,6 +86,48 @@ public class PositionRepositoryAsyncTests : IDisposable
         count.Should().BeEquivalentTo(new RecordsCount { RecordsFiltered = 1, RecordsTotal = 1 });
     }
 
+    [Fact]
+    public async Task UpdateAsync_ShouldPersistChanges()
+    {
+        var position = new Position
+        {
+            Id = Guid.NewGuid(),
+            PositionNumber = "ENG-02",
+            PositionTitle = "Engineer",
+            PositionDescription = "Builds",
+            DepartmentId = Guid.NewGuid(),
+            SalaryRangeId = Guid.NewGuid()
+        };
+        _context.Positions.Add(position);
+        await _context.SaveChangesAsync();
+
+        position.PositionTitle = "Senior Engineer";
+        await _repository.UpdateAsync(position);
+
+        var updated = await _context.Positions.FindAsync(position.Id);
+        updated!.PositionTitle.Should().Be("Senior Engineer");
+    }
+
+    [Fact]
+    public async Task DeleteAsync_ShouldRemoveEntity()
+    {
+        var position = new Position
+        {
+            Id = Guid.NewGuid(),
+            PositionNumber = "ENG-03",
+            PositionTitle = "Engineer",
+            PositionDescription = "Builds",
+            DepartmentId = Guid.NewGuid(),
+            SalaryRangeId = Guid.NewGuid()
+        };
+        _context.Positions.Add(position);
+        await _context.SaveChangesAsync();
+
+        await _repository.DeleteAsync(position);
+
+        (await _context.Positions.FindAsync(position.Id)).Should().BeNull();
+    }
+
     public void Dispose()
     {
         _context.Database.EnsureDeleted();
