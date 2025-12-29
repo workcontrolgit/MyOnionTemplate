@@ -18,25 +18,27 @@
 
         public async Task<(IEnumerable<Entity> data, RecordsCount recordsCount)> GetSalaryRangeResponseAsync(GetSalaryRangesQuery requestParameters)
         {
-            var query = _repository.AsNoTracking();
-            var recordsTotal = await query.CountAsync();
+            var recordsTotal = await _repository.CountAsync();
 
-            var orderBy = string.IsNullOrEmpty(requestParameters.OrderBy) ? "Name" : requestParameters.OrderBy;
-            var orderedQuery = query.OrderBy(orderBy);
+            var filteredSpecification = new SalaryRangesByFiltersSpecification(requestParameters, applyPaging: false);
+            var pagedSpecification = new SalaryRangesByFiltersSpecification(requestParameters);
 
-            var pagedData = await orderedQuery
-                .Skip((requestParameters.PageNumber - 1) * requestParameters.PageSize)
-                .Take(requestParameters.PageSize)
-                .ToListAsync();
+            var recordsFiltered = await CountAsync(filteredSpecification);
+            var resultData = await ListAsync(pagedSpecification);
 
-            var shapedData = await _dataShaper.ShapeDataAsync(pagedData, requestParameters.Fields);
-            var recordsCount = new RecordsCount
-            {
-                RecordsFiltered = recordsTotal,
-                RecordsTotal = recordsTotal
-            };
+            var shapedData = _dataShaper.ShapeData(resultData, requestParameters.Fields);
+            var recordsCount = BuildRecordsCount(recordsTotal, recordsFiltered);
 
             return (shapedData, recordsCount);
+        }
+
+        private static RecordsCount BuildRecordsCount(int total, int filtered)
+        {
+            return new RecordsCount
+            {
+                RecordsFiltered = filtered,
+                RecordsTotal = total
+            };
         }
     }
 }

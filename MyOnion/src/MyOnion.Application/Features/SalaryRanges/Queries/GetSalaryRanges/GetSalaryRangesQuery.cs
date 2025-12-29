@@ -7,6 +7,7 @@
     /// </summary>
     public class GetSalaryRangesQuery : QueryParameter, IRequest<PagedResult<IEnumerable<Entity>>>
     {
+        public string Name { get; set; }
     }
 
     public class GetAllSalaryRangesQueryHandler : IRequestHandler<GetSalaryRangesQuery, PagedResult<IEnumerable<Entity>>>
