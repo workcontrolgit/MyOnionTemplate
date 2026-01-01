@@ -1,11 +1,4 @@
-using AutoMapper;
-using FluentAssertions;
-using Moq;
-using MyOnion.Application.Features.SalaryRanges.Commands.CreateSalaryRange;
-using MyOnion.Application.Interfaces.Repositories;
-using MyOnion.Domain.Entities;
-
-namespace MyOnion.Application.Tests.SalaryRanges;
+﻿namespace MyOnion.Application.Tests.SalaryRanges;
 
 public class CreateSalaryRangeCommandHandlerTests
 {

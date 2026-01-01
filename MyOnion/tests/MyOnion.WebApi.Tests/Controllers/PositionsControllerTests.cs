@@ -1,17 +1,4 @@
-using FluentAssertions;
-using MediatR;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.DependencyInjection;
-using Moq;
-using MyOnion.Application.Common.Results;
-using MyOnion.Application.Features.Positions.Commands.CreatePosition;
-using MyOnion.Application.Features.Positions.Queries.GetPositions;
-using MyOnion.Application.Parameters;
-using MyOnion.Domain.Entities;
-using MyOnion.WebApi.Controllers.v1;
-
-namespace MyOnion.WebApi.Tests.Controllers;
+﻿namespace MyOnion.WebApi.Tests.Controllers;
 
 public class PositionsControllerTests
 {

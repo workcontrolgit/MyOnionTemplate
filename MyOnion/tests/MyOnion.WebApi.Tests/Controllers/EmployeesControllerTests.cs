@@ -1,20 +1,4 @@
-using FluentAssertions;
-using MediatR;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.DependencyInjection;
-using Moq;
-using MyOnion.Application.Common.Results;
-using MyOnion.Application.Features.Employees.Commands.CreateEmployee;
-using MyOnion.Application.Features.Employees.Commands.DeleteEmployeeById;
-using MyOnion.Application.Features.Employees.Commands.UpdateEmployee;
-using MyOnion.Application.Features.Employees.Queries.GetEmployeeById;
-using MyOnion.Application.Features.Employees.Queries.GetEmployees;
-using MyOnion.Application.Parameters;
-using MyOnion.Domain.Entities;
-using MyOnion.WebApi.Controllers.v1;
-
-namespace MyOnion.WebApi.Tests.Controllers;
+﻿namespace MyOnion.WebApi.Tests.Controllers;
 
 public class EmployeesControllerTests
 {

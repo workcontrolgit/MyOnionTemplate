@@ -1,19 +1,4 @@
-using FluentAssertions;
-using MediatR;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.DependencyInjection;
-using Moq;
-using MyOnion.Application.Common.Results;
-using MyOnion.Application.Features.SalaryRanges.Commands.CreateSalaryRange;
-using MyOnion.Application.Features.SalaryRanges.Commands.UpdateSalaryRange;
-using MyOnion.Application.Features.SalaryRanges.Queries.GetSalaryRangeById;
-using MyOnion.Application.Features.SalaryRanges.Queries.GetSalaryRanges;
-using MyOnion.Application.Parameters;
-using MyOnion.Domain.Entities;
-using MyOnion.WebApi.Controllers.v1;
-
-namespace MyOnion.WebApi.Tests.Controllers;
+﻿namespace MyOnion.WebApi.Tests.Controllers;
 
 public class SalaryRangesControllerTests
 {

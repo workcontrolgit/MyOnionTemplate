@@ -1,11 +1,4 @@
-using FluentAssertions;
-using Moq;
-using MyOnion.Application.Exceptions;
-using MyOnion.Application.Features.Positions.Commands.DeletePositionById;
-using MyOnion.Application.Interfaces.Repositories;
-using MyOnion.Domain.Entities;
-
-namespace MyOnion.Application.Tests.Positions;
+﻿namespace MyOnion.Application.Tests.Positions;
 
 public class DeletePositionByIdCommandHandlerTests
 {

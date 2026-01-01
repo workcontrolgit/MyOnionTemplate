@@ -1,13 +1,4 @@
-using FluentAssertions;
-using Moq;
-using MyOnion.Application.Features.Positions.DTOs;
-using MyOnion.Application.Features.Positions.Queries.GetPositions;
-using MyOnion.Application.Interfaces;
-using MyOnion.Application.Interfaces.Repositories;
-using MyOnion.Application.Parameters;
-using MyOnion.Domain.Entities;
-
-namespace MyOnion.Application.Tests.Positions;
+﻿namespace MyOnion.Application.Tests.Positions;
 
 public class GetPositionsQueryHandlerTests
 {

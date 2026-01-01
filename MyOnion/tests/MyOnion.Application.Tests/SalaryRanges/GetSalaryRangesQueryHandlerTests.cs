@@ -1,12 +1,4 @@
-using FluentAssertions;
-using Moq;
-using MyOnion.Application.Features.SalaryRanges.Queries.GetSalaryRanges;
-using MyOnion.Application.Interfaces;
-using MyOnion.Application.Interfaces.Repositories;
-using MyOnion.Application.Parameters;
-using MyOnion.Domain.Entities;
-
-namespace MyOnion.Application.Tests.SalaryRanges;
+﻿namespace MyOnion.Application.Tests.SalaryRanges;
 
 public class GetSalaryRangesQueryHandlerTests
 {

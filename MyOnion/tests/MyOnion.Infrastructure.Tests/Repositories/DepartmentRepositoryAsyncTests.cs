@@ -1,14 +1,4 @@
-using FluentAssertions;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Logging;
-using MyOnion.Application.Features.Departments.Queries.GetDepartments;
-using MyOnion.Application.Helpers;
-using MyOnion.Infrastructure.Persistence.Contexts;
-using MyOnion.Infrastructure.Persistence.Repositories;
-using MyOnion.Infrastructure.Shared.Services;
-using MyOnion.Domain.Entities;
-
-namespace MyOnion.Infrastructure.Tests.Repositories;
+﻿namespace MyOnion.Infrastructure.Tests.Repositories;
 
 public class DepartmentRepositoryAsyncTests : IDisposable
 {

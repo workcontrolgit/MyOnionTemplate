@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
-VisualStudioVersion = 17.14.36811.4 d17.14
+VisualStudioVersion = 17.14.36811.4
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Presentation", "Presentation", "{02EA681E-C7D8-13C7-8484-4AC65E1B71E8}"
 EndProject
@@ -25,10 +25,10 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		MyOnion\docs\DataShapingUpgradePlan.md = MyOnion\docs\DataShapingUpgradePlan.md
 		MyOnion\docs\EndpointTimingPlan.md = MyOnion\docs\EndpointTimingPlan.md
 		MyOnion\docs\TestingPlans\Positions-Unit-Testing.md = MyOnion\docs\TestingPlans\Positions-Unit-Testing.md
-		MyOnion\docs\TestingPlans\TestCoverage100Plan.md = MyOnion\docs\TestingPlans\TestCoverage100Plan.md
 		MyOnion\README.md = MyOnion\README.md
 		MyOnion\docs\Result Pattern.md = MyOnion\docs\Result Pattern.md
 		MyOnion\docs\SpecificationUpgradePlan.md = MyOnion\docs\SpecificationUpgradePlan.md
+		MyOnion\docs\TestingPlans\TestCoverage100Plan.md = MyOnion\docs\TestingPlans\TestCoverage100Plan.md
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{DB82AE70-76E5-D76A-C66A-5F02FE794F50}"
@@ -38,6 +38,11 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MyOnion.Infrastructure.Tests", "MyOnion\tests\MyOnion.Infrastructure.Tests\MyOnion.Infrastructure.Tests.csproj", "{259DDF53-EAE0-4A3A-9E9E-464A4F148C93}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MyOnion.WebApi.Tests", "MyOnion\tests\MyOnion.WebApi.Tests\MyOnion.WebApi.Tests.csproj", "{D123FCB2-AA53-45E7-88B8-C81104C57F4C}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Scripts", "Scripts", "{970105CD-17A1-432B-9380-266245D30F44}"
+	ProjectSection(SolutionItems) = preProject
+		MyOnion\scripts\Build-OnionTemplate.ps1 = MyOnion\scripts\Build-OnionTemplate.ps1
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -158,6 +163,7 @@ Global
 		{795F5FF7-D863-4F17-8724-AF63171D062B} = {DB82AE70-76E5-D76A-C66A-5F02FE794F50}
 		{259DDF53-EAE0-4A3A-9E9E-464A4F148C93} = {DB82AE70-76E5-D76A-C66A-5F02FE794F50}
 		{D123FCB2-AA53-45E7-88B8-C81104C57F4C} = {DB82AE70-76E5-D76A-C66A-5F02FE794F50}
+		{970105CD-17A1-432B-9380-266245D30F44} = {8EC462FD-D22E-90A8-E5CE-7E832BA40C5D}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {1E08DDF8-AD1A-431B-A227-0D56CEC880E1}

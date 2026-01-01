@@ -1,12 +1,4 @@
-using FluentAssertions;
-using Moq;
-using MyOnion.Application.Features.Departments.Queries.GetDepartments;
-using MyOnion.Application.Interfaces;
-using MyOnion.Application.Interfaces.Repositories;
-using MyOnion.Application.Parameters;
-using MyOnion.Domain.Entities;
-
-namespace MyOnion.Application.Tests.Departments;
+﻿namespace MyOnion.Application.Tests.Departments;
 
 public class GetDepartmentsQueryHandlerTests
 {

@@ -1,11 +1,4 @@
-using FluentAssertions;
-using Moq;
-using MyOnion.Application.Exceptions;
-using MyOnion.Application.Features.Departments.Commands.UpdateDepartment;
-using MyOnion.Application.Interfaces.Repositories;
-using MyOnion.Domain.Entities;
-
-namespace MyOnion.Application.Tests.Departments;
+﻿namespace MyOnion.Application.Tests.Departments;
 
 public class UpdateDepartmentCommandHandlerTests
 {

@@ -1,11 +1,4 @@
-using AutoMapper;
-using FluentAssertions;
-using Moq;
-using MyOnion.Application.Features.Employees.Commands.CreateEmployee;
-using MyOnion.Application.Interfaces.Repositories;
-using MyOnion.Domain.Entities;
-
-namespace MyOnion.Application.Tests.Employees;
+﻿namespace MyOnion.Application.Tests.Employees;
 
 public class CreateEmployeeCommandHandlerTests
 {

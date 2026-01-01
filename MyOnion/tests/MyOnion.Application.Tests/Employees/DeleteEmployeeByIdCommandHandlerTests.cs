@@ -1,11 +1,4 @@
-using FluentAssertions;
-using Moq;
-using MyOnion.Application.Exceptions;
-using MyOnion.Application.Features.Employees.Commands.DeleteEmployeeById;
-using MyOnion.Application.Interfaces.Repositories;
-using MyOnion.Domain.Entities;
-
-namespace MyOnion.Application.Tests.Employees;
+﻿namespace MyOnion.Application.Tests.Employees;
 
 public class DeleteEmployeeByIdCommandHandlerTests
 {

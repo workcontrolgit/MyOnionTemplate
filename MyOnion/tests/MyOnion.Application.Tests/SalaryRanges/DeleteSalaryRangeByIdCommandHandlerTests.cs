@@ -1,11 +1,4 @@
-using FluentAssertions;
-using Moq;
-using MyOnion.Application.Exceptions;
-using MyOnion.Application.Features.SalaryRanges.Commands.DeleteSalaryRangeById;
-using MyOnion.Application.Interfaces.Repositories;
-using MyOnion.Domain.Entities;
-
-namespace MyOnion.Application.Tests.SalaryRanges;
+﻿namespace MyOnion.Application.Tests.SalaryRanges;
 
 public class DeleteSalaryRangeByIdCommandHandlerTests
 {

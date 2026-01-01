@@ -1,12 +1,4 @@
-using FluentAssertions;
-using Moq;
-using MyOnion.Application.Features.Employees.Queries.GetEmployees;
-using MyOnion.Application.Interfaces;
-using MyOnion.Application.Interfaces.Repositories;
-using MyOnion.Application.Parameters;
-using MyOnion.Domain.Entities;
-
-namespace MyOnion.Application.Tests.Employees;
+﻿namespace MyOnion.Application.Tests.Employees;
 
 public class GetEmployeesQueryHandlerTests
 {

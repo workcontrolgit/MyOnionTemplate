@@ -1,14 +1,4 @@
-using FluentAssertions;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Logging;
-using MyOnion.Application.Features.SalaryRanges.Queries.GetSalaryRanges;
-using MyOnion.Application.Helpers;
-using MyOnion.Domain.Entities;
-using MyOnion.Infrastructure.Persistence.Contexts;
-using MyOnion.Infrastructure.Persistence.Repositories;
-using MyOnion.Infrastructure.Shared.Services;
-
-namespace MyOnion.Infrastructure.Tests.Repositories;
+﻿namespace MyOnion.Infrastructure.Tests.Repositories;
 
 public class SalaryRangeRepositoryAsyncTests : IDisposable
 {

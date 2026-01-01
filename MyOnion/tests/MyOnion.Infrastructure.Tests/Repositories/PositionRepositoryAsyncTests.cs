@@ -1,18 +1,4 @@
-using FluentAssertions;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Logging;
-using Moq;
-using MyOnion.Application.Features.Positions.Queries.GetPositions;
-using MyOnion.Application.Helpers;
-using MyOnion.Application.Interfaces;
-using MyOnion.Application.Interfaces.Repositories;
-using MyOnion.Application.Parameters;
-using MyOnion.Domain.Entities;
-using MyOnion.Infrastructure.Persistence.Contexts;
-using MyOnion.Infrastructure.Persistence.Repositories;
-using MyOnion.Infrastructure.Shared.Services;
-
-namespace MyOnion.Infrastructure.Tests.Repositories;
+﻿namespace MyOnion.Infrastructure.Tests.Repositories;
 
 public class PositionRepositoryAsyncTests : IDisposable
 {
