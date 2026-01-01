@@ -1,13 +1,13 @@
 ﻿namespace MyOnion.WebApi.Tests.Controllers;
 
-public class PositionsControllerTests
+public class DepartmentsControllerTests
 {
     private readonly Mock<IMediator> _mediatorMock = new();
-    private readonly PositionsController _controller;
+    private readonly DepartmentsController _controller;
 
-    public PositionsControllerTests()
+    public DepartmentsControllerTests()
     {
-        _controller = new PositionsController();
+        _controller = new DepartmentsController();
         var services = new ServiceCollection();
         services.AddSingleton(_mediatorMock.Object);
         _controller.ControllerContext = new ControllerContext
@@ -20,11 +20,11 @@ public class PositionsControllerTests
     }
 
     [Fact]
-    public async Task Get_ShouldReturnOkResultWithPagedData()
+    public async Task Get_ShouldReturnOkResultWithPagedDepartments()
     {
-        var query = new GetPositionsQuery { PageNumber = 1, PageSize = 10 };
+        var query = new GetDepartmentsQuery { PageNumber = 1, PageSize = 10 };
         var payload = PagedResult<IEnumerable<Entity>>.Success(new List<Entity> { new() }, 1, 10, new RecordsCount { RecordsFiltered = 1, RecordsTotal = 1 });
-        _mediatorMock.Setup(m => m.Send(It.IsAny<GetPositionsQuery>(), It.IsAny<CancellationToken>())).ReturnsAsync(payload);
+        _mediatorMock.Setup(m => m.Send(It.IsAny<GetDepartmentsQuery>(), It.IsAny<CancellationToken>())).ReturnsAsync(payload);
 
         var result = await _controller.Get(query);
 
@@ -34,17 +34,9 @@ public class PositionsControllerTests
     }
 
     [Fact]
-    public async Task Post_ShouldInvokeMediatorWithCommand()
+    public async Task Post_ShouldReturnCreatedResult()
     {
-        var command = new CreatePositionCommand
-        {
-            PositionNumber = "PRD-001",
-            PositionTitle = "Product Manager",
-            PositionDescription = "Leads product",
-            DepartmentId = Guid.NewGuid(),
-            SalaryRangeId = Guid.NewGuid()
-        };
-
+        var command = new CreateDepartmentCommand { Name = "Finance" };
         var response = Result<Guid>.Success(Guid.NewGuid());
         _mediatorMock.Setup(m => m.Send(command, It.IsAny<CancellationToken>())).ReturnsAsync(response);
 
@@ -54,5 +46,19 @@ public class PositionsControllerTests
         created.Should().NotBeNull();
         created!.Value.Should().Be(response);
         _mediatorMock.Verify(m => m.Send(command, It.IsAny<CancellationToken>()), Times.Once);
+    }
+
+    [Fact]
+    public async Task GetById_ShouldForwardQueryToMediator()
+    {
+        var id = Guid.NewGuid();
+        var response = Result<Department>.Success(new Department { Id = id, Name = "HR" });
+        _mediatorMock.Setup(m => m.Send(It.Is<GetDepartmentByIdQuery>(q => q.Id == id), It.IsAny<CancellationToken>())).ReturnsAsync(response);
+
+        var result = await _controller.Get(id);
+
+        var okResult = result as OkObjectResult;
+        okResult.Should().NotBeNull();
+        okResult!.Value.Should().Be(response);
     }
 }

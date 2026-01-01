@@ -1,18 +1,4 @@
-using FluentAssertions;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Logging;
-using Moq;
-using MyOnion.Application.Features.Positions.Queries.GetPositions;
-using MyOnion.Application.Helpers;
-using MyOnion.Application.Interfaces;
-using MyOnion.Application.Interfaces.Repositories;
-using MyOnion.Application.Parameters;
-using MyOnion.Domain.Entities;
-using MyOnion.Infrastructure.Persistence.Contexts;
-using MyOnion.Infrastructure.Persistence.Repositories;
-using MyOnion.Infrastructure.Shared.Services;
-
-namespace MyOnion.Infrastructure.Tests.Repositories;
+﻿namespace MyOnion.Infrastructure.Tests.Repositories;
 
 public class PositionRepositoryAsyncTests : IDisposable
 {
@@ -84,6 +70,48 @@ public class PositionRepositoryAsyncTests : IDisposable
         data.Should().HaveCount(1);
         data.First()["PositionTitle"].Should().Be("QA Engineer");
         count.Should().BeEquivalentTo(new RecordsCount { RecordsFiltered = 1, RecordsTotal = 1 });
+    }
+
+    [Fact]
+    public async Task UpdateAsync_ShouldPersistChanges()
+    {
+        var position = new Position
+        {
+            Id = Guid.NewGuid(),
+            PositionNumber = "ENG-02",
+            PositionTitle = "Engineer",
+            PositionDescription = "Builds",
+            DepartmentId = Guid.NewGuid(),
+            SalaryRangeId = Guid.NewGuid()
+        };
+        _context.Positions.Add(position);
+        await _context.SaveChangesAsync();
+
+        position.PositionTitle = "Senior Engineer";
+        await _repository.UpdateAsync(position);
+
+        var updated = await _context.Positions.FindAsync(position.Id);
+        updated!.PositionTitle.Should().Be("Senior Engineer");
+    }
+
+    [Fact]
+    public async Task DeleteAsync_ShouldRemoveEntity()
+    {
+        var position = new Position
+        {
+            Id = Guid.NewGuid(),
+            PositionNumber = "ENG-03",
+            PositionTitle = "Engineer",
+            PositionDescription = "Builds",
+            DepartmentId = Guid.NewGuid(),
+            SalaryRangeId = Guid.NewGuid()
+        };
+        _context.Positions.Add(position);
+        await _context.SaveChangesAsync();
+
+        await _repository.DeleteAsync(position);
+
+        (await _context.Positions.FindAsync(position.Id)).Should().BeNull();
     }
 
     public void Dispose()
