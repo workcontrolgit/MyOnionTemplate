@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 17
-VisualStudioVersion = 17.14.36811.4
+# Visual Studio Version 18
+VisualStudioVersion = 18.1.11312.151 d18.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Presentation", "Presentation", "{02EA681E-C7D8-13C7-8484-4AC65E1B71E8}"
 EndProject
@@ -42,6 +42,7 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Scripts", "Scripts", "{970105CD-17A1-432B-9380-266245D30F44}"
 	ProjectSection(SolutionItems) = preProject
 		MyOnion\scripts\Build-OnionTemplate.ps1 = MyOnion\scripts\Build-OnionTemplate.ps1
+		MyOnion\scripts\Install-OnionTemplateLocally.ps1 = MyOnion\scripts\Install-OnionTemplateLocally.ps1
 	EndProjectSection
 EndProject
 Global

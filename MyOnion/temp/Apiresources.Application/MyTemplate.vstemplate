@@ -1,0 +1,194 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<VSTemplate Version="3.0.0" Type="Project" xmlns="http://schemas.microsoft.com/developer/vstemplate/2005">
+  <TemplateData>
+    <Name>Apiresources.Application</Name>
+    <Description>Application layer: CQRS, DTOs, validation, and MediatR behaviours.</Description>
+    <ProjectType>CSharp</ProjectType>
+    <SortOrder>1000</SortOrder>
+    <CreateNewFolder>true</CreateNewFolder>
+    <DefaultName>Apiresources.Application</DefaultName>
+    <ProvideDefaultName>true</ProvideDefaultName>
+    <LocationField>Enabled</LocationField>
+    <EnableLocationBrowseButton>true</EnableLocationBrowseButton>
+    <CreateInPlace>true</CreateInPlace>
+  </TemplateData>
+  <TemplateContent>
+    <Project TargetFileName="Apiresources.Application.csproj" File="Apiresources.Application.csproj" ReplaceParameters="true">
+      <Folder Name="Behaviours" TargetFolderName="Behaviours">
+        <ProjectItem ReplaceParameters="true" TargetFileName="ValidationBehaviour.cs">ValidationBehaviour.cs</ProjectItem>
+      </Folder>
+      <Folder Name="Common" TargetFolderName="Common">
+        <Folder Name="Results" TargetFolderName="Results">
+          <ProjectItem ReplaceParameters="true" TargetFileName="PagedDataTableResult.cs">PagedDataTableResult.cs</ProjectItem>
+          <ProjectItem ReplaceParameters="true" TargetFileName="PagedResult.cs">PagedResult.cs</ProjectItem>
+          <ProjectItem ReplaceParameters="true" TargetFileName="Result.cs">Result.cs</ProjectItem>
+        </Folder>
+      </Folder>
+      <Folder Name="Documentation" TargetFolderName="Documentation">
+        <ProjectItem ReplaceParameters="true" TargetFileName="DTO-Structure.md">DTO-Structure.md</ProjectItem>
+      </Folder>
+      <Folder Name="DTOs" TargetFolderName="DTOs">
+        <Folder Name="Email" TargetFolderName="Email">
+          <ProjectItem ReplaceParameters="true" TargetFileName="EmailRequest.cs">EmailRequest.cs</ProjectItem>
+        </Folder>
+      </Folder>
+      <Folder Name="Enums" TargetFolderName="Enums">
+        <ProjectItem ReplaceParameters="true" TargetFileName="Roles.cs">Roles.cs</ProjectItem>
+      </Folder>
+      <Folder Name="Exceptions" TargetFolderName="Exceptions">
+        <ProjectItem ReplaceParameters="true" TargetFileName="ApiException.cs">ApiException.cs</ProjectItem>
+        <ProjectItem ReplaceParameters="true" TargetFileName="ValidationException.cs">ValidationException.cs</ProjectItem>
+      </Folder>
+      <Folder Name="Features" TargetFolderName="Features">
+        <Folder Name="Departments" TargetFolderName="Departments">
+          <Folder Name="Commands" TargetFolderName="Commands">
+            <Folder Name="CreateDepartment" TargetFolderName="CreateDepartment">
+              <ProjectItem ReplaceParameters="true" TargetFileName="CreateDepartmentCommand.cs">CreateDepartmentCommand.cs</ProjectItem>
+              <ProjectItem ReplaceParameters="true" TargetFileName="CreateDepartmentCommandValidator.cs">CreateDepartmentCommandValidator.cs</ProjectItem>
+            </Folder>
+            <Folder Name="DeleteDepartmentById" TargetFolderName="DeleteDepartmentById">
+              <ProjectItem ReplaceParameters="true" TargetFileName="DeleteDepartmentByIdCommand.cs">DeleteDepartmentByIdCommand.cs</ProjectItem>
+            </Folder>
+            <Folder Name="UpdateDepartment" TargetFolderName="UpdateDepartment">
+              <ProjectItem ReplaceParameters="true" TargetFileName="UpdateDepartmentCommand.cs">UpdateDepartmentCommand.cs</ProjectItem>
+              <ProjectItem ReplaceParameters="true" TargetFileName="UpdateDepartmentCommandValidator.cs">UpdateDepartmentCommandValidator.cs</ProjectItem>
+            </Folder>
+          </Folder>
+          <Folder Name="Queries" TargetFolderName="Queries">
+            <Folder Name="GetDepartmentById" TargetFolderName="GetDepartmentById">
+              <ProjectItem ReplaceParameters="true" TargetFileName="GetDepartmentByIdQuery.cs">GetDepartmentByIdQuery.cs</ProjectItem>
+            </Folder>
+            <Folder Name="GetDepartments" TargetFolderName="GetDepartments">
+              <ProjectItem ReplaceParameters="true" TargetFileName="GetDepartmentsQuery.cs">GetDepartmentsQuery.cs</ProjectItem>
+              <ProjectItem ReplaceParameters="true" TargetFileName="GetDepartmentsViewModel.cs">GetDepartmentsViewModel.cs</ProjectItem>
+            </Folder>
+          </Folder>
+        </Folder>
+        <Folder Name="Employees" TargetFolderName="Employees">
+          <Folder Name="Commands" TargetFolderName="Commands">
+            <Folder Name="CreateEmployee" TargetFolderName="CreateEmployee">
+              <ProjectItem ReplaceParameters="true" TargetFileName="CreateEmployeeCommand.cs">CreateEmployeeCommand.cs</ProjectItem>
+              <ProjectItem ReplaceParameters="true" TargetFileName="CreateEmployeeCommandValidator.cs">CreateEmployeeCommandValidator.cs</ProjectItem>
+            </Folder>
+            <Folder Name="DeleteEmployeeById" TargetFolderName="DeleteEmployeeById">
+              <ProjectItem ReplaceParameters="true" TargetFileName="DeleteEmployeeByIdCommand.cs">DeleteEmployeeByIdCommand.cs</ProjectItem>
+            </Folder>
+            <Folder Name="UpdateEmployee" TargetFolderName="UpdateEmployee">
+              <ProjectItem ReplaceParameters="true" TargetFileName="UpdateEmployeeCommand.cs">UpdateEmployeeCommand.cs</ProjectItem>
+              <ProjectItem ReplaceParameters="true" TargetFileName="UpdateEmployeeCommandValidator.cs">UpdateEmployeeCommandValidator.cs</ProjectItem>
+            </Folder>
+          </Folder>
+          <Folder Name="Queries" TargetFolderName="Queries">
+            <Folder Name="GetEmployeeById" TargetFolderName="GetEmployeeById">
+              <ProjectItem ReplaceParameters="true" TargetFileName="GetEmployeeByIdQuery.cs">GetEmployeeByIdQuery.cs</ProjectItem>
+            </Folder>
+            <Folder Name="GetEmployees" TargetFolderName="GetEmployees">
+              <ProjectItem ReplaceParameters="true" TargetFileName="GetEmployeesQuery.cs">GetEmployeesQuery.cs</ProjectItem>
+              <ProjectItem ReplaceParameters="true" TargetFileName="GetEmployeesViewModel.cs">GetEmployeesViewModel.cs</ProjectItem>
+              <ProjectItem ReplaceParameters="true" TargetFileName="PagedEmployeesQuery.cs">PagedEmployeesQuery.cs</ProjectItem>
+            </Folder>
+          </Folder>
+        </Folder>
+        <Folder Name="Positions" TargetFolderName="Positions">
+          <Folder Name="Commands" TargetFolderName="Commands">
+            <Folder Name="CreatePosition" TargetFolderName="CreatePosition">
+              <ProjectItem ReplaceParameters="true" TargetFileName="CreatePositionCommand.cs">CreatePositionCommand.cs</ProjectItem>
+              <ProjectItem ReplaceParameters="true" TargetFileName="CreatePositionCommandValidator.cs">CreatePositionCommandValidator.cs</ProjectItem>
+              <ProjectItem ReplaceParameters="true" TargetFileName="InsertMockPositionCommand.cs">InsertMockPositionCommand.cs</ProjectItem>
+            </Folder>
+            <Folder Name="DeletePositionById" TargetFolderName="DeletePositionById">
+              <ProjectItem ReplaceParameters="true" TargetFileName="DeletePositionByIdCommand.cs">DeletePositionByIdCommand.cs</ProjectItem>
+            </Folder>
+            <Folder Name="UpdatePosition" TargetFolderName="UpdatePosition">
+              <ProjectItem ReplaceParameters="true" TargetFileName="UpdatePositionCommand.cs">UpdatePositionCommand.cs</ProjectItem>
+              <ProjectItem ReplaceParameters="true" TargetFileName="UpdatePositionCommandValidator.cs">UpdatePositionCommandValidator.cs</ProjectItem>
+            </Folder>
+          </Folder>
+          <Folder Name="DTOs" TargetFolderName="DTOs">
+            <ProjectItem ReplaceParameters="true" TargetFileName="PositionSummaryDto.cs">PositionSummaryDto.cs</ProjectItem>
+          </Folder>
+          <Folder Name="Queries" TargetFolderName="Queries">
+            <Folder Name="GetPositionById" TargetFolderName="GetPositionById">
+              <ProjectItem ReplaceParameters="true" TargetFileName="GetPositionByIdQuery.cs">GetPositionByIdQuery.cs</ProjectItem>
+            </Folder>
+            <Folder Name="GetPositions" TargetFolderName="GetPositions">
+              <ProjectItem ReplaceParameters="true" TargetFileName="GetPositionsQuery.cs">GetPositionsQuery.cs</ProjectItem>
+            </Folder>
+          </Folder>
+        </Folder>
+        <Folder Name="SalaryRanges" TargetFolderName="SalaryRanges">
+          <Folder Name="Commands" TargetFolderName="Commands">
+            <Folder Name="CreateSalaryRange" TargetFolderName="CreateSalaryRange">
+              <ProjectItem ReplaceParameters="true" TargetFileName="CreateSalaryRangeCommand.cs">CreateSalaryRangeCommand.cs</ProjectItem>
+              <ProjectItem ReplaceParameters="true" TargetFileName="CreateSalaryRangeCommandValidator.cs">CreateSalaryRangeCommandValidator.cs</ProjectItem>
+            </Folder>
+            <Folder Name="DeleteSalaryRangeById" TargetFolderName="DeleteSalaryRangeById">
+              <ProjectItem ReplaceParameters="true" TargetFileName="DeleteSalaryRangeByIdCommand.cs">DeleteSalaryRangeByIdCommand.cs</ProjectItem>
+            </Folder>
+            <Folder Name="UpdateSalaryRange" TargetFolderName="UpdateSalaryRange">
+              <ProjectItem ReplaceParameters="true" TargetFileName="UpdateSalaryRangeCommand.cs">UpdateSalaryRangeCommand.cs</ProjectItem>
+              <ProjectItem ReplaceParameters="true" TargetFileName="UpdateSalaryRangeCommandValidator.cs">UpdateSalaryRangeCommandValidator.cs</ProjectItem>
+            </Folder>
+          </Folder>
+          <Folder Name="Queries" TargetFolderName="Queries">
+            <Folder Name="GetSalaryRangeById" TargetFolderName="GetSalaryRangeById">
+              <ProjectItem ReplaceParameters="true" TargetFileName="GetSalaryRangeByIdQuery.cs">GetSalaryRangeByIdQuery.cs</ProjectItem>
+            </Folder>
+            <Folder Name="GetSalaryRanges" TargetFolderName="GetSalaryRanges">
+              <ProjectItem ReplaceParameters="true" TargetFileName="GetSalaryRangesQuery.cs">GetSalaryRangesQuery.cs</ProjectItem>
+              <ProjectItem ReplaceParameters="true" TargetFileName="GetSalaryRangesViewModel.cs">GetSalaryRangesViewModel.cs</ProjectItem>
+            </Folder>
+          </Folder>
+        </Folder>
+      </Folder>
+      <Folder Name="Helpers" TargetFolderName="Helpers">
+        <ProjectItem ReplaceParameters="true" TargetFileName="DataShapeHelper.cs">DataShapeHelper.cs</ProjectItem>
+        <ProjectItem ReplaceParameters="true" TargetFileName="ModelHelper.cs">ModelHelper.cs</ProjectItem>
+      </Folder>
+      <Folder Name="Interfaces" TargetFolderName="Interfaces">
+        <Folder Name="Repositories" TargetFolderName="Repositories">
+          <ProjectItem ReplaceParameters="true" TargetFileName="IDepartmentRepositoryAsync.cs">IDepartmentRepositoryAsync.cs</ProjectItem>
+          <ProjectItem ReplaceParameters="true" TargetFileName="IEmployeeRepositoryAsync.cs">IEmployeeRepositoryAsync.cs</ProjectItem>
+          <ProjectItem ReplaceParameters="true" TargetFileName="IPositionRepositoryAsync.cs">IPositionRepositoryAsync.cs</ProjectItem>
+          <ProjectItem ReplaceParameters="true" TargetFileName="ISalaryRangeRepositoryAsync.cs">ISalaryRangeRepositoryAsync.cs</ProjectItem>
+        </Folder>
+        <ProjectItem ReplaceParameters="true" TargetFileName="IDataShapeHelper.cs">IDataShapeHelper.cs</ProjectItem>
+        <ProjectItem ReplaceParameters="true" TargetFileName="IDateTimeService.cs">IDateTimeService.cs</ProjectItem>
+        <ProjectItem ReplaceParameters="true" TargetFileName="IEmailService.cs">IEmailService.cs</ProjectItem>
+        <ProjectItem ReplaceParameters="true" TargetFileName="IGenericRepositoryAsync.cs">IGenericRepositoryAsync.cs</ProjectItem>
+        <ProjectItem ReplaceParameters="true" TargetFileName="IMockService.cs">IMockService.cs</ProjectItem>
+        <ProjectItem ReplaceParameters="true" TargetFileName="IModelHelper.cs">IModelHelper.cs</ProjectItem>
+      </Folder>
+      <Folder Name="Mappings" TargetFolderName="Mappings">
+        <ProjectItem ReplaceParameters="true" TargetFileName="GeneralProfile.cs">GeneralProfile.cs</ProjectItem>
+      </Folder>
+      <Folder Name="Parameters" TargetFolderName="Parameters">
+        <ProjectItem ReplaceParameters="true" TargetFileName="Column.cs">Column.cs</ProjectItem>
+        <ProjectItem ReplaceParameters="true" TargetFileName="ListParameter.cs">ListParameter.cs</ProjectItem>
+        <ProjectItem ReplaceParameters="true" TargetFileName="PagingParameter.cs">PagingParameter.cs</ProjectItem>
+        <ProjectItem ReplaceParameters="true" TargetFileName="QueryParameter.cs">QueryParameter.cs</ProjectItem>
+        <ProjectItem ReplaceParameters="true" TargetFileName="RecordsCount.cs">RecordsCount.cs</ProjectItem>
+        <ProjectItem ReplaceParameters="true" TargetFileName="Search.cs">Search.cs</ProjectItem>
+        <ProjectItem ReplaceParameters="true" TargetFileName="SortOrder.cs">SortOrder.cs</ProjectItem>
+      </Folder>
+      <Folder Name="Specifications" TargetFolderName="Specifications">
+        <Folder Name="Departments" TargetFolderName="Departments">
+          <ProjectItem ReplaceParameters="true" TargetFileName="DepartmentSpecifications.cs">DepartmentSpecifications.cs</ProjectItem>
+        </Folder>
+        <Folder Name="Employees" TargetFolderName="Employees">
+          <ProjectItem ReplaceParameters="true" TargetFileName="EmployeeSpecifications.cs">EmployeeSpecifications.cs</ProjectItem>
+        </Folder>
+        <Folder Name="Positions" TargetFolderName="Positions">
+          <ProjectItem ReplaceParameters="true" TargetFileName="PositionSpecifications.cs">PositionSpecifications.cs</ProjectItem>
+        </Folder>
+        <Folder Name="SalaryRanges" TargetFolderName="SalaryRanges">
+          <ProjectItem ReplaceParameters="true" TargetFileName="SalaryRangeSpecifications.cs">SalaryRangeSpecifications.cs</ProjectItem>
+        </Folder>
+        <ProjectItem ReplaceParameters="true" TargetFileName="BaseSpecification.cs">BaseSpecification.cs</ProjectItem>
+        <ProjectItem ReplaceParameters="true" TargetFileName="ISpecification.cs">ISpecification.cs</ProjectItem>
+      </Folder>
+      <ProjectItem ReplaceParameters="true" TargetFileName="GlobalUsings.cs">GlobalUsings.cs</ProjectItem>
+      <ProjectItem ReplaceParameters="true" TargetFileName="ServiceExtensions.cs">ServiceExtensions.cs</ProjectItem>
+    </Project>
+  </TemplateContent>
+</VSTemplate>

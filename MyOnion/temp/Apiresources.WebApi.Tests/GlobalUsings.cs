@@ -1,0 +1,25 @@
+﻿global using FluentAssertions;
+global using MediatR;
+global using Microsoft.AspNetCore.Http;
+global using Microsoft.AspNetCore.Mvc;
+global using Microsoft.Extensions.DependencyInjection;
+global using Moq;
+global using $ext_projectname$.Application.Common.Results;
+global using $ext_projectname$.Application.Features.Departments.Commands.CreateDepartment;
+global using $ext_projectname$.Application.Features.Departments.Queries.GetDepartmentById;
+global using $ext_projectname$.Application.Features.Departments.Queries.GetDepartments;
+global using $ext_projectname$.Application.Features.Employees.Commands.CreateEmployee;
+global using $ext_projectname$.Application.Features.Employees.Commands.DeleteEmployeeById;
+global using $ext_projectname$.Application.Features.Employees.Commands.UpdateEmployee;
+global using $ext_projectname$.Application.Features.Employees.Queries.GetEmployeeById;
+global using $ext_projectname$.Application.Features.Employees.Queries.GetEmployees;
+global using $ext_projectname$.Application.Features.Positions.Commands.CreatePosition;
+global using $ext_projectname$.Application.Features.Positions.Queries.GetPositions;
+global using $ext_projectname$.Application.Features.SalaryRanges.Commands.CreateSalaryRange;
+global using $ext_projectname$.Application.Features.SalaryRanges.Commands.UpdateSalaryRange;
+global using $ext_projectname$.Application.Features.SalaryRanges.Queries.GetSalaryRangeById;
+global using $ext_projectname$.Application.Features.SalaryRanges.Queries.GetSalaryRanges;
+global using $ext_projectname$.Application.Parameters;
+global using MyOnion.Domain.Entities;
+global using $ext_projectname$.WebApi.Controllers.v1;
+

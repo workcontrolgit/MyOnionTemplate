@@ -1,0 +1,38 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<VSTemplate Version="3.0.0" Type="Project" xmlns="http://schemas.microsoft.com/developer/vstemplate/2005">
+  <TemplateData>
+    <Name>Apiresources.Infrastructure.Persistence</Name>
+    <Description>EF Core DbContext, repositories, and migrations.</Description>
+    <ProjectType>CSharp</ProjectType>
+    <SortOrder>1000</SortOrder>
+    <CreateNewFolder>true</CreateNewFolder>
+    <DefaultName>Apiresources.Infrastructure.Persistence</DefaultName>
+    <ProvideDefaultName>true</ProvideDefaultName>
+    <LocationField>Enabled</LocationField>
+    <EnableLocationBrowseButton>true</EnableLocationBrowseButton>
+    <CreateInPlace>true</CreateInPlace>
+  </TemplateData>
+  <TemplateContent>
+    <Project TargetFileName="Apiresources.Infrastructure.Persistence.csproj" File="Apiresources.Infrastructure.Persistence.csproj" ReplaceParameters="true">
+      <Folder Name="Contexts" TargetFolderName="Contexts">
+        <ProjectItem ReplaceParameters="true" TargetFileName="ApplicationDbContext.cs">ApplicationDbContext.cs</ProjectItem>
+        <ProjectItem ReplaceParameters="true" TargetFileName="ApplicationDbContextHelpers.cs">ApplicationDbContextHelpers.cs</ProjectItem>
+      </Folder>
+      <Folder Name="Repositories" TargetFolderName="Repositories">
+        <ProjectItem ReplaceParameters="true" TargetFileName="DepartmentRepositoryAsync.cs">DepartmentRepositoryAsync.cs</ProjectItem>
+        <ProjectItem ReplaceParameters="true" TargetFileName="EmployeeRepositoryAsync.cs">EmployeeRepositoryAsync.cs</ProjectItem>
+        <ProjectItem ReplaceParameters="true" TargetFileName="GenericRepositoryAsync.cs">GenericRepositoryAsync.cs</ProjectItem>
+        <ProjectItem ReplaceParameters="true" TargetFileName="PositionRepositoryAsync.cs">PositionRepositoryAsync.cs</ProjectItem>
+        <ProjectItem ReplaceParameters="true" TargetFileName="SalaryRangeRepositoryAsync.cs">SalaryRangeRepositoryAsync.cs</ProjectItem>
+      </Folder>
+      <Folder Name="SeedData" TargetFolderName="SeedData">
+        <ProjectItem ReplaceParameters="true" TargetFileName="DbInitializer.cs">DbInitializer.cs</ProjectItem>
+      </Folder>
+      <Folder Name="Specifications" TargetFolderName="Specifications">
+        <ProjectItem ReplaceParameters="true" TargetFileName="SpecificationEvaluator.cs">SpecificationEvaluator.cs</ProjectItem>
+      </Folder>
+      <ProjectItem ReplaceParameters="true" TargetFileName="GlobalUsings.cs">GlobalUsings.cs</ProjectItem>
+      <ProjectItem ReplaceParameters="true" TargetFileName="ServiceRegistration.cs">ServiceRegistration.cs</ProjectItem>
+    </Project>
+  </TemplateContent>
+</VSTemplate>

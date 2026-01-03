@@ -1,0 +1,26 @@
+﻿global using AutoMapper;
+global using FluentAssertions;
+global using Moq;
+global using $ext_projectname$.Application.Exceptions;
+global using $ext_projectname$.Application.Features.Departments.Commands.CreateDepartment;
+global using $ext_projectname$.Application.Features.Departments.Commands.DeleteDepartmentById;
+global using $ext_projectname$.Application.Features.Departments.Commands.UpdateDepartment;
+global using $ext_projectname$.Application.Features.Departments.Queries.GetDepartments;
+global using $ext_projectname$.Application.Features.Employees.Commands.CreateEmployee;
+global using $ext_projectname$.Application.Features.Employees.Commands.DeleteEmployeeById;
+global using $ext_projectname$.Application.Features.Employees.Commands.UpdateEmployee;
+global using $ext_projectname$.Application.Features.Employees.Queries.GetEmployees;
+global using $ext_projectname$.Application.Features.Positions.Commands.CreatePosition;
+global using $ext_projectname$.Application.Features.Positions.Commands.DeletePositionById;
+global using $ext_projectname$.Application.Features.Positions.Commands.UpdatePosition;
+global using $ext_projectname$.Application.Features.Positions.DTOs;
+global using $ext_projectname$.Application.Features.Positions.Queries.GetPositions;
+global using $ext_projectname$.Application.Features.SalaryRanges.Commands.CreateSalaryRange;
+global using $ext_projectname$.Application.Features.SalaryRanges.Commands.DeleteSalaryRangeById;
+global using $ext_projectname$.Application.Features.SalaryRanges.Commands.UpdateSalaryRange;
+global using $ext_projectname$.Application.Features.SalaryRanges.Queries.GetSalaryRanges;
+global using $ext_projectname$.Application.Interfaces;
+global using $ext_projectname$.Application.Interfaces.Repositories;
+global using $ext_projectname$.Application.Parameters;
+global using $ext_projectname$.Domain.Entities;
+

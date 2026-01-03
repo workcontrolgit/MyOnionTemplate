@@ -1,0 +1,61 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<VSTemplate Version="3.0.0" Type="Project" xmlns="http://schemas.microsoft.com/developer/vstemplate/2005">
+  <TemplateData>
+    <Name>Apiresources.WebApi</Name>
+    <Description>ASP.NET Core Web API host, middleware, and configuration.</Description>
+    <ProjectType>CSharp</ProjectType>
+    <SortOrder>1000</SortOrder>
+    <CreateNewFolder>true</CreateNewFolder>
+    <DefaultName>Apiresources.WebApi</DefaultName>
+    <ProvideDefaultName>true</ProvideDefaultName>
+    <LocationField>Enabled</LocationField>
+    <EnableLocationBrowseButton>true</EnableLocationBrowseButton>
+    <CreateInPlace>true</CreateInPlace>
+  </TemplateData>
+  <TemplateContent>
+    <Project TargetFileName="Apiresources.WebApi.csproj" File="Apiresources.WebApi.csproj" ReplaceParameters="true">
+      <Folder Name="Common" TargetFolderName="Common">
+        <ProjectItem ReplaceParameters="true" TargetFileName="ExecutionTimingConstants.cs">ExecutionTimingConstants.cs</ProjectItem>
+      </Folder>
+      <Folder Name="Controllers" TargetFolderName="Controllers">
+        <Folder Name="v1" TargetFolderName="v1">
+          <ProjectItem ReplaceParameters="true" TargetFileName="DepartmentsController.cs">DepartmentsController.cs</ProjectItem>
+          <ProjectItem ReplaceParameters="true" TargetFileName="EmployeesController.cs">EmployeesController.cs</ProjectItem>
+          <ProjectItem ReplaceParameters="true" TargetFileName="PositionsController.cs">PositionsController.cs</ProjectItem>
+          <ProjectItem ReplaceParameters="true" TargetFileName="SalaryRangesController.cs">SalaryRangesController.cs</ProjectItem>
+        </Folder>
+        <ProjectItem ReplaceParameters="true" TargetFileName="BaseApiController.cs">BaseApiController.cs</ProjectItem>
+        <ProjectItem ReplaceParameters="true" TargetFileName="MetaController.cs">MetaController.cs</ProjectItem>
+      </Folder>
+      <Folder Name="Extensions" TargetFolderName="Extensions">
+        <ProjectItem ReplaceParameters="true" TargetFileName="AppExtensions.cs">AppExtensions.cs</ProjectItem>
+        <ProjectItem ReplaceParameters="true" TargetFileName="AuthorizationConsts.cs">AuthorizationConsts.cs</ProjectItem>
+        <ProjectItem ReplaceParameters="true" TargetFileName="ServiceExtensions.cs">ServiceExtensions.cs</ProjectItem>
+      </Folder>
+      <Folder Name="Filters" TargetFolderName="Filters">
+        <ProjectItem ReplaceParameters="true" TargetFileName="ExecutionTimeResultFilter.cs">ExecutionTimeResultFilter.cs</ProjectItem>
+      </Folder>
+      <Folder Name="Middlewares" TargetFolderName="Middlewares">
+        <ProjectItem ReplaceParameters="true" TargetFileName="ErrorHandlerMiddleware.cs">ErrorHandlerMiddleware.cs</ProjectItem>
+        <ProjectItem ReplaceParameters="true" TargetFileName="RequestTimingMiddleware.cs">RequestTimingMiddleware.cs</ProjectItem>
+      </Folder>
+      <Folder Name="Models" TargetFolderName="Models">
+        <ProjectItem ReplaceParameters="true" TargetFileName="Metadata.cs">Metadata.cs</ProjectItem>
+      </Folder>
+      <Folder Name="Options" TargetFolderName="Options">
+        <ProjectItem ReplaceParameters="true" TargetFileName="ExecutionTimingOptions.cs">ExecutionTimingOptions.cs</ProjectItem>
+      </Folder>
+      <Folder Name="Properties" TargetFolderName="Properties">
+        <Folder Name="PublishProfiles" TargetFolderName="PublishProfiles">
+          <ProjectItem ReplaceParameters="true" TargetFileName="FolderProfile.pubxml">FolderProfile.pubxml</ProjectItem>
+        </Folder>
+        <ProjectItem ReplaceParameters="true" TargetFileName="launchSettings.json">launchSettings.json</ProjectItem>
+      </Folder>
+      <ProjectItem ReplaceParameters="true" TargetFileName="appsettings.Development.json">appsettings.Development.json</ProjectItem>
+      <ProjectItem ReplaceParameters="true" TargetFileName="appsettings.json">appsettings.json</ProjectItem>
+      <ProjectItem ReplaceParameters="true" TargetFileName="GlobalUsings.cs">GlobalUsings.cs</ProjectItem>
+      <ProjectItem ReplaceParameters="true" TargetFileName="MyOnion.WebApi.xml">MyOnion.WebApi.xml</ProjectItem>
+      <ProjectItem ReplaceParameters="true" TargetFileName="Program.cs">Program.cs</ProjectItem>
+    </Project>
+  </TemplateContent>
+</VSTemplate>

@@ -1,0 +1,161 @@
+﻿<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>$safeprojectname$</name>
+    </assembly>
+    <members>
+        <member name="M:$safeprojectname$.Controllers.v1.DepartmentsController.Get($ext_projectname$.Application.Features.Departments.Queries.GetDepartments.GetDepartmentsQuery)">
+            <summary>
+            Gets a list of departments based on the specified filter.
+            </summary>
+            <param name="filter">The filter used to get the list of departments.</param>
+            <returns>A list of departments.</returns>
+        </member>
+        <member name="M:$safeprojectname$.Controllers.v1.DepartmentsController.Get(System.Guid)">
+            <summary>
+            Gets a single department by identifier.
+            </summary>
+            <param name="id">Department identifier.</param>
+        </member>
+        <member name="M:$safeprojectname$.Controllers.v1.DepartmentsController.Post($ext_projectname$.Application.Features.Departments.Commands.CreateDepartment.CreateDepartmentCommand)">
+            <summary>
+            Creates a new department.
+            </summary>
+            <param name="command">Department payload.</param>
+        </member>
+        <member name="M:$safeprojectname$.Controllers.v1.DepartmentsController.Put(System.Guid,$ext_projectname$.Application.Features.Departments.Commands.UpdateDepartment.UpdateDepartmentCommand)">
+            <summary>
+            Updates the specified department.
+            </summary>
+            <param name="id">Department identifier.</param>
+            <param name="command">Update payload.</param>
+        </member>
+        <member name="M:$safeprojectname$.Controllers.v1.DepartmentsController.Delete(System.Guid)">
+            <summary>
+            Deletes the specified department.
+            </summary>
+            <param name="id">Department identifier.</param>
+        </member>
+        <member name="M:$safeprojectname$.Controllers.v1.EmployeesController.Get($ext_projectname$.Application.Features.Employees.Queries.GetEmployees.GetEmployeesQuery)">
+            <summary>
+            Gets a list of employees based on the specified filter.
+            </summary>
+            <param name="filter">The filter used to get the list of employees.</param>
+            <returns>A list of employees.</returns>
+        </member>
+        <member name="M:$safeprojectname$.Controllers.v1.EmployeesController.Get(System.Guid)">
+            <summary>
+            Gets an employee by identifier.
+            </summary>
+            <param name="id">Employee identifier.</param>
+        </member>
+        <member name="M:$safeprojectname$.Controllers.v1.EmployeesController.Paged($ext_projectname$.Application.Features.Employees.Queries.GetEmployees.PagedEmployeesQuery)">
+            <summary>
+            Retrieves a paged list of employees.
+            Support Ngx-DataTables https://medium.com/scrum-and-coke/angular-11-pagination-of-zillion-rows-45d8533538c0
+            </summary>
+            <param name="query">The query parameters for the paged list.</param>
+            <returns>A paged list of employees.</returns>
+        </member>
+        <member name="M:$safeprojectname$.Controllers.v1.EmployeesController.Post($ext_projectname$.Application.Features.Employees.Commands.CreateEmployee.CreateEmployeeCommand)">
+            <summary>
+            Creates a new employee.
+            </summary>
+            <param name="command">Employee payload.</param>
+        </member>
+        <member name="M:$safeprojectname$.Controllers.v1.EmployeesController.Put(System.Guid,$ext_projectname$.Application.Features.Employees.Commands.UpdateEmployee.UpdateEmployeeCommand)">
+            <summary>
+            Updates an existing employee.
+            </summary>
+            <param name="id">Employee identifier.</param>
+            <param name="command">Update payload.</param>
+        </member>
+        <member name="M:$safeprojectname$.Controllers.v1.EmployeesController.Delete(System.Guid)">
+            <summary>
+            Deletes an employee by identifier.
+            </summary>
+            <param name="id">Employee identifier.</param>
+        </member>
+        <member name="M:$safeprojectname$.Controllers.v1.PositionsController.Get($ext_projectname$.Application.Features.Positions.Queries.GetPositions.GetPositionsQuery)">
+            <summary>
+            Gets a list of positions based on the provided filter.
+            </summary>
+            <param name="filter">The filter used to query the positions.</param>
+            <returns>A list of positions.</returns>
+        </member>
+        <member name="M:$safeprojectname$.Controllers.v1.PositionsController.Get(System.Guid)">
+            <summary>
+            Gets a position by its Id.
+            </summary>
+            <param name="id">The Id of the position.</param>
+            <returns>The position with the specified Id.</returns>
+        </member>
+        <member name="M:$safeprojectname$.Controllers.v1.PositionsController.Post($ext_projectname$.Application.Features.Positions.Commands.CreatePosition.CreatePositionCommand)">
+            <summary>
+            Creates a new position.
+            </summary>
+            <param name="command">The command containing the data for the new position.</param>
+            <returns>A 201 Created response containing the newly created position.</returns>
+        </member>
+        <member name="M:$safeprojectname$.Controllers.v1.PositionsController.AddMock($ext_projectname$.Application.Features.Positions.Commands.CreatePosition.InsertMockPositionCommand)">
+            <summary>
+            Sends an InsertMockPositionCommand to the mediator.
+            </summary>
+            <param name="command">The command to be sent.</param>
+            <returns>The result of the command.</returns>
+        </member>
+        <member name="M:$safeprojectname$.Controllers.v1.PositionsController.Put(System.Guid,$ext_projectname$.Application.Features.Positions.Commands.UpdatePosition.UpdatePositionCommand)">
+            <summary>
+            Updates a position with the given id using the provided command.
+            </summary>
+            <param name="id">The id of the position to update.</param>
+            <param name="command">The command containing the updated information.</param>
+            <returns>The updated position.</returns>
+        </member>
+        <member name="M:$safeprojectname$.Controllers.v1.PositionsController.Delete(System.Guid)">
+            <summary>
+            Deletes a position by its Id.
+            </summary>
+            <param name="id">The Id of the position to delete.</param>
+            <returns>The result of the deletion.</returns>
+        </member>
+        <member name="M:$safeprojectname$.Controllers.v1.SalaryRangesController.Get($ext_projectname$.Application.Features.SalaryRanges.Queries.GetSalaryRanges.GetSalaryRangesQuery)">
+            <summary>
+            Gets a list of salary ranges based on the specified filter.
+            </summary>
+            <param name="filter">The filter used to get the list of salary ranges.</param>
+            <returns>A list of salary ranges.</returns>
+        </member>
+        <member name="M:$safeprojectname$.Controllers.v1.SalaryRangesController.Get(System.Guid)">
+            <summary>
+            Gets a salary range by identifier.
+            </summary>
+            <param name="id">Salary range identifier.</param>
+        </member>
+        <member name="M:$safeprojectname$.Controllers.v1.SalaryRangesController.Post($ext_projectname$.Application.Features.SalaryRanges.Commands.CreateSalaryRange.CreateSalaryRangeCommand)">
+            <summary>
+            Creates a new salary range.
+            </summary>
+            <param name="command">Salary range payload.</param>
+        </member>
+        <member name="M:$safeprojectname$.Controllers.v1.SalaryRangesController.Put(System.Guid,$ext_projectname$.Application.Features.SalaryRanges.Commands.UpdateSalaryRange.UpdateSalaryRangeCommand)">
+            <summary>
+            Updates an existing salary range.
+            </summary>
+            <param name="id">Salary range identifier.</param>
+            <param name="command">Update payload.</param>
+        </member>
+        <member name="M:$safeprojectname$.Controllers.v1.SalaryRangesController.Delete(System.Guid)">
+            <summary>
+            Deletes a salary range.
+            </summary>
+            <param name="id">Salary range identifier.</param>
+        </member>
+        <member name="T:Program">
+            <summary>
+            Partial Program class exposed for functional testing.
+            </summary>
+        </member>
+    </members>
+</doc>
+
