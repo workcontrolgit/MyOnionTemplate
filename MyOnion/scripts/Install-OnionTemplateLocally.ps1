@@ -27,9 +27,14 @@ if (-not (Test-Path $templateZipSource)) {
 
 $documents = [Environment]::GetFolderPath("MyDocuments")
 $vsTemplateRoots = @(
+    # Visual Studio 2022 default templates path
     "Visual Studio 2022\Templates\ProjectTemplates\Visual C#",
+    # Visual Studio 2019 default templates path
     "Visual Studio 2019\Templates\ProjectTemplates\Visual C#",
-    "Visual Studio\Templates\ProjectTemplates\Visual C#" # fallback for future versions
+    # Visual Studio 2026 (internal “Visual Studio 18”) templates path
+    "Visual Studio 18\Templates\ProjectTemplates\Visual C#",
+    # Generic fallback for future Visual Studio versions
+    "Visual Studio\Templates\ProjectTemplates\Visual C#"
 ) | Where-Object { -not [string]::IsNullOrWhiteSpace($_) }
 
 $autoPaths = foreach ($root in $vsTemplateRoots) {

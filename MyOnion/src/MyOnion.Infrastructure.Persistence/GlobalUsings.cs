@@ -4,7 +4,6 @@ global using System.Linq;
 global using System.Linq.Dynamic.Core;
 global using System.Threading;
 global using System.Threading.Tasks;
-global using EFCore.BulkExtensions;
 global using FluentValidation;
 global using LinqKit;
 global using Microsoft.EntityFrameworkCore;
