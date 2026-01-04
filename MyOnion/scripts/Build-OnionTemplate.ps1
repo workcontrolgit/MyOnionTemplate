@@ -333,36 +333,38 @@ $rootTemplate = @'
   </TemplateData>
   <TemplateContent>
     <ProjectCollection>
-      <SolutionFolder Name="Presentation">
-        <ProjectTemplateLink ProjectName="$projectname$.WebApi" CopyParameters="true">
-          src\Apiresources.WebApi\MyTemplate.vstemplate
-        </ProjectTemplateLink>
+      <SolutionFolder Name="src">
+        <SolutionFolder Name="Presentation">
+          <ProjectTemplateLink ProjectName="$projectname$.WebApi" CopyParameters="true" ProjectFolder="src\$projectname$.WebApi">
+            src/Apiresources.WebApi/MyTemplate.vstemplate
+          </ProjectTemplateLink>
+        </SolutionFolder>
+        <SolutionFolder Name="Core">
+          <ProjectTemplateLink ProjectName="$projectname$.Application" CopyParameters="true" ProjectFolder="src\$projectname$.Application">
+            src/Apiresources.Application/MyTemplate.vstemplate
+          </ProjectTemplateLink>
+          <ProjectTemplateLink ProjectName="$projectname$.Domain" CopyParameters="true" ProjectFolder="src\$projectname$.Domain">
+            src/Apiresources.Domain/MyTemplate.vstemplate
+          </ProjectTemplateLink>
+        </SolutionFolder>
+        <SolutionFolder Name="Infrastructure">
+          <ProjectTemplateLink ProjectName="$projectname$.Infrastructure.Persistence" CopyParameters="true" ProjectFolder="src\$projectname$.Infrastructure.Persistence">
+            src/Apiresources.Infrastructure.Persistence/MyTemplate.vstemplate
+          </ProjectTemplateLink>
+          <ProjectTemplateLink ProjectName="$projectname$.Infrastructure.Shared" CopyParameters="true" ProjectFolder="src\$projectname$.Infrastructure.Shared">
+            src/Apiresources.Infrastructure.Shared/MyTemplate.vstemplate
+          </ProjectTemplateLink>
+        </SolutionFolder>
       </SolutionFolder>
-      <SolutionFolder Name="Core">
-        <ProjectTemplateLink ProjectName="$projectname$.Application" CopyParameters="true">
-          src\Apiresources.Application\MyTemplate.vstemplate
+      <SolutionFolder Name="tests">
+        <ProjectTemplateLink ProjectName="$projectname$.Application.Tests" CopyParameters="true" ProjectFolder="tests\$projectname$.Application.Tests">
+          tests/Apiresources.Application.Tests/MyTemplate.vstemplate
         </ProjectTemplateLink>
-        <ProjectTemplateLink ProjectName="$projectname$.Domain" CopyParameters="true">
-          src\Apiresources.Domain\MyTemplate.vstemplate
+        <ProjectTemplateLink ProjectName="$projectname$.Infrastructure.Tests" CopyParameters="true" ProjectFolder="tests\$projectname$.Infrastructure.Tests">
+          tests/Apiresources.Infrastructure.Tests/MyTemplate.vstemplate
         </ProjectTemplateLink>
-      </SolutionFolder>
-      <SolutionFolder Name="Infrastructure">
-        <ProjectTemplateLink ProjectName="$projectname$.Infrastructure.Persistence" CopyParameters="true">
-          src\Apiresources.Infrastructure.Persistence\MyTemplate.vstemplate
-        </ProjectTemplateLink>
-        <ProjectTemplateLink ProjectName="$projectname$.Infrastructure.Shared" CopyParameters="true">
-          src\Apiresources.Infrastructure.Shared\MyTemplate.vstemplate
-        </ProjectTemplateLink>
-      </SolutionFolder>
-      <SolutionFolder Name="Tests">
-        <ProjectTemplateLink ProjectName="$projectname$.Application.Tests" CopyParameters="true">
-          tests\Apiresources.Application.Tests\MyTemplate.vstemplate
-        </ProjectTemplateLink>
-        <ProjectTemplateLink ProjectName="$projectname$.Infrastructure.Tests" CopyParameters="true">
-          tests\Apiresources.Infrastructure.Tests\MyTemplate.vstemplate
-        </ProjectTemplateLink>
-        <ProjectTemplateLink ProjectName="$projectname$.WebApi.Tests" CopyParameters="true">
-          tests\Apiresources.WebApi.Tests\MyTemplate.vstemplate
+        <ProjectTemplateLink ProjectName="$projectname$.WebApi.Tests" CopyParameters="true" ProjectFolder="tests\$projectname$.WebApi.Tests">
+          tests/Apiresources.WebApi.Tests/MyTemplate.vstemplate
         </ProjectTemplateLink>
       </SolutionFolder>
     </ProjectCollection>
