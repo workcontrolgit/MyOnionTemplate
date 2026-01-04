@@ -206,6 +206,7 @@ New-Item -ItemType Directory -Path $templateRoot | Out-Null
 
 $projects = @(
     @{
+        Category = "src"
         Name = "Apiresources.Application"
         Source = Join-Path $repoRoot "src\\MyOnion.Application"
         Description = "Application layer: CQRS, DTOs, validation, and MediatR behaviours."
@@ -215,6 +216,7 @@ $projects = @(
         }
     },
     @{
+        Category = "src"
         Name = "Apiresources.Domain"
         Source = Join-Path $repoRoot "src\\MyOnion.Domain"
         Description = "Domain entities, enums, and value objects."
@@ -223,6 +225,7 @@ $projects = @(
         }
     },
     @{
+        Category = "src"
         Name = "Apiresources.Infrastructure.Persistence"
         Source = Join-Path $repoRoot "src\\MyOnion.Infrastructure.Persistence"
         Description = "EF Core DbContext, repositories, and migrations."
@@ -234,6 +237,7 @@ $projects = @(
         }
     },
     @{
+        Category = "src"
         Name = "Apiresources.Infrastructure.Shared"
         Source = Join-Path $repoRoot "src\\MyOnion.Infrastructure.Shared"
         Description = "Shared services (email, datetime, seeders)."
@@ -244,6 +248,7 @@ $projects = @(
         }
     },
     @{
+        Category = "src"
         Name = "Apiresources.WebApi"
         Source = Join-Path $repoRoot "src\\MyOnion.WebApi"
         Description = "ASP.NET Core Web API host, middleware, and configuration."
@@ -259,6 +264,7 @@ $projects = @(
         }
     },
     @{
+        Category = "tests"
         Name = "Apiresources.Application.Tests"
         Source = Join-Path $repoRoot "tests\\MyOnion.Application.Tests"
         Description = "Application-layer unit tests."
@@ -270,6 +276,7 @@ $projects = @(
         }
     },
     @{
+        Category = "tests"
         Name = "Apiresources.Infrastructure.Tests"
         Source = Join-Path $repoRoot "tests\\MyOnion.Infrastructure.Tests"
         Description = "Infrastructure integration tests."
@@ -283,6 +290,7 @@ $projects = @(
         }
     },
     @{
+        Category = "tests"
         Name = "Apiresources.WebApi.Tests"
         Source = Join-Path $repoRoot "tests\\MyOnion.WebApi.Tests"
         Description = "Web API integration tests."
@@ -297,7 +305,12 @@ $projects = @(
 )
 
 foreach ($project in $projects) {
-    $destination = Join-Path $templateRoot $project.Name
+    $category = $project.Category
+    if ([string]::IsNullOrWhiteSpace($category)) {
+        $destination = Join-Path $templateRoot $project.Name
+    } else {
+        $destination = Join-Path (Join-Path $templateRoot $category) $project.Name
+    }
     Write-Info "Preparing $($project.Name)"
     Copy-ProjectSource -Source $project.Source -Destination $destination
     Rename-ProjectFile -ProjectDirectory $destination -TemplateProjectName $project.Name
@@ -322,34 +335,34 @@ $rootTemplate = @'
     <ProjectCollection>
       <SolutionFolder Name="Presentation">
         <ProjectTemplateLink ProjectName="$projectname$.WebApi" CopyParameters="true">
-          Apiresources.WebApi\MyTemplate.vstemplate
+          src\Apiresources.WebApi\MyTemplate.vstemplate
         </ProjectTemplateLink>
       </SolutionFolder>
       <SolutionFolder Name="Core">
         <ProjectTemplateLink ProjectName="$projectname$.Application" CopyParameters="true">
-          Apiresources.Application\MyTemplate.vstemplate
+          src\Apiresources.Application\MyTemplate.vstemplate
         </ProjectTemplateLink>
         <ProjectTemplateLink ProjectName="$projectname$.Domain" CopyParameters="true">
-          Apiresources.Domain\MyTemplate.vstemplate
+          src\Apiresources.Domain\MyTemplate.vstemplate
         </ProjectTemplateLink>
       </SolutionFolder>
       <SolutionFolder Name="Infrastructure">
         <ProjectTemplateLink ProjectName="$projectname$.Infrastructure.Persistence" CopyParameters="true">
-          Apiresources.Infrastructure.Persistence\MyTemplate.vstemplate
+          src\Apiresources.Infrastructure.Persistence\MyTemplate.vstemplate
         </ProjectTemplateLink>
         <ProjectTemplateLink ProjectName="$projectname$.Infrastructure.Shared" CopyParameters="true">
-          Apiresources.Infrastructure.Shared\MyTemplate.vstemplate
+          src\Apiresources.Infrastructure.Shared\MyTemplate.vstemplate
         </ProjectTemplateLink>
       </SolutionFolder>
       <SolutionFolder Name="Tests">
         <ProjectTemplateLink ProjectName="$projectname$.Application.Tests" CopyParameters="true">
-          Apiresources.Application.Tests\MyTemplate.vstemplate
+          tests\Apiresources.Application.Tests\MyTemplate.vstemplate
         </ProjectTemplateLink>
         <ProjectTemplateLink ProjectName="$projectname$.Infrastructure.Tests" CopyParameters="true">
-          Apiresources.Infrastructure.Tests\MyTemplate.vstemplate
+          tests\Apiresources.Infrastructure.Tests\MyTemplate.vstemplate
         </ProjectTemplateLink>
         <ProjectTemplateLink ProjectName="$projectname$.WebApi.Tests" CopyParameters="true">
-          Apiresources.WebApi.Tests\MyTemplate.vstemplate
+          tests\Apiresources.WebApi.Tests\MyTemplate.vstemplate
         </ProjectTemplateLink>
       </SolutionFolder>
     </ProjectCollection>
