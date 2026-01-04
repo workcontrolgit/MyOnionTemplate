@@ -118,7 +118,7 @@ function New-TemplateXml {
     $templateData = $doc.CreateElement("TemplateData", $ns)
     $root.AppendChild($templateData) | Out-Null
 
-    foreach ($pair in @(@("Name", $TemplateProjectName), @("Description", $Description), @("ProjectType", "CSharp"), @("SortOrder", "1000"), @("CreateNewFolder", "true"), @("DefaultName", $TemplateProjectName), @("ProvideDefaultName", "true"), @("LocationField", "Enabled"), @("EnableLocationBrowseButton", "true"), @("CreateInPlace", "true"))) {
+    foreach ($pair in @(@("Name", $TemplateProjectName), @("Description", $Description), @("ProjectType", "CSharp"), @("SortOrder", "1000"), @("CreateNewFolder", "true"), @("DefaultName", "CleanArchitecture"), @("ProvideDefaultName", "true"), @("LocationField", "Enabled"), @("EnableLocationBrowseButton", "true"), @("CreateInPlace", "true"))) {
         $element = $doc.CreateElement($pair[0], $ns)
         $element.InnerText = $pair[1]
         $templateData.AppendChild($element) | Out-Null
@@ -189,6 +189,7 @@ function Get-TargetProjectName {
 
     return "`$safeprojectname$"
 }
+
 
 $repoRoot = Split-Path -Parent $PSScriptRoot
 $templateRoot = Join-Path $repoRoot "artifacts\\TemplateOnionAPI"
@@ -318,15 +319,15 @@ foreach ($project in $projects) {
     New-TemplateXml -ProjectDirectory $destination -TemplateProjectName $project.Name -Description $project.Description
 }
 
-$rootTemplate = @'
+ $rootTemplate = @'
 <VSTemplate Version="3.0.0" Type="ProjectGroup" xmlns="http://schemas.microsoft.com/developer/vstemplate/2005">
   <TemplateData>
-    <Name>Onion API (.NET 10.0)</Name>
-    <Description>Creates an 8-project onion architecture API solution (WebApi, Application, Domain, Infrastructure.Persistence, Infrastructure.Shared, plus Application, Infrastructure, and WebApi test projects) targeting .NET 10.0 with CQRS, MediatR, FluentValidation, EF Core, and Swagger.</Description>
+    <Name>Template Onion API</Name>
+    <Description>Creates an 8-project onion architecture API solution (WebApi, Application, Domain, Infrastructure.Persistence, Infrastructure.Shared, plus Application, Infrastructure, and WebApi test projects) targeting .NET with CQRS, MediatR, FluentValidation, EF Core, and Swagger.</Description>
     <ProjectType>CSharp</ProjectType>
     <SortOrder>1000</SortOrder>
     <CreateNewFolder>true</CreateNewFolder>
-    <DefaultName>OnionApi</DefaultName>
+    <DefaultName>CleanArchitecture</DefaultName>
     <ProvideDefaultName>true</ProvideDefaultName>
     <LocationField>Enabled</LocationField>
     <EnableLocationBrowseButton>true</EnableLocationBrowseButton>
