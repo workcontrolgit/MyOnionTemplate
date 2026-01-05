@@ -1,6 +1,6 @@
 # MyOnion
 
-MyOnion is a .NET 9 onion-architecture reference API that demonstrates Domain-Driven Design patterns using ASP.NET Core, MediatR, FluentValidation, and EF Core. The solution is organized into Domain, Application, Infrastructure.Persistence, Infrastructure.Shared, and WebApi projects, keeping dependencies flowing inward so UI concerns never reference infrastructure details directly.
+MyOnion is a .NET 10 clean architecture reference API that demonstrates Domain-Driven Design patterns using ASP.NET Core, MediatR, FluentValidation, and EF Core. The solution is organized into Domain, Application, Infrastructure.Persistence, Infrastructure.Shared, and WebApi projects, keeping dependencies flowing inward so UI concerns never reference infrastructure details directly.
 
 ## Project Layout
 - `MyOnion.Domain` – Entities, enums, shared value objects, and domain abstractions.
@@ -12,7 +12,7 @@ MyOnion is a .NET 9 onion-architecture reference API that demonstrates Domain-Dr
 ## Getting Started
 ```powershell
 # Install required SDK
-winget install Microsoft.DotNet.SDK.9
+winget install Microsoft.DotNet.SDK.10
 
 # Restore dependencies
 dotnet restore MyOnion.sln
@@ -35,12 +35,14 @@ Navigate to `https://localhost:5001/swagger` for API exploration. Health checks 
 Automated tests are not yet included; add future suites under `tests/` (xUnit recommended) covering validators, repositories, and controllers. Execute with `dotnet test MyOnion.sln` and collect coverage using `--collect:"XPlat Code Coverage"` for critical features.
 
 ## Security & Configuration Notes
-- JWT authentication is configured via `AddJWTAuthentication`; provide `Sts:ServerUrl` and `Sts:Audience` via `appsettings.Development.json` or user secrets.
+- JWT authentication is configured via `AddJWTAuthentication`; provide `Sts:ServerUrl`, `Sts:Audience`, and optional `Sts:ValidIssuer` via `appsettings.Development.json` or user secrets.
 - Do not commit secrets. Use `dotnet user-secrets` locally or environment variables in CI/CD.
-- Default CORS policy currently allows all origins; restrict this in production using configuration-driven policies.
+- Configure allowed front-end URLs under `Cors:AllowedOrigins` (JSON arrays) to lock down cross-origin access; fall back to the open policy only for local HTTPS development.
 
 ## Contributing
 1. Fork or branch from `main`.
 2. Add or update code alongside matching layer projects.
 3. Validate with `dotnet build` and manual API smoke tests.
 4. Submit a PR using imperative commit messages (e.g., `Add customer filtering`). Include a short description, validation commands, and screenshots or sample responses if your change alters API contracts.
+
+

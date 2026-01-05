@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PackageManifest Version="2.0.0" xmlns="http://schemas.microsoft.com/developer/vsx-schema/2011" xmlns:d="http://schemas.microsoft.com/developer/vsx-schema-design/2011">
+    <Metadata>
+        <Identity Id="VSIXTemplateOnionAPI.253e3774-ce3b-4788-b76a-d17a369a0a04" Version="10.0.0" Language="en-US" Publisher="workcontrol" />
+        <DisplayName>Template OnionAPI</DisplayName>
+        <Description xml:space="preserve">Visual Studio template that scaffolds a .NET 10 ASP.NET Core Web API following clean architecture with Domain, Application, Infrastructure.Persistence, Infrastructure.Shared, and WebApi projects wired with MediatR, FluentValidation, EF Core, Swagger, and Serilog.  The source code includes features such as data filtering, sorting, ordering and shaping.</Description>
+    </Metadata>
+    <Installation>
+        <InstallationTarget Version="[17.0,18.0)" Id="Microsoft.VisualStudio.Community">
+            <ProductArchitecture>amd64</ProductArchitecture>
+        </InstallationTarget>
+        <InstallationTarget Version="[17.0,18.0)" Id="Microsoft.VisualStudio.Pro">
+            <ProductArchitecture>amd64</ProductArchitecture>
+        </InstallationTarget>
+        <InstallationTarget Version="[17.0,18.0)" Id="Microsoft.VisualStudio.Enterprise">
+            <ProductArchitecture>amd64</ProductArchitecture>
+        </InstallationTarget>
+    </Installation>
+    <Dependencies>
+    </Dependencies>
+    <Prerequisites>
+        <Prerequisite Id="Microsoft.VisualStudio.Component.CoreEditor" Version="[17.0,18.0)" DisplayName="Visual Studio core editor" />
+    </Prerequisites>
+    <Assets>
+        <Asset Type="Microsoft.VisualStudio.VsPackage" d:Source="Project" d:ProjectName="%CurrentProject%" Path="|%CurrentProject%;PkgdefProjectOutputGroup|" />
+        <Asset Type="Microsoft.VisualStudio.ProjectTemplate" d:Source="File" Path="ProjectTemplates" d:TargetPath="ProjectTemplates\TemplateOnionAPI.zip" />
+    </Assets>
+</PackageManifest>
+
