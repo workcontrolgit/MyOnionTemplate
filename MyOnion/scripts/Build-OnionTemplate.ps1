@@ -1,6 +1,7 @@
 param(
     [string]$Configuration = "Release",
-    [string]$DesktopDropPath = "$([Environment]::GetFolderPath('Desktop'))\\VSIXTemplateOnionAPI.vsix"
+    [string]$DesktopDropPath = "$([Environment]::GetFolderPath('Desktop'))\\VSIXTemplateOnionAPI.vsix",
+    [switch]$SkipVsix
 )
 
 Set-StrictMode -Version Latest
@@ -87,6 +88,9 @@ function Update-TextTokens {
             $updated = [Regex]::Replace($updated, $pattern, $ReplaceRules[$key])
         }
 
+        $srcPrefixPattern = [Regex]::Escape("..\..\src\")
+        $updated = [Regex]::Replace($updated, $srcPrefixPattern, "..\")
+
         if ($updated -ne $content) {
             Set-Content -Path $file.FullName -Value $updated -Encoding UTF8
         }
@@ -100,6 +104,8 @@ function New-TemplateXml {
         [string]$Description
     )
 
+    $targetProjectName = Get-TargetProjectName -TemplateProjectName $TemplateProjectName
+
     $ns = "http://schemas.microsoft.com/developer/vstemplate/2005"
     $doc = New-Object System.Xml.XmlDocument
     $doc.AppendChild($doc.CreateXmlDeclaration("1.0", "utf-8", $null)) | Out-Null
@@ -112,7 +118,7 @@ function New-TemplateXml {
     $templateData = $doc.CreateElement("TemplateData", $ns)
     $root.AppendChild($templateData) | Out-Null
 
-    foreach ($pair in @(@("Name", $TemplateProjectName), @("Description", $Description), @("ProjectType", "CSharp"), @("SortOrder", "1000"), @("CreateNewFolder", "true"), @("DefaultName", $TemplateProjectName), @("ProvideDefaultName", "true"), @("LocationField", "Enabled"), @("EnableLocationBrowseButton", "true"), @("CreateInPlace", "true"))) {
+    foreach ($pair in @(@("Name", $TemplateProjectName), @("Description", $Description), @("ProjectType", "CSharp"), @("SortOrder", "1000"), @("CreateNewFolder", "true"), @("DefaultName", "CleanArchitecture"), @("ProvideDefaultName", "true"), @("LocationField", "Enabled"), @("EnableLocationBrowseButton", "true"), @("CreateInPlace", "true"))) {
         $element = $doc.CreateElement($pair[0], $ns)
         $element.InnerText = $pair[1]
         $templateData.AppendChild($element) | Out-Null
@@ -122,7 +128,7 @@ function New-TemplateXml {
     $root.AppendChild($templateContent) | Out-Null
 
     $projectElement = $doc.CreateElement("Project", $ns)
-    $projectElement.SetAttribute("TargetFileName", "$TemplateProjectName.csproj")
+    $projectElement.SetAttribute("TargetFileName", "$targetProjectName.csproj")
     $projectElement.SetAttribute("File", "$TemplateProjectName.csproj")
     $projectElement.SetAttribute("ReplaceParameters", "true")
     $templateContent.AppendChild($projectElement) | Out-Null
@@ -166,12 +172,31 @@ function Add-DirectoryNodes {
     }
 }
 
+function Get-TargetProjectName {
+    param(
+        [string]$TemplateProjectName
+    )
+
+    $prefix = "Apiresources."
+    if ($TemplateProjectName.StartsWith($prefix)) {
+        $suffix = $TemplateProjectName.Substring($prefix.Length)
+        if ([string]::IsNullOrWhiteSpace($suffix)) {
+            return "`$safeprojectname$"
+        }
+
+        return "`$safeprojectname$.$suffix"
+    }
+
+    return "`$safeprojectname$"
+}
+
+
 $repoRoot = Split-Path -Parent $PSScriptRoot
 $templateRoot = Join-Path $repoRoot "artifacts\\TemplateOnionAPI"
 $vsixProjectDir = Join-Path $repoRoot "vsix\\VSIXTemplateOnionAPI"
-$projectTemplatesDir = Join-Path $vsixProjectDir "ProjectTemplates"
+$projectTemplatesDir = Join-Path $vsixProjectDir "ProjectTemplates\\CSharp\\1033"
 $zipPath = Join-Path $projectTemplatesDir "TemplateOnionAPI.zip"
-
+$legacyZipPath = Join-Path $vsixProjectDir "ProjectTemplates\\TemplateOnionAPI.zip"
 New-Item -ItemType Directory -Path (Split-Path $templateRoot) -ErrorAction SilentlyContinue | Out-Null
 New-Item -ItemType Directory -Path $projectTemplatesDir -ErrorAction SilentlyContinue | Out-Null
 
@@ -182,6 +207,7 @@ New-Item -ItemType Directory -Path $templateRoot | Out-Null
 
 $projects = @(
     @{
+        Category = "src"
         Name = "Apiresources.Application"
         Source = Join-Path $repoRoot "src\\MyOnion.Application"
         Description = "Application layer: CQRS, DTOs, validation, and MediatR behaviours."
@@ -191,14 +217,16 @@ $projects = @(
         }
     },
     @{
+        Category = "src"
         Name = "Apiresources.Domain"
         Source = Join-Path $repoRoot "src\\MyOnion.Domain"
         Description = "Domain entities, enums, and value objects."
         Replace = @{
-            "MyOnion.Domain" = "`$safeprojectname$.Domain"
+            "MyOnion.Domain" = "`$safeprojectname$"
         }
     },
     @{
+        Category = "src"
         Name = "Apiresources.Infrastructure.Persistence"
         Source = Join-Path $repoRoot "src\\MyOnion.Infrastructure.Persistence"
         Description = "EF Core DbContext, repositories, and migrations."
@@ -206,9 +234,11 @@ $projects = @(
             "MyOnion.Infrastructure.Persistence" = "`$safeprojectname$"
             "MyOnion.Domain" = "`$ext_projectname$.Domain"
             "MyOnion.Application" = "`$ext_projectname$.Application"
+            "MyOnion.Infrastructure.Shared" = "`$ext_projectname$.Infrastructure.Shared"
         }
     },
     @{
+        Category = "src"
         Name = "Apiresources.Infrastructure.Shared"
         Source = Join-Path $repoRoot "src\\MyOnion.Infrastructure.Shared"
         Description = "Shared services (email, datetime, seeders)."
@@ -219,6 +249,7 @@ $projects = @(
         }
     },
     @{
+        Category = "src"
         Name = "Apiresources.WebApi"
         Source = Join-Path $repoRoot "src\\MyOnion.WebApi"
         Description = "ASP.NET Core Web API host, middleware, and configuration."
@@ -228,12 +259,59 @@ $projects = @(
             "MyOnion.Domain" = "`$ext_projectname$.Domain"
             "MyOnion.Infrastructure.Persistence" = "`$ext_projectname$.Infrastructure.Persistence"
             "MyOnion.Infrastructure.Shared" = "`$ext_projectname$.Infrastructure.Shared"
+            "MyOnionDb" = '$ext_projectname$Db'
+            "Serilog.MyOnion" = 'Serilog.$ext_projectname$'
+            "__MyOnion." = "__`$ext_projectname$."
+        }
+    },
+    @{
+        Category = "tests"
+        Name = "Apiresources.Application.Tests"
+        Source = Join-Path $repoRoot "tests\\MyOnion.Application.Tests"
+        Description = "Application-layer unit tests."
+        Replace = @{
+            "MyOnion.Application.Tests" = "`$safeprojectname$"
+            "MyOnion.Application" = "`$ext_projectname$.Application"
+            "MyOnion.Domain" = "`$ext_projectname$.Domain"
+            "..\\..\\src\\" = "..\\"
+        }
+    },
+    @{
+        Category = "tests"
+        Name = "Apiresources.Infrastructure.Tests"
+        Source = Join-Path $repoRoot "tests\\MyOnion.Infrastructure.Tests"
+        Description = "Infrastructure integration tests."
+        Replace = @{
+            "MyOnion.Infrastructure.Tests" = "`$safeprojectname$"
+            "MyOnion.Application" = "`$ext_projectname$.Application"
+            "MyOnion.Domain" = "`$ext_projectname$.Domain"
+            "MyOnion.Infrastructure.Persistence" = "`$ext_projectname$.Infrastructure.Persistence"
+            "MyOnion.Infrastructure.Shared" = "`$ext_projectname$.Infrastructure.Shared"
+            "..\\..\\src\\" = "..\\"
+        }
+    },
+    @{
+        Category = "tests"
+        Name = "Apiresources.WebApi.Tests"
+        Source = Join-Path $repoRoot "tests\\MyOnion.WebApi.Tests"
+        Description = "Web API integration tests."
+        Replace = @{
+            "MyOnion.WebApi.Tests" = "`$safeprojectname$"
+            "MyOnion.WebApi" = "`$ext_projectname$.WebApi"
+            "MyOnion.Application" = "`$ext_projectname$.Application"
+            "MyOnion.Domain" = "`$ext_projectname$.Domain"
+            "..\\..\\src\\" = "..\\"
         }
     }
 )
 
 foreach ($project in $projects) {
-    $destination = Join-Path $templateRoot $project.Name
+    $category = $project.Category
+    if ([string]::IsNullOrWhiteSpace($category)) {
+        $destination = Join-Path $templateRoot $project.Name
+    } else {
+        $destination = Join-Path (Join-Path $templateRoot $category) $project.Name
+    }
     Write-Info "Preparing $($project.Name)"
     Copy-ProjectSource -Source $project.Source -Destination $destination
     Rename-ProjectFile -ProjectDirectory $destination -TemplateProjectName $project.Name
@@ -241,40 +319,53 @@ foreach ($project in $projects) {
     New-TemplateXml -ProjectDirectory $destination -TemplateProjectName $project.Name -Description $project.Description
 }
 
-$rootTemplate = @'
+ $rootTemplate = @'
 <VSTemplate Version="3.0.0" Type="ProjectGroup" xmlns="http://schemas.microsoft.com/developer/vstemplate/2005">
   <TemplateData>
-    <Name>Onion API (.NET 10)</Name>
-    <Description>Creates a 5-project onion architecture API solution targeting .NET 10 with CQRS, MediatR, FluentValidation, EF Core, and Swagger.</Description>
+    <Name>Template Onion API</Name>
+    <Description>Creates an 8-project onion architecture API solution (WebApi, Application, Domain, Infrastructure.Persistence, Infrastructure.Shared, plus Application, Infrastructure, and WebApi test projects) targeting .NET with CQRS, MediatR, FluentValidation, EF Core, and Swagger.</Description>
     <ProjectType>CSharp</ProjectType>
     <SortOrder>1000</SortOrder>
     <CreateNewFolder>true</CreateNewFolder>
-    <DefaultName>MyOnionApi</DefaultName>
+    <DefaultName>CleanArchitecture</DefaultName>
     <ProvideDefaultName>true</ProvideDefaultName>
     <LocationField>Enabled</LocationField>
     <EnableLocationBrowseButton>true</EnableLocationBrowseButton>
   </TemplateData>
   <TemplateContent>
     <ProjectCollection>
-      <SolutionFolder Name="Presentation">
-        <ProjectTemplateLink ProjectName="$projectname$.WebApi" CopyParameters="true">
-          Apiresources.WebApi\MyTemplate.vstemplate
-        </ProjectTemplateLink>
+      <SolutionFolder Name="src">
+        <SolutionFolder Name="Presentation">
+          <ProjectTemplateLink ProjectName="$projectname$.WebApi" CopyParameters="true" ProjectFolder="src\$projectname$.WebApi">
+            src/Apiresources.WebApi/MyTemplate.vstemplate
+          </ProjectTemplateLink>
+        </SolutionFolder>
+        <SolutionFolder Name="Core">
+          <ProjectTemplateLink ProjectName="$projectname$.Application" CopyParameters="true" ProjectFolder="src\$projectname$.Application">
+            src/Apiresources.Application/MyTemplate.vstemplate
+          </ProjectTemplateLink>
+          <ProjectTemplateLink ProjectName="$projectname$.Domain" CopyParameters="true" ProjectFolder="src\$projectname$.Domain">
+            src/Apiresources.Domain/MyTemplate.vstemplate
+          </ProjectTemplateLink>
+        </SolutionFolder>
+        <SolutionFolder Name="Infrastructure">
+          <ProjectTemplateLink ProjectName="$projectname$.Infrastructure.Persistence" CopyParameters="true" ProjectFolder="src\$projectname$.Infrastructure.Persistence">
+            src/Apiresources.Infrastructure.Persistence/MyTemplate.vstemplate
+          </ProjectTemplateLink>
+          <ProjectTemplateLink ProjectName="$projectname$.Infrastructure.Shared" CopyParameters="true" ProjectFolder="src\$projectname$.Infrastructure.Shared">
+            src/Apiresources.Infrastructure.Shared/MyTemplate.vstemplate
+          </ProjectTemplateLink>
+        </SolutionFolder>
       </SolutionFolder>
-      <SolutionFolder Name="Core">
-        <ProjectTemplateLink ProjectName="$projectname$.Application" CopyParameters="true">
-          Apiresources.Application\MyTemplate.vstemplate
+      <SolutionFolder Name="tests">
+        <ProjectTemplateLink ProjectName="$projectname$.Application.Tests" CopyParameters="true" ProjectFolder="tests\$projectname$.Application.Tests">
+          tests/Apiresources.Application.Tests/MyTemplate.vstemplate
         </ProjectTemplateLink>
-        <ProjectTemplateLink ProjectName="$projectname$.Domain" CopyParameters="true">
-          Apiresources.Domain\MyTemplate.vstemplate
+        <ProjectTemplateLink ProjectName="$projectname$.Infrastructure.Tests" CopyParameters="true" ProjectFolder="tests\$projectname$.Infrastructure.Tests">
+          tests/Apiresources.Infrastructure.Tests/MyTemplate.vstemplate
         </ProjectTemplateLink>
-      </SolutionFolder>
-      <SolutionFolder Name="Infrastructure">
-        <ProjectTemplateLink ProjectName="$projectname$.Infrastructure.Persistence" CopyParameters="true">
-          Apiresources.Infrastructure.Persistence\MyTemplate.vstemplate
-        </ProjectTemplateLink>
-        <ProjectTemplateLink ProjectName="$projectname$.Infrastructure.Shared" CopyParameters="true">
-          Apiresources.Infrastructure.Shared\MyTemplate.vstemplate
+        <ProjectTemplateLink ProjectName="$projectname$.WebApi.Tests" CopyParameters="true" ProjectFolder="tests\$projectname$.WebApi.Tests">
+          tests/Apiresources.WebApi.Tests/MyTemplate.vstemplate
         </ProjectTemplateLink>
       </SolutionFolder>
     </ProjectCollection>
@@ -290,6 +381,17 @@ if (Test-Path $zipPath) {
 Compress-Archive -Path (Join-Path $templateRoot "*") -DestinationPath $zipPath -Force
 Write-Info "Template zip created at $zipPath"
 
+if (Test-Path $legacyZipPath) {
+    Remove-Item -Force $legacyZipPath
+}
+Copy-Item -Path $zipPath -Destination $legacyZipPath
+Write-Info "Template zip copied to legacy path $legacyZipPath"
+
+if ($SkipVsix) {
+    Write-Info "SkipVsix specified; skipping VSIX build."
+    return
+}
+
 $msbuildExe = Get-MSBuildPath
 Push-Location $vsixProjectDir
 try {
@@ -300,7 +402,13 @@ try {
 
 $builtVsix = Join-Path $vsixProjectDir "bin\\$Configuration\\VSIXTemplateOnionAPI.vsix"
 if (-not (Test-Path $builtVsix)) {
-    throw "VSIX build did not produce $builtVsix"
+    $fallbackVsix = Get-ChildItem -Path (Join-Path $vsixProjectDir "bin") -Recurse -Filter "VSIXTemplateOnionAPI.vsix" -ErrorAction SilentlyContinue | Sort-Object LastWriteTime -Descending | Select-Object -First 1
+    if ($fallbackVsix) {
+        $builtVsix = $fallbackVsix.FullName
+        Write-Info "Expected $Configuration VSIX not found; using $builtVsix instead."
+    } else {
+        throw "VSIX build did not produce a VSIX under $(Join-Path $vsixProjectDir 'bin')"
+    }
 }
 
 Copy-Item -Path $builtVsix -Destination $DesktopDropPath -Force
