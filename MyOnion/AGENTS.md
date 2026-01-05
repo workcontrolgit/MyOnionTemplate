@@ -1,5 +1,7 @@
 # Repository Guidelines
 
+For a high-level overview of folders, commands, and onboarding steps, see the root [`README.md`](README.md). This file dives deeper into day-to-day expectations for contributors and automation agents.
+
 ## Project Structure & Module Organization
 The root `MyOnion.sln` wires the five onion layers: `MyOnion.Domain` holds entities/enums, `MyOnion.Application` contains DTOs, Behaviours, and MediatR Features, `MyOnion.Infrastructure.Persistence` implements EF Core contexts/repositories, `MyOnion.Infrastructure.Shared` exposes reusable services, and `MyOnion.WebApi` hosts controllers, middleware, and `appsettings*.json`. Keep cross-layer references flowing inward (WebApi -> Application -> Domain) and place new assets beside their peers (e.g., `Features/Orders`, `Controllers/OrdersController.cs`).
 

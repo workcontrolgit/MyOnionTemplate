@@ -29,6 +29,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		MyOnion\docs\Result Pattern.md = MyOnion\docs\Result Pattern.md
 		MyOnion\docs\SpecificationUpgradePlan.md = MyOnion\docs\SpecificationUpgradePlan.md
 		MyOnion\docs\TestingPlans\TestCoverage100Plan.md = MyOnion\docs\TestingPlans\TestCoverage100Plan.md
+		MyOnion\docs\Template-Onion-API-Net10-Blog.md = MyOnion\docs\Template-Onion-API-Net10-Blog.md
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{DB82AE70-76E5-D76A-C66A-5F02FE794F50}"
@@ -55,6 +56,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Docs", "Docs", "{50A5EEAC-F
 		MyOnion\docs\Result Pattern.md = MyOnion\docs\Result Pattern.md
 		MyOnion\docs\SpecificationUpgradePlan.md = MyOnion\docs\SpecificationUpgradePlan.md
 		MyOnion\docs\TestingPlans\TestCoverage100Plan.md = MyOnion\docs\TestingPlans\TestCoverage100Plan.md
+		MyOnion\docs\Template-Onion-API-Net10-Blog.md = MyOnion\docs\Template-Onion-API-Net10-Blog.md
 	EndProjectSection
 EndProject
 Global
