@@ -1,0 +1,16 @@
+global using FluentAssertions;
+global using Microsoft.EntityFrameworkCore;
+global using Microsoft.Extensions.Logging;
+global using Moq;
+global using MyOnion.Application.Features.Departments.Queries.GetDepartments;
+global using MyOnion.Application.Features.Employees.Queries.GetEmployees;
+global using MyOnion.Application.Features.Positions.Queries.GetPositions;
+global using MyOnion.Application.Features.SalaryRanges.Queries.GetSalaryRanges;
+global using MyOnion.Application.Helpers;
+global using MyOnion.Application.Interfaces;
+global using MyOnion.Application.Interfaces.Repositories;
+global using MyOnion.Application.Parameters;
+global using MyOnion.Domain.Entities;
+global using MyOnion.Infrastructure.Persistence.Contexts;
+global using MyOnion.Infrastructure.Persistence.Repositories;
+global using MyOnion.Infrastructure.Shared.Services;
