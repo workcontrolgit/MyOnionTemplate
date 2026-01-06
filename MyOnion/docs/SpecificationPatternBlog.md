@@ -1,10 +1,10 @@
 # Harnessing Specifications to Simplify .NET APIs in Template OnionAPI
 
-MyOnion’s Specification Upgrade Plan doesn’t just modernize repository code—it formalizes a lightweight pattern that any .NET developer can lift into their own solutions. This post walks through what the specification pattern is inside the template, why it matters, and how you can start using it immediately.
+The Template OnionAPI template leans on the specification pattern to capture query intent in small, reusable objects. Instead of scattering filters, includes, and pagination across repositories, each concern lives in a single spec that any handler can reuse. This post covers what the specification abstraction looks like in the template, why it pays off, and a practical example you can lift into your own .NET apps.
 
-## What the Specification Pattern Is Here
+## What the Specification Pattern Looks Like Here
 
-At its core, a specification is a small, reusable object that describes *what* you want from the data store rather than *how* to get it. The template ships with a simple contract:
+A specification is an object that declares *what* data you need, not *how* to fetch it. The shared interface keeps things consistent:
 
 ```csharp
 public interface ISpecification<T>
@@ -20,22 +20,17 @@ public interface ISpecification<T>
 ```
 Source: `MyOnion/src/MyOnion.Application/Specifications/ISpecification.cs:1`
 
-`BaseSpecification<T>` implements the plumbing—tracking criteria, includes, paging, and ordering—while `SpecificationEvaluator` applies those pieces to an EF Core `IQueryable`. The evaluator simply checks each property and builds up the final query, which keeps the repositories almost declarative.
+`BaseSpecification<T>` wires up helpers for adding includes, applying paging, and setting ordering, while `SpecificationEvaluator` turns any `ISpecification<T>` into a composed EF Core query. Repositories no longer need to know which navigation properties to include or how to apply paging loops—the spec carries that intent.
 
-## Why the Template Adopted It
+## Why Use Specifications
 
-SpecificationUpgradePlan.md highlights a few motivators:
+- **Less code** – Shared specs eliminate repetitive `if` blocks across handlers and repositories; the filtering rules live in one place.
+- **Flexibility** – Each spec exposes paging, ordering, and include knobs, so you can handle exports, dashboards, and filtered lists with the same class by toggling constructor parameters.
+- **Testability** – Specifications are just objects; you can unit test their predicates and the evaluator with an in-memory context before wiring them into the API.
 
-- **Centralized query intent** – Filtering, ordering, paging, and eager-loading all live in specs, so repositories stop bloating with `if/else` ladders and controllers don’t duplicate logic.
-- **Safer refactors** – Generic repositories can accept `ISpecification<T>` and defer execution to EF Core. Because the spec owns the logic, merging new filters or includes is far less risky.
-- **Documentation-as-code** – Having named specs like `EmployeesByFiltersSpec` doubles as living documentation that reflects the “catalogue” described in Phase 4 of the plan.
-- **Extensibility** – When the plan later adds Department or Salary specs, teams follow the same recipe: extend `BaseSpecification<T>`, compose predicates with `PredicateBuilder`, and plug into the same evaluator.
+These benefits compound over time. Adding a new filter becomes one predicate addition, and multiple consumers stay in sync automatically.
 
-All of this keeps data-shaping helpers (`IDataShapeHelper`, `IModelHelper`) intact: specs feed clean, materialized sets into the existing dynamic projection pipeline.
-
-## Example: Filtering Employees with One Spec
-
-Here’s a trimmed version of the employee filter spec you’ll find in the template:
+## Example: EmployeesByFiltersSpecification
 
 ```csharp
 public class EmployeesByFiltersSpecification : BaseSpecification<Employee>
@@ -62,7 +57,29 @@ public class EmployeesByFiltersSpecification : BaseSpecification<Employee>
             predicate = predicate.Or(p => p.LastName.ToLower().Contains(term));
         }
 
-        // Additional FirstName, Email, EmployeeNumber, PositionTitle filters removed for brevity...
+        if (!string.IsNullOrWhiteSpace(request.FirstName))
+        {
+            var term = request.FirstName.ToLower().Trim();
+            predicate = predicate.Or(p => p.FirstName.ToLower().Contains(term));
+        }
+
+        if (!string.IsNullOrWhiteSpace(request.Email))
+        {
+            var term = request.Email.ToLower().Trim();
+            predicate = predicate.Or(p => p.Email.ToLower().Contains(term));
+        }
+
+        if (!string.IsNullOrWhiteSpace(request.EmployeeNumber))
+        {
+            var term = request.EmployeeNumber.ToLower().Trim();
+            predicate = predicate.Or(p => p.EmployeeNumber.ToLower().Contains(term));
+        }
+
+        if (!string.IsNullOrWhiteSpace(request.PositionTitle))
+        {
+            var term = request.PositionTitle.ToLower().Trim();
+            predicate = predicate.Or(p => p.Position.PositionTitle.ToLower().Contains(term));
+        }
 
         return predicate.IsStarted ? predicate : null;
     }
@@ -70,31 +87,35 @@ public class EmployeesByFiltersSpecification : BaseSpecification<Employee>
 ```
 Source: `MyOnion/src/MyOnion.Application/Specifications/Employees/EmployeeSpecifications.cs:1`
 
-A few tips from this example:
+Highlights from this spec:
 
-- Criteria are composed with `PredicateBuilder`, so adding another filter is a one-line expression.
-- Includes (`AddInclude(e => e.Position)`) keep eager loading coupled to the spec, not the repository.
-- Ordering and paging remain optional knobs—handy when the same spec powers both paged lists and exports.
+- The constructor decides whether to apply paging; you can reuse the same spec for paged lists or full exports.
+- Includes are tied to the spec, so repositories do not need to remember to eagerly load `Position`.
+- The predicate is composable, making it trivial to add or remove filters without touching consumers.
 
-## Where It Gets Consumed
+## Where the Spec Runs
 
-The generic repository only needs one extra method:
+Repositories expose spec-aware methods so handlers simply pass the description of the data they want:
 
 ```csharp
 public async Task<IReadOnlyList<T>> ListAsync(ISpecification<T> specification)
 {
-    var queryable = SpecificationEvaluator<T>.GetQuery(_dbContext.Set<T>().AsQueryable(), specification);
+    var queryable = SpecificationEvaluator<T>.GetQuery(
+        _dbContext.Set<T>().AsQueryable(),
+        specification);
+
     return await queryable.ToListAsync(cancellationToken);
 }
 ```
 
-Because specs are immutable descriptions, handlers can swap them freely. For instance, an API endpoint that supports free-text search can take a `PagedEmployeesQuery`, hydrate the `EmployeesKeywordSpecification`, and pass it straight to `ListAsync`. Dynamic shaping still happens afterward, but *every* consumer benefits from the same, battle-tested query logic.
+Because specifications are immutable, multiple handlers can share the same instance safely, and you can swap specs at runtime based on user input (keyword search vs. filter panel) without changing repository code.
 
-## Getting Started in Your Own Code
+## Getting Started
 
-1. **Define your spec contract** (or reuse this one) with criteria, includes, ordering, and paging knobs.
-2. **Implement `BaseSpecification<T>` and a simple evaluator** like the template’s to compose EF Core queries.
-3. **Build a small specification catalogue** per aggregate, as outlined in the plan’s Phase 4. Treat each spec like a scenario-focused query object.
-4. **Gradually refactor repositories and handlers** to call spec-aware methods. Keep old signatures during migration, exactly as the plan suggests, so you can roll out safely.
+1. **Define a spec contract** just like `ISpecification<T>` so every query exposes the same knobs.
+2. **Build a base class** with helpers to add includes, paging, and ordering; keep the API expressive but focused.
+3. **Create a spec catalogue** per aggregate—`EmployeesByFiltersSpecification`, `EmployeesKeywordSpecification`, etc.—to capture real scenarios.
+4. **Expose spec-friendly repository methods** such as `ListAsync(ISpecification<T>)` or `FirstOrDefaultAsync(ISpecification<T>)` so consumers pass intent instead of ad-hoc predicates.
 
-Once in place, the specification pattern becomes the single source of truth for your data-access intent. In MyOnion it unlocked clearer repositories, easier testing (you can unit test specs and evaluator separately), and better documentation. Adopt the same approach in your .NET projects, and the payoff is cleaner code and faster iteration every time a product manager asks for “just one more filter.”
+Once you capture filtering logic inside specs, you spend less time wiring boilerplate queries, gain flexibility when requirements change, and end up with small objects that are easy to test in isolation. That combination is why the specification pattern has become the backbone of data access in Template OnionAPI.
+

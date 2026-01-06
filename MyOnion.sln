@@ -37,14 +37,18 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Docs", "Docs", "{50A5EEAC-F7BC-4A33-8708-BA75054DC7C7}"
 	ProjectSection(SolutionItems) = preProject
 		MyOnion\docs\.NET10 Upgrade Plan.md = MyOnion\docs\.NET10 Upgrade Plan.md
+		MyOnion\docs\DataShapingBlog.md = MyOnion\docs\DataShapingBlog.md
 		MyOnion\docs\DataShapingUpgradePlan.md = MyOnion\docs\DataShapingUpgradePlan.md
 		MyOnion\docs\EndpointTimingPlan.md = MyOnion\docs\EndpointTimingPlan.md
 		MyOnion\docs\TestingPlans\Positions-Unit-Testing.md = MyOnion\docs\TestingPlans\Positions-Unit-Testing.md
 		MyOnion\README.md = MyOnion\README.md
 		MyOnion\docs\Result Pattern.md = MyOnion\docs\Result Pattern.md
 		MyOnion\docs\SpecificationPatternBlog.md = MyOnion\docs\SpecificationPatternBlog.md
+		MyOnion\docs\PositionTestingBlog.md = MyOnion\docs\PositionTestingBlog.md
 		MyOnion\docs\SpecificationUpgradePlan.md = MyOnion\docs\SpecificationUpgradePlan.md
+		MyOnion\docs\EndpointTimingBlog.md = MyOnion\docs\EndpointTimingBlog.md
 		MyOnion\docs\Template-Onion-API-Net10-Blog.md = MyOnion\docs\Template-Onion-API-Net10-Blog.md
+		MyOnion\docs\ResultPatternBlog.md = MyOnion\docs\ResultPatternBlog.md
 		MyOnion\docs\TestingPlans\TestCoverage100Plan.md = MyOnion\docs\TestingPlans\TestCoverage100Plan.md
 	EndProjectSection
 EndProject
