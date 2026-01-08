@@ -7,6 +7,7 @@ using MyOnion.Application.Behaviours;
 using MyOnion.Application.Helpers;
 using MyOnion.Application.Interfaces;
 using MyOnion.Domain.Entities;
+using Scrutor;
 
 namespace MyOnion.Application
 {
@@ -29,6 +30,7 @@ namespace MyOnion.Application
                 .AddClasses(classSelector => classSelector.AssignableTo(typeof(IDataShapeHelper<>)))
                 .AsImplementedInterfaces()
                 .WithTransientLifetime());
+            services.Decorate<IRequestHandler<GetEmployeesQuery, PagedResult<IEnumerable<Entity>>>, GetEmployeesCachingDecorator>();
         }
     }
 }

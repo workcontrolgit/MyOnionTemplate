@@ -21,17 +21,23 @@ namespace MyOnion.Application.Features.Employees.Commands.CreateEmployee
         {
             private readonly IEmployeeRepositoryAsync _repository;
             private readonly IMapper _mapper;
+            private readonly ICacheInvalidationService _cacheInvalidationService;
 
-            public CreateEmployeeCommandHandler(IEmployeeRepositoryAsync repository, IMapper mapper)
+            public CreateEmployeeCommandHandler(
+                IEmployeeRepositoryAsync repository,
+                IMapper mapper,
+                ICacheInvalidationService cacheInvalidationService)
             {
                 _repository = repository;
                 _mapper = mapper;
+                _cacheInvalidationService = cacheInvalidationService;
             }
 
             public async Task<Result<Guid>> Handle(CreateEmployeeCommand request, CancellationToken cancellationToken)
             {
                 var employee = _mapper.Map<Employee>(request);
                 await _repository.AddAsync(employee);
+                await _cacheInvalidationService.InvalidatePrefixAsync(CacheKeyPrefixes.EmployeesAll, cancellationToken);
                 return Result<Guid>.Success(employee.Id);
             }
         }

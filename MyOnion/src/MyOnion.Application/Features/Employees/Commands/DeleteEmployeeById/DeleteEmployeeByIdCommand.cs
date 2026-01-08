@@ -10,10 +10,14 @@ namespace MyOnion.Application.Features.Employees.Commands.DeleteEmployeeById
         public class DeleteEmployeeByIdCommandHandler : IRequestHandler<DeleteEmployeeByIdCommand, Result<Guid>>
         {
             private readonly IEmployeeRepositoryAsync _repository;
+            private readonly ICacheInvalidationService _cacheInvalidationService;
 
-            public DeleteEmployeeByIdCommandHandler(IEmployeeRepositoryAsync repository)
+            public DeleteEmployeeByIdCommandHandler(
+                IEmployeeRepositoryAsync repository,
+                ICacheInvalidationService cacheInvalidationService)
             {
                 _repository = repository;
+                _cacheInvalidationService = cacheInvalidationService;
             }
 
             public async Task<Result<Guid>> Handle(DeleteEmployeeByIdCommand command, CancellationToken cancellationToken)
@@ -25,6 +29,7 @@ namespace MyOnion.Application.Features.Employees.Commands.DeleteEmployeeById
                 }
 
                 await _repository.DeleteAsync(entity);
+                await _cacheInvalidationService.InvalidatePrefixAsync(CacheKeyPrefixes.EmployeesAll, cancellationToken);
                 return Result<Guid>.Success(entity.Id);
             }
         }

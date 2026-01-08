@@ -19,7 +19,9 @@ global using MyOnion.Application.Features.SalaryRanges.Commands.CreateSalaryRang
 global using MyOnion.Application.Features.SalaryRanges.Commands.DeleteSalaryRangeById;
 global using MyOnion.Application.Features.SalaryRanges.Commands.UpdateSalaryRange;
 global using MyOnion.Application.Features.SalaryRanges.Queries.GetSalaryRanges;
+global using MyOnion.Application.Common.Caching;
 global using MyOnion.Application.Interfaces;
+global using MyOnion.Application.Interfaces.Caching;
 global using MyOnion.Application.Interfaces.Repositories;
 global using MyOnion.Application.Parameters;
 global using MyOnion.Domain.Entities;

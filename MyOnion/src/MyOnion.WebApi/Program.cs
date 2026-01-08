@@ -19,6 +19,7 @@ try
     builder.Services.AddApplicationLayer();
     builder.Services.AddPersistenceInfrastructure(builder.Configuration);
     builder.Services.AddSharedInfrastructure(builder.Configuration);
+    builder.Services.AddCachingInfrastructure(builder.Configuration);
     builder.Services.AddSwaggerExtension();
     builder.Services.AddControllersExtension(builder.Configuration);
     // Configure CORS policies
@@ -72,6 +73,7 @@ try
     app.UseCors("AllowAll");
     // Use Authentication middleware
     app.UseAuthentication();
+    app.UseCacheBypassMiddleware();
     // Use Authorization middleware
     app.UseAuthorization();
     // Enable Swagger for API documentation

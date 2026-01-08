@@ -1,3 +1,5 @@
+using System.Text.Json.Serialization;
+
 namespace MyOnion.Application.Common.Results
 {
     public class Result
@@ -70,6 +72,7 @@ namespace MyOnion.Application.Common.Results
             Value = value;
         }
 
+        [JsonPropertyOrder(100)]
         public T Value { get; }
 
         public static Result<T> Success(T value, string message = null)
