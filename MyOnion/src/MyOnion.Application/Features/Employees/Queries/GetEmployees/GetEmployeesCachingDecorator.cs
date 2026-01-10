@@ -45,7 +45,7 @@ public sealed class GetEmployeesCachingDecorator : IPipelineBehavior<GetEmployee
         }
 
         _diagnosticsPublisher.ReportMiss(cacheKey, null);
-        if (!ShouldCache(request) || !TryBuildCachePayload(response, out var payload))
+        if (!TryBuildCachePayload(response, out var payload))
         {
             return response;
         }
@@ -103,19 +103,6 @@ public sealed class GetEmployeesCachingDecorator : IPipelineBehavior<GetEmployee
             .ToArray();
 
         return tokens.Length == 0 ? string.Empty : string.Join(",", tokens);
-    }
-
-    private static bool ShouldCache(GetEmployeesQuery request)
-    {
-        var normalizedFields = NormalizeFieldsForKey(request.Fields);
-        if (string.IsNullOrWhiteSpace(normalizedFields))
-        {
-            return true;
-        }
-
-        return !normalizedFields
-            .Split(',', StringSplitOptions.RemoveEmptyEntries)
-            .Any(field => field.Equals("position", StringComparison.OrdinalIgnoreCase));
     }
 
     private static bool TryBuildCachePayload(

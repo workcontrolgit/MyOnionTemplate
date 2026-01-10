@@ -55,8 +55,7 @@
             else
             {
                 //default fields from view model
-                var fields = _modelHelper.GetModelFields<GetEmployeesViewModel>();
-                objRequest.Fields = RemoveField(fields, nameof(GetEmployeesViewModel.Position));
+                objRequest.Fields = _modelHelper.GetModelFields<GetEmployeesViewModel>();
             }
             // query based on filter
             var qryResult = await _repository.GetEmployeeResponseAsync(objRequest);
@@ -67,21 +66,5 @@
             return PagedResult<IEnumerable<Entity>>.Success(data, objRequest.PageNumber, objRequest.PageSize, recordCount);
         }
 
-        private static string RemoveField(string fields, string fieldName)
-        {
-            if (string.IsNullOrWhiteSpace(fields))
-            {
-                return string.Empty;
-            }
-
-            var filtered = fields
-                .Split(',', StringSplitOptions.RemoveEmptyEntries)
-                .Select(field => field.Trim())
-                .Where(field => !string.IsNullOrWhiteSpace(field))
-                .Where(field => !field.Equals(fieldName, StringComparison.OrdinalIgnoreCase))
-                .ToArray();
-
-            return filtered.Length == 0 ? string.Empty : string.Join(",", filtered);
-        }
     }
 }

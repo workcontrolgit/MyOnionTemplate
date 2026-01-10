@@ -46,7 +46,7 @@ public sealed class GetPositionsCachingBehavior : IPipelineBehavior<GetPositions
         }
 
         _diagnosticsPublisher.ReportMiss(cacheKey, null);
-        if (!ShouldCache(request) || !TryBuildCachePayload(response, out var payload))
+        if (!TryBuildCachePayload(response, out var payload))
         {
             return response;
         }
@@ -101,21 +101,6 @@ public sealed class GetPositionsCachingBehavior : IPipelineBehavior<GetPositions
             .ToArray();
 
         return tokens.Length == 0 ? string.Empty : string.Join(",", tokens);
-    }
-
-    private static bool ShouldCache(GetPositionsQuery request)
-    {
-        var normalizedFields = NormalizeFieldsForKey(request.Fields);
-        if (string.IsNullOrWhiteSpace(normalizedFields))
-        {
-            return true;
-        }
-
-        return !normalizedFields
-            .Split(',', StringSplitOptions.RemoveEmptyEntries)
-            .Any(field =>
-                field.Equals("department", StringComparison.OrdinalIgnoreCase)
-                || field.Equals("salaryrange", StringComparison.OrdinalIgnoreCase));
     }
 
     private static bool TryBuildCachePayload(
