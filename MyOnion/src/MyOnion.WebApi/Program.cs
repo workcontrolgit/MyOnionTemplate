@@ -20,6 +20,8 @@ try
     builder.Services.AddPersistenceInfrastructure(builder.Configuration);
     builder.Services.AddSharedInfrastructure(builder.Configuration);
     builder.Services.AddCachingInfrastructure(builder.Configuration);
+    builder.Services.AddHttpContextAccessor();
+    builder.Services.AddScoped<ICacheDiagnosticsPublisher, HttpCacheDiagnosticsPublisher>();
     builder.Services.AddSwaggerExtension();
     builder.Services.AddControllersExtension(builder.Configuration);
     // Configure CORS policies

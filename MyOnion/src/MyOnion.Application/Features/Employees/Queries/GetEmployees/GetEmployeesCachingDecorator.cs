@@ -1,5 +1,6 @@
 #nullable enable
 using System.Text;
+using MyOnion.Application.Interfaces.Caching;
 
 namespace MyOnion.Application.Features.Employees.Queries.GetEmployees;
 
@@ -9,15 +10,18 @@ public sealed class GetEmployeesCachingDecorator : IRequestHandler<GetEmployeesQ
     private readonly IRequestHandler<GetEmployeesQuery, PagedResult<IEnumerable<Entity>>> _inner;
     private readonly ICacheProvider _cacheProvider;
     private readonly ICacheEntryOptionsFactory _entryOptionsFactory;
+    private readonly ICacheDiagnosticsPublisher _diagnosticsPublisher;
 
     public GetEmployeesCachingDecorator(
         IRequestHandler<GetEmployeesQuery, PagedResult<IEnumerable<Entity>>> inner,
         ICacheProvider cacheProvider,
-        ICacheEntryOptionsFactory entryOptionsFactory)
+        ICacheEntryOptionsFactory entryOptionsFactory,
+        ICacheDiagnosticsPublisher diagnosticsPublisher)
     {
         _inner = inner;
         _cacheProvider = cacheProvider;
         _entryOptionsFactory = entryOptionsFactory;
+        _diagnosticsPublisher = diagnosticsPublisher;
     }
 
     public async Task<PagedResult<IEnumerable<Entity>>> Handle(GetEmployeesQuery request, CancellationToken cancellationToken)
@@ -26,6 +30,7 @@ public sealed class GetEmployeesCachingDecorator : IRequestHandler<GetEmployeesQ
         var cachedResponse = await _cacheProvider.GetAsync<PagedResult<IEnumerable<Entity>>>(cacheKey, cancellationToken).ConfigureAwait(false);
         if (cachedResponse is not null)
         {
+            _diagnosticsPublisher.ReportHit();
             return cachedResponse;
         }
 
@@ -35,6 +40,7 @@ public sealed class GetEmployeesCachingDecorator : IRequestHandler<GetEmployeesQ
             return response;
         }
 
+        _diagnosticsPublisher.ReportMiss();
         var entryOptions = _entryOptionsFactory.Create(EndpointKey);
         await _cacheProvider.SetAsync(cacheKey, response, entryOptions, cancellationToken).ConfigureAwait(false);
         return response;

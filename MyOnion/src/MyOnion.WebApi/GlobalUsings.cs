@@ -50,5 +50,6 @@ global using MyOnion.Infrastructure.Persistence.Contexts;
 global using MyOnion.Infrastructure.Persistence.SeedData;
 global using MyOnion.Infrastructure.Shared;
 global using MyOnion.WebApi.Extensions;
+global using MyOnion.WebApi.Diagnostics;
 global using MyOnion.WebApi.Middlewares;
 global using Serilog;

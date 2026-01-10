@@ -223,7 +223,25 @@ public sealed class DistributedCacheProvider : ICacheProvider
             return string.Empty;
         }
 
-        var index = logicalKey.LastIndexOf(':');
-        return index <= 0 ? logicalKey : logicalKey[..index];
+        var searchIndex = 0;
+        while (searchIndex < logicalKey.Length)
+        {
+            var colonIndex = logicalKey.IndexOf(':', searchIndex);
+            if (colonIndex < 0)
+            {
+                break;
+            }
+
+            var nextColonIndex = logicalKey.IndexOf(':', colonIndex + 1);
+            var equalsIndex = logicalKey.IndexOf('=', colonIndex + 1);
+            if (equalsIndex > colonIndex && (nextColonIndex < 0 || equalsIndex < nextColonIndex))
+            {
+                return logicalKey[..colonIndex];
+            }
+
+            searchIndex = colonIndex + 1;
+        }
+
+        return logicalKey;
     }
 }

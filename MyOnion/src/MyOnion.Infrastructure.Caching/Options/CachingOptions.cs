@@ -19,6 +19,8 @@ public sealed class CachingOptions
 
     public Dictionary<string, EndpointCacheOptions> PerEndpoint { get; set; } =
         new(StringComparer.OrdinalIgnoreCase);
+
+    public CacheDiagnosticsOptions Diagnostics { get; set; } = new();
 }
 
 public sealed class ProviderSettings
@@ -45,6 +47,15 @@ public sealed class EndpointCacheOptions
     public int? AbsoluteTtlSeconds { get; set; }
 
     public int? SlidingTtlSeconds { get; set; }
+}
+
+public sealed class CacheDiagnosticsOptions
+{
+    public const string DefaultHeaderName = "X-Cache-Status";
+
+    public bool EmitCacheStatusHeader { get; set; }
+
+    public string HeaderName { get; set; } = DefaultHeaderName;
 }
 
 public static class CacheProviders
