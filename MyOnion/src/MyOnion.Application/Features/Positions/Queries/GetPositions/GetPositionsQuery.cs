@@ -59,7 +59,8 @@ namespace MyOnion.Application.Features.Positions.Queries.GetPositions
             if (string.IsNullOrEmpty(objRequest.Fields))
             {
                 //default fields from view model
-                objRequest.Fields = _modelHelper.GetModelFields<PositionSummaryDto>();
+                var fields = _modelHelper.GetModelFields<PositionSummaryDto>();
+                objRequest.Fields = RemoveFields(fields, nameof(PositionSummaryDto.Department), nameof(PositionSummaryDto.SalaryRange));
             }
             // verify orderby a valid field and exist in the DTO GetPositionsViewModel
             if (!string.IsNullOrEmpty(objRequest.OrderBy))
@@ -74,6 +75,24 @@ namespace MyOnion.Application.Features.Positions.Queries.GetPositions
             RecordsCount recordCount = qryResult.recordsCount;
             // response wrapper
             return PagedResult<IEnumerable<Entity>>.Success(data, objRequest.PageNumber, objRequest.PageSize, recordCount);
+        }
+
+        private static string RemoveFields(string fields, params string[] fieldNames)
+        {
+            if (string.IsNullOrWhiteSpace(fields))
+            {
+                return string.Empty;
+            }
+
+            var names = fieldNames ?? Array.Empty<string>();
+            var filtered = fields
+                .Split(',', StringSplitOptions.RemoveEmptyEntries)
+                .Select(field => field.Trim())
+                .Where(field => !string.IsNullOrWhiteSpace(field))
+                .Where(field => !names.Any(name => field.Equals(name, StringComparison.OrdinalIgnoreCase)))
+                .ToArray();
+
+            return filtered.Length == 0 ? string.Empty : string.Join(",", filtered);
         }
     }
 }
