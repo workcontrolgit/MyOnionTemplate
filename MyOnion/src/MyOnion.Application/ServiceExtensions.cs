@@ -30,7 +30,11 @@ namespace MyOnion.Application
                 .AddClasses(classSelector => classSelector.AssignableTo(typeof(IDataShapeHelper<>)))
                 .AsImplementedInterfaces()
                 .WithTransientLifetime());
-            services.Decorate<IRequestHandler<GetEmployeesQuery, PagedResult<IEnumerable<Entity>>>, GetEmployeesCachingDecorator>();
+            services.Scan(selector => selector
+                .FromAssemblies(Assembly.GetExecutingAssembly())
+                .AddClasses(classSelector => classSelector.AssignableTo(typeof(IPipelineBehavior<,>)))
+                .AsImplementedInterfaces()
+                .WithTransientLifetime());
         }
     }
 }

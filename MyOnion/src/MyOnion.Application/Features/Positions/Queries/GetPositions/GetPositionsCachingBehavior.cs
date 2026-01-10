@@ -1,17 +1,18 @@
 #nullable enable
 using System.Text;
+using MyOnion.Application.Common.Caching;
 using MyOnion.Application.Interfaces.Caching;
 
-namespace MyOnion.Application.Features.Employees.Queries.GetEmployees;
+namespace MyOnion.Application.Features.Positions.Queries.GetPositions;
 
-public sealed class GetEmployeesCachingDecorator : IPipelineBehavior<GetEmployeesQuery, PagedResult<IEnumerable<Entity>>>
+public sealed class GetPositionsCachingBehavior : IPipelineBehavior<GetPositionsQuery, PagedResult<IEnumerable<Entity>>>
 {
-    private static string EndpointKey => CacheKeyPrefixes.EmployeesAll;
+    private static string EndpointKey => CacheKeyPrefixes.PositionsAll;
     private readonly ICacheProvider _cacheProvider;
     private readonly ICacheEntryOptionsFactory _entryOptionsFactory;
     private readonly ICacheDiagnosticsPublisher _diagnosticsPublisher;
 
-    public GetEmployeesCachingDecorator(
+    public GetPositionsCachingBehavior(
         ICacheProvider cacheProvider,
         ICacheEntryOptionsFactory entryOptionsFactory,
         ICacheDiagnosticsPublisher diagnosticsPublisher)
@@ -22,13 +23,13 @@ public sealed class GetEmployeesCachingDecorator : IPipelineBehavior<GetEmployee
     }
 
     public async Task<PagedResult<IEnumerable<Entity>>> Handle(
-        GetEmployeesQuery request,
+        GetPositionsQuery request,
         RequestHandlerDelegate<PagedResult<IEnumerable<Entity>>> next,
         CancellationToken cancellationToken)
     {
         var cacheKey = BuildCacheKey(request);
         var entryOptions = _entryOptionsFactory.Create(EndpointKey);
-        var cachedResponse = await _cacheProvider.GetAsync<CachedEmployeesPage>(cacheKey, cancellationToken).ConfigureAwait(false);
+        var cachedResponse = await _cacheProvider.GetAsync<CachedPositionsPage>(cacheKey, cancellationToken).ConfigureAwait(false);
         if (cachedResponse is not null)
         {
             var remainingTtl = cachedResponse.ExpiresAtUtc is { } expiresAt
@@ -55,19 +56,16 @@ public sealed class GetEmployeesCachingDecorator : IPipelineBehavior<GetEmployee
         return response;
     }
 
-    private static string BuildCacheKey(GetEmployeesQuery request)
+    private static string BuildCacheKey(GetPositionsQuery request)
     {
         var builder = new StringBuilder(EndpointKey);
         builder.Append(":page=").Append(request.PageNumber);
         builder.Append(":size=").Append(request.PageSize);
-        AppendFilter(builder, "last", NormalizeValue(request.LastName));
-        AppendFilter(builder, "first", NormalizeValue(request.FirstName));
-        AppendFilter(builder, "email", NormalizeValue(request.Email));
-        AppendFilter(builder, "number", NormalizeValue(request.EmployeeNumber));
-        AppendFilter(builder, "position", NormalizeValue(request.PositionTitle));
+        AppendFilter(builder, "number", NormalizeValue(request.PositionNumber));
+        AppendFilter(builder, "title", NormalizeValue(request.PositionTitle));
+        AppendFilter(builder, "department", NormalizeValue(request.Department));
         AppendFilter(builder, "fields", NormalizeFieldsForKey(request.Fields));
-        var orderBy = request.ShapeParameter?.OrderBy ?? request.OrderBy;
-        AppendFilter(builder, "order", NormalizeValue(orderBy));
+        AppendFilter(builder, "order", NormalizeValue(request.OrderBy));
         return builder.ToString();
     }
 
@@ -105,7 +103,7 @@ public sealed class GetEmployeesCachingDecorator : IPipelineBehavior<GetEmployee
         return tokens.Length == 0 ? string.Empty : string.Join(",", tokens);
     }
 
-    private static bool ShouldCache(GetEmployeesQuery request)
+    private static bool ShouldCache(GetPositionsQuery request)
     {
         var normalizedFields = NormalizeFieldsForKey(request.Fields);
         if (string.IsNullOrWhiteSpace(normalizedFields))
@@ -115,12 +113,14 @@ public sealed class GetEmployeesCachingDecorator : IPipelineBehavior<GetEmployee
 
         return !normalizedFields
             .Split(',', StringSplitOptions.RemoveEmptyEntries)
-            .Any(field => field.Equals("position", StringComparison.OrdinalIgnoreCase));
+            .Any(field =>
+                field.Equals("department", StringComparison.OrdinalIgnoreCase)
+                || field.Equals("salaryrange", StringComparison.OrdinalIgnoreCase));
     }
 
     private static bool TryBuildCachePayload(
         PagedResult<IEnumerable<Entity>> response,
-        out CachedEmployeesPage payload)
+        out CachedPositionsPage payload)
     {
         var data = response.Value;
         if (data is null)
@@ -146,7 +146,7 @@ public sealed class GetEmployeesCachingDecorator : IPipelineBehavior<GetEmployee
             items.Add(dict);
         }
 
-        payload = new CachedEmployeesPage(
+        payload = new CachedPositionsPage(
             items,
             response.PageNumber,
             response.PageSize,
@@ -157,7 +157,7 @@ public sealed class GetEmployeesCachingDecorator : IPipelineBehavior<GetEmployee
         return true;
     }
 
-    private static PagedResult<IEnumerable<Entity>> ToPagedResult(CachedEmployeesPage payload)
+    private static PagedResult<IEnumerable<Entity>> ToPagedResult(CachedPositionsPage payload)
     {
         var data = new List<Entity>(payload.Items.Count);
         foreach (var item in payload.Items)
@@ -180,7 +180,7 @@ public sealed class GetEmployeesCachingDecorator : IPipelineBehavior<GetEmployee
         return PagedResult<IEnumerable<Entity>>.Success(data, payload.PageNumber, payload.PageSize, recordsCount, payload.Message);
     }
 
-    private sealed record CachedEmployeesPage(
+    private sealed record CachedPositionsPage(
         IReadOnlyList<Dictionary<string, object?>> Items,
         int PageNumber,
         int PageSize,

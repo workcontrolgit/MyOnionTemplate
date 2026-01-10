@@ -8,7 +8,10 @@ namespace MyOnion.Infrastructure.Caching.Providers.Distributed;
 
 public sealed class DistributedCacheProvider : ICacheProvider
 {
-    private static readonly JsonSerializerOptions SerializerOptions = new(JsonSerializerDefaults.Web);
+    private static readonly JsonSerializerOptions SerializerOptions = new(JsonSerializerDefaults.Web)
+    {
+        ReferenceHandler = System.Text.Json.Serialization.ReferenceHandler.IgnoreCycles
+    };
 
     private readonly IDistributedCache _cache;
     private readonly IOptionsMonitor<CachingOptions> _optionsMonitor;

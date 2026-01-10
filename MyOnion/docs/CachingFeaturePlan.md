@@ -7,6 +7,8 @@ Template OnionAPI needs a first-class caching layer so frequently requested endp
 - Keep caching configurable per environment with sensible defaults (disabled for development/local).
 - Support both in-memory and distributed providers without duplicating code paths.
 - Provide a unified way to invalidate caches when data changes or via administrative commands.
+- Ensure cache keys are stable (canonical) so equivalent requests hit the same cache entry.
+- Keep cached payloads compact and safe to serialize by caching DTO-style projections instead of EF graphs.
 
 ## Configuration Requirements
 - Add `Caching` section to `appsettings.*.json` containing:
@@ -17,17 +19,23 @@ Template OnionAPI needs a first-class caching layer so frequently requested endp
 - Bind settings to `CachingOptions` with `IOptionsMonitor` so runtime toggles/hot reload are possible.
 - Include a global `DisableCache` flag for troubleshooting (overrides all other settings when `true`).
 - Support per-request overrides via a secure `X-Debug-Disable-Cache` header. Only process this header when the caller is authenticated and authorized (e.g., Admin role) and log every use.
+- Emit cache diagnostics headers for developers:
+  - `X-Cache-Status` = `HIT|MISS`
+  - `X-Cache-Key` = computed cache key
+  - `X-Cache-Duration-Ms` = remaining TTL for hits (absolute TTL)
 
 ## Provider Support
 - **Memory:** Wrap `IMemoryCache` and register it when provider is `Memory`. Ensure singleton service with size-limiting configuration to avoid unbounded growth.
 - **Distributed:** Support `IDistributedCache` so Redis/SQL Server providers can plug in. Leverage JSON serialization for values.
 - Provide `ICacheProvider` abstraction exposing `GetAsync`, `SetAsync`, `RemoveAsync`, and `RemoveByPrefixAsync` to keep service code independent from the provider implementation. Because `IDistributedCache` lacks native prefix removal, maintain a prefix index (e.g., `Caching:Index:{Prefix}` stored in the distributed cache) that tracks keys per prefix so `RemoveByPrefixAsync` can iterate the stored key set.
+- When `IMemoryCache` uses a `SizeLimit`, every cache entry must set a non-zero `Size` or it will throw.
 
 ## Code Locations & Layering
 - **Interfaces/Contracts:** add `ICacheProvider` and `ICacheInvalidationService` under `MyOnion.Application/Interfaces` so handlers reference only abstractions.
 - **Implementations:** live in the new `MyOnion.Infrastructure.Caching` project (e.g., `MemoryCacheProvider`, `DistributedCacheProvider`, `CacheInvalidationService`).
 - **Alternative Shared Placement:** if we need these interfaces outside the application assembly, we can move them into `MyOnion.Infrastructure.Shared` (or another shared project) while still keeping implementations inside `MyOnion.Infrastructure.Caching`.
 - **Composition Root:** `MyOnion.WebApi` (in `Program.cs` or `ServiceCollectionExtensions`) binds `CachingOptions` and selects the provider at runtime, defaulting to disabled caching for development profiles.
+- **Caching behavior:** implement cache logic as MediatR pipeline behaviors (not request handler decorators) to avoid recursive handler resolution. Register behaviors with Scrutor scanning for `IPipelineBehavior<,>`.
 
 ## Example Interfaces & Providers
 
@@ -133,6 +141,7 @@ public sealed class MemoryCacheProvider : ICacheProvider
 - Standardize keys as `{Prefix}:{Domain}:{Identifier}` (for example, `MyOnion:Employees:ById:1234`).
 - Provide helper utilities to compose keys and to record dependencies per aggregate (e.g., every position record includes a `Positions:All` marker).
 - For list endpoints, include query fingerprints (sorted filter parameters + page number) to avoid collisions.
+- Canonicalize list query parameters (trim, lowercase, sort fields, de-dupe) before computing keys so different field orders map to one key.
 
 ## Invalidation Options
 - Expose an `ICacheInvalidationService` with methods to purge by key, prefix, or entire cache.
@@ -143,9 +152,10 @@ public sealed class MemoryCacheProvider : ICacheProvider
 ## Implementation Outline
 1. New project `MyOnion.Infrastructure.Caching` containing options, provider implementations, and invalidation service.
 2. Register the caching module in `MyOnion.WebApi` composition root, binding options and selecting provider at runtime.
-3. Introduce caching decorators for read-heavy queries (e.g., `GetEmployeesQueryHandler`) that accept `CacheEntryOptions` so handlers can opt into custom TTLs or sliding expirations; fall back to `DefaultCacheDurationSeconds`.
+3. Introduce caching pipeline behaviors for read-heavy queries (e.g., `GetEmployeesQueryHandler`) that accept `CacheEntryOptions` so handlers can opt into custom TTLs or sliding expirations; fall back to `DefaultCacheDurationSeconds`. Register behaviors via Scrutor scanning for `IPipelineBehavior<,>`.
 4. Add middleware or filters to respect the secure `X-Debug-Disable-Cache` header for debugging.
 5. Extend health checks to report cache provider status (memory usage, distributed connectivity).
+6. Cache DTO-style projections for list endpoints to avoid serializing EF navigation graphs; skip caching when a request includes heavy nav fields.
 
 ## Rollout Steps
 1. Scaffold `MyOnion.Infrastructure.Caching` project with `CachingOptions`, provider interfaces, and dependency injection extensions.
@@ -168,3 +178,5 @@ public sealed class MemoryCacheProvider : ICacheProvider
 - **Stale Data:** rely on invalidation service + repository hooks; add monitoring to detect high cache age.
 - **Distributed Provider Failures:** wrap distributed calls with fallbacks to pass-through behavior when the cache backend is unavailable.
 - **Memory Pressure:** allow memory provider to set size limits and expose metrics for dashboards.
+- **Cache Key Explosion:** normalize fields/filters, cap entries with size limits, and avoid caching for high-cardinality field sets.
+- **Serialization Loops:** cache DTO projections instead of EF graphs; avoid navigation properties in cached payloads unless explicitly shaped.

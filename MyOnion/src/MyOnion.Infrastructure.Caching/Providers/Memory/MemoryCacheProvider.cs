@@ -50,6 +50,10 @@ public sealed class MemoryCacheProvider : ICacheProvider
             AbsoluteExpirationRelativeToNow = entryOptions.AbsoluteTtl,
             SlidingExpiration = entryOptions.SlidingTtl
         };
+        if (options.ProviderSettings.Memory.SizeLimitMB is int sizeLimit && sizeLimit > 0)
+        {
+            memoryOptions.Size = 1;
+        }
 
         _cache.Set(cacheKey, value, memoryOptions);
         TrackKey(options, key, cacheKey);
