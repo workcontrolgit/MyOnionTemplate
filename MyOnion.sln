@@ -19,6 +19,9 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MyOnion.Infrastructure.Shared", "MyOnion\src\MyOnion.Infrastructure.Shared\MyOnion.Infrastructure.Shared.csproj", "{8D2AA125-BECA-414D-AF77-70D55950F380}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{8EC462FD-D22E-90A8-E5CE-7E832BA40C5D}"
+	ProjectSection(SolutionItems) = preProject
+		MyOnion\docs\MediatR-Replacement-Plan.md = MyOnion\docs\MediatR-Replacement-Plan.md
+	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{DB82AE70-76E5-D76A-C66A-5F02FE794F50}"
 EndProject
@@ -39,16 +42,17 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Docs", "Docs", "{50A5EEAC-F
 		MyOnion\docs\.NET10 Upgrade Plan.md = MyOnion\docs\.NET10 Upgrade Plan.md
 		MyOnion\docs\DataShapingBlog.md = MyOnion\docs\DataShapingBlog.md
 		MyOnion\docs\DataShapingUpgradePlan.md = MyOnion\docs\DataShapingUpgradePlan.md
+		MyOnion\docs\EndpointTimingBlog.md = MyOnion\docs\EndpointTimingBlog.md
 		MyOnion\docs\EndpointTimingPlan.md = MyOnion\docs\EndpointTimingPlan.md
+		MyOnion\docs\MediatR-Replacement-Plan.md = MyOnion\docs\MediatR-Replacement-Plan.md
 		MyOnion\docs\TestingPlans\Positions-Unit-Testing.md = MyOnion\docs\TestingPlans\Positions-Unit-Testing.md
+		MyOnion\docs\PositionTestingBlog.md = MyOnion\docs\PositionTestingBlog.md
 		MyOnion\README.md = MyOnion\README.md
 		MyOnion\docs\Result Pattern.md = MyOnion\docs\Result Pattern.md
-		MyOnion\docs\SpecificationPatternBlog.md = MyOnion\docs\SpecificationPatternBlog.md
-		MyOnion\docs\PositionTestingBlog.md = MyOnion\docs\PositionTestingBlog.md
-		MyOnion\docs\SpecificationUpgradePlan.md = MyOnion\docs\SpecificationUpgradePlan.md
-		MyOnion\docs\EndpointTimingBlog.md = MyOnion\docs\EndpointTimingBlog.md
-		MyOnion\docs\Template-Onion-API-Net10-Blog.md = MyOnion\docs\Template-Onion-API-Net10-Blog.md
 		MyOnion\docs\ResultPatternBlog.md = MyOnion\docs\ResultPatternBlog.md
+		MyOnion\docs\SpecificationPatternBlog.md = MyOnion\docs\SpecificationPatternBlog.md
+		MyOnion\docs\SpecificationUpgradePlan.md = MyOnion\docs\SpecificationUpgradePlan.md
+		MyOnion\docs\Template-Onion-API-Net10-Blog.md = MyOnion\docs\Template-Onion-API-Net10-Blog.md
 		MyOnion\docs\TestingPlans\TestCoverage100Plan.md = MyOnion\docs\TestingPlans\TestCoverage100Plan.md
 	EndProjectSection
 EndProject
