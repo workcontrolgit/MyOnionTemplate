@@ -6,7 +6,7 @@ Goal: provide automated coverage for the Positions feature across application, i
 1. **Application layer**
    - Command handlers: create, update, delete (happy path + error conditions).
    - Query handlers: get-by-id and list (filtering, field validation, error paths).
-   - AutoMapper profile validation and ValidationBehavior interactions.
+   - Mapster configuration validation and ValidationBehavior interactions.
 2. **Infrastructure layer**
    - `PositionRepositoryAsync` read/write operations using EF Core InMemory provider.
    - Data shaping utilities and specification filters.
