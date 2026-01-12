@@ -39,6 +39,10 @@ Replace AutoMapper with Mapster across the solution while keeping API behavior s
 - Use Mapster with `TypeAdapterConfig` + `MapsterMapper.IMapper` to keep DI and usage close to the current AutoMapper pattern.
   - Note: Scrutor is already used in `ServiceExtensions.cs` for `IDataShapeHelper` registration; Mapster config scanning can be done via `config.Scan(Assembly)` and does not require Scrutor.
 
+## Versioning
+- AutoMapper (replaced): `12.0.1`.
+- Mapster (replacement): `7.4.0` with `Mapster.DependencyInjection` `1.0.0`.
+
 ## Rationale (Why Mapster)
 - Compatibility: Similar mental model (source -> destination mapping), supports reverse maps, flattening, and custom rules.
 - Low-impact migration: `MapsterMapper.IMapper` keeps injection and `Map<T>` usage similar to AutoMapper.

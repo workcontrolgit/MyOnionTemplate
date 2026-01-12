@@ -1,10 +1,10 @@
 using System.Reflection;
 using FluentValidation;
-using MediatR;
 using Microsoft.Extensions.DependencyInjection;
 using MyOnion.Application.Behaviours;
 using MyOnion.Application.Helpers;
 using MyOnion.Application.Interfaces;
+using MyOnion.Application.Messaging;
 using MyOnion.Domain.Entities;
 
 namespace MyOnion.Application
@@ -18,7 +18,12 @@ namespace MyOnion.Application
             services.AddSingleton(mapsterConfig);
             services.AddScoped<IMapper, ServiceMapper>();
             services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());
-            services.AddMediatR(cfg => cfg.RegisterServicesFromAssemblies(Assembly.GetExecutingAssembly()));
+            services.AddScoped<IMediator, Mediator>();
+            services.Scan(selector => selector
+                .FromAssemblies(Assembly.GetExecutingAssembly())
+                .AddClasses(classSelector => classSelector.AssignableTo(typeof(IRequestHandler<,>)))
+                .AsImplementedInterfaces()
+                .WithTransientLifetime());
             services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationBehavior<,>));
             services.AddScoped<IDataShapeHelper<Position>, DataShapeHelper<Position>>();
             services.AddScoped<IDataShapeHelper<Employee>, DataShapeHelper<Employee>>();
