@@ -210,7 +210,7 @@ $projects = @(
         Category = "src"
         Name = "Apiresources.Application"
         Source = Join-Path $repoRoot "src\\MyOnion.Application"
-        Description = "Application layer: CQRS, DTOs, validation, and MediatR behaviours."
+        Description = "Application layer: CQRS, DTOs, validation, and mediator behaviours."
         Replace = @{
             "MyOnion.Application" = "`$safeprojectname$"
             "MyOnion.Domain" = "`$ext_projectname$.Domain"
@@ -323,7 +323,7 @@ foreach ($project in $projects) {
 <VSTemplate Version="3.0.0" Type="ProjectGroup" xmlns="http://schemas.microsoft.com/developer/vstemplate/2005">
   <TemplateData>
     <Name>Template Onion API</Name>
-    <Description>Creates an 8-project clean architecture API solution (WebApi, Application, Domain, Infrastructure.Persistence, Infrastructure.Shared, plus Application, Infrastructure, and WebApi test projects) targeting .NET with CQRS, MediatR, FluentValidation, EF Core, and Swagger.</Description>
+    <Description>Creates an 8-project clean architecture API solution (WebApi, Application, Domain, Infrastructure.Persistence, Infrastructure.Shared, plus Application, Infrastructure, and WebApi test projects) targeting .NET with CQRS, mediator, FluentValidation, EF Core, and Swagger.</Description>
     <ProjectType>CSharp</ProjectType>
     <SortOrder>1000</SortOrder>
     <CreateNewFolder>true</CreateNewFolder>

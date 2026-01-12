@@ -2,6 +2,7 @@
 
 ## Goal
 Replace MediatR with a free, open source alternative while preserving behavior across requests, handlers, and pipeline behaviors.
+Reason: MediatR is moving to a commercial license (see public announcement by Jimmy Bogard).
 
 ## Scope
 - Projects: `MyOnion.Application`, `MyOnion.WebApi`, tests.
@@ -19,3 +20,16 @@ Replace MediatR with a free, open source alternative while preserving behavior a
 4. Refactor handlers and requests to the new mediator.
 5. Update tests and docs.
 6. Validate with build and tests.
+
+## Progress Review
+- Replacement already implemented with an in-house mediator in `MyOnion/src/MyOnion.Application/Messaging/`.
+- DI uses `IMediator` from `MyOnion.Application.Messaging` via `MyOnion/src/MyOnion.Application/ServiceExtensions.cs`.
+- No `MediatR` package references found in `MyOnion/src` or `MyOnion/tests`.
+
+## Status
+- [x] Replacement selected: in-house mediator (`MyOnion.Application.Messaging`).
+- [x] Inventory completed: handlers and behaviors use local interfaces.
+- [x] Dependencies updated: no MediatR packages in `src`/`tests`.
+- [x] Handlers updated to in-house mediator interfaces.
+- [x] Docs cleanup (README/AGENTS/etc. still mention MediatR).
+- [ ] Build/test validation (run `dotnet build` / `dotnet test`).
