@@ -1,55 +1,21 @@
-# MediatR Replacement Plan - Project "Onion Relay"
+# MediatR Replacement Plan
 
 ## Goal
-Replace MediatR with a lightweight in-process mediator while preserving CQRS and pipeline behavior support across the Application layer.
+Replace MediatR with a free, open source alternative while preserving behavior across requests, handlers, and pipeline behaviors.
 
 ## Scope
-- Application layer request/handler abstractions
-- Pipeline behaviors (validation, caching, logging, etc.)
-- DI registration and handler discovery
-- Controllers and tests that depend on `IMediator`
-- Remove MediatR package and global usings
+- Projects: `MyOnion.Application`, `MyOnion.WebApi`, tests.
+- Files: DI registration, request/handler definitions, pipeline behaviors, and tests.
 
-## Non-Goals
-- Changing request/response DTO shapes
-- Introducing external message buses
-- Rewriting existing feature logic
+## Success Criteria
+- All MediatR references removed.
+- Replacement mediator integrated with DI and pipeline behaviors.
+- Tests updated and passing.
 
-## Phases
-### Phase 1 - Inventory and Design
-- Inventory MediatR usages in Application, WebApi, and tests.
-- List current behaviors and handler conventions.
-- Define local interfaces (`IRequest<T>`, `IRequestHandler<,>`, `IPipelineBehavior<,>`, `IMediator`).
-- Decide on handler registration approach (Scrutor scan or reflection helper).
-
-### Phase 2 - Infrastructure Build
-- Implement mediator (compose behaviors and invoke handlers).
-- Add DI registration for mediator, handlers, and behaviors.
-- Add new namespace/global usings in Application and WebApi.
-- Ensure behavior order matches current MediatR setup.
-
-### Phase 3 - Migration
-- Update all requests/handlers to new interfaces.
-- Replace `MediatR.IMediator` injections with local `IMediator`.
-- Update tests and fixtures using MediatR types.
-- Remove MediatR package and global usings.
-
-### Phase 4 - Validation and Cleanup
-- Build the solution.
-- Run tests for Application and WebApi.
-- Remove orphaned files/usings and verify analyzers pass.
-
-## Risks and Mitigations
-- Behavior order changes could affect validation/caching: mirror existing registration order.
-- DI scanning misses handlers: add unit test or startup check to verify counts.
-- Runtime resolution issues: keep handler interfaces and constraints consistent.
-
-## Acceptance Criteria
-- No references to MediatR packages/usings remain.
-- All existing commands/queries work with pipeline behaviors intact.
-- Build succeeds and tests pass.
-
-## Validation Commands
-- `dotnet build MyOnion.sln -c Release`
-- `dotnet test MyOnion.sln`
-
+## Work Plan
+1. Choose a replacement (e.g., Wolverine, Mediator, or a lightweight in-house mediator).
+2. Inventory MediatR usage (requests, handlers, behaviors, DI registration).
+3. Update dependencies and DI wiring.
+4. Refactor handlers and requests to the new mediator.
+5. Update tests and docs.
+6. Validate with build and tests.
