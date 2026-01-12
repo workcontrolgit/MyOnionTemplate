@@ -8,7 +8,7 @@ global using System.Linq;
 global using System.Threading;
 global using System.Threading.Tasks;
 global using Asp.Versioning;
-global using MediatR;
+global using MyOnion.Application.Messaging;
 global using Microsoft.AspNetCore.Authentication.JwtBearer;
 global using Microsoft.AspNetCore.Builder;
 global using Microsoft.AspNetCore.Hosting;

@@ -1,5 +1,5 @@
-global using AutoMapper;
 global using FluentAssertions;
+global using MapsterMapper;
 global using Moq;
 global using MyOnion.Application.Exceptions;
 global using MyOnion.Application.Features.Departments.Commands.CreateDepartment;

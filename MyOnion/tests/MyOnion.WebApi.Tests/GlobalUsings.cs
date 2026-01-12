@@ -1,5 +1,5 @@
 global using FluentAssertions;
-global using MediatR;
+global using MyOnion.Application.Messaging;
 global using Microsoft.AspNetCore.Http;
 global using Microsoft.AspNetCore.Mvc;
 global using Microsoft.Extensions.DependencyInjection;
