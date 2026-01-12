@@ -25,6 +25,7 @@ Reason: MediatR is moving to a commercial license (see public announcement by Ji
 - Replacement already implemented with an in-house mediator in `MyOnion/src/MyOnion.Application/Messaging/`.
 - DI uses `IMediator` from `MyOnion.Application.Messaging` via `MyOnion/src/MyOnion.Application/ServiceExtensions.cs`.
 - No `MediatR` package references found in `MyOnion/src` or `MyOnion/tests`.
+- FluentValidation is enforced through `ValidationBehavior<,>` in `MyOnion/src/MyOnion.Application/Behaviours/ValidationBehaviour.cs`, registered as a pipeline behavior in `MyOnion/src/MyOnion.Application/ServiceExtensions.cs`. Requests sent via `IMediator.Send(...)` (including create/insert commands) still run validation.
 
 ## Status
 - [x] Replacement selected: in-house mediator (`MyOnion.Application.Messaging`).

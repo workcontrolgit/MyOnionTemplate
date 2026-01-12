@@ -1,5 +1,4 @@
 using System.Reflection;
-using AutoMapper;
 using FluentValidation;
 using Microsoft.Extensions.DependencyInjection;
 using MyOnion.Application.Behaviours;
@@ -14,7 +13,10 @@ namespace MyOnion.Application
     {
         public static void AddApplicationLayer(this IServiceCollection services)
         {
-            services.AddAutoMapper(Assembly.GetExecutingAssembly());
+            var mapsterConfig = new TypeAdapterConfig();
+            mapsterConfig.Scan(Assembly.GetExecutingAssembly());
+            services.AddSingleton(mapsterConfig);
+            services.AddScoped<IMapper, ServiceMapper>();
             services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());
             services.AddScoped<IMediator, Mediator>();
             services.Scan(selector => selector
