@@ -53,38 +53,4 @@ namespace MyOnion.Application.Specifications.Employees
         }
     }
 
-    public class EmployeesKeywordSpecification : BaseSpecification<Employee>
-    {
-        public EmployeesKeywordSpecification(PagedEmployeesQuery request, bool applyPaging = true)
-            : base(BuildSearchExpression(request.Search?.Value))
-        {
-            AddInclude(e => e.Position);
-            var orderBy = string.IsNullOrWhiteSpace(request.OrderBy) ? "LastName" : request.OrderBy;
-            ApplyOrderBy(orderBy);
-
-            if (applyPaging && request.PageSize > 0)
-            {
-                ApplyPaging((request.PageNumber - 1) * request.PageSize, request.PageSize);
-            }
-        }
-
-        private static Expression<Func<Employee, bool>> BuildSearchExpression(string keyword)
-        {
-            if (string.IsNullOrWhiteSpace(keyword))
-            {
-                return null;
-            }
-
-            var term = keyword.ToLower().Trim();
-            var predicate = PredicateBuilder.New<Employee>();
-
-            predicate = predicate.Or(p => p.LastName.ToLower().Contains(term));
-            predicate = predicate.Or(p => p.FirstName.ToLower().Contains(term));
-            predicate = predicate.Or(p => p.Email.ToLower().Contains(term));
-            predicate = predicate.Or(p => p.EmployeeNumber.ToLower().Contains(term));
-            predicate = predicate.Or(p => p.Position.PositionTitle.ToLower().Contains(term));
-
-            return predicate;
-        }
-    }
 }

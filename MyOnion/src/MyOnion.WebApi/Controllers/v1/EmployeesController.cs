@@ -26,19 +26,6 @@
         }
 
         /// <summary>
-        /// Retrieves a paged list of employees.
-        /// Support Ngx-DataTables https://medium.com/scrum-and-coke/angular-11-pagination-of-zillion-rows-45d8533538c0
-        /// </summary>
-        /// <param name="query">The query parameters for the paged list.</param>
-        /// <returns>A paged list of employees.</returns>
-        [HttpPost]
-        [Route("Paged")]
-        public async Task<IActionResult> Paged(PagedEmployeesQuery query)
-        {
-            return Ok(await Mediator.Send(query));
-        }
-
-        /// <summary>
         /// Creates a new employee.
         /// </summary>
         /// <param name="command">Employee payload.</param>

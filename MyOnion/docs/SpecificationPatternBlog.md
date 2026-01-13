@@ -114,7 +114,7 @@ Because specifications are immutable, multiple handlers can share the same insta
 
 1. **Define a spec contract** just like `ISpecification<T>` so every query exposes the same knobs.
 2. **Build a base class** with helpers to add includes, paging, and ordering; keep the API expressive but focused.
-3. **Create a spec catalogue** per aggregate—`EmployeesByFiltersSpecification`, `EmployeesKeywordSpecification`, etc.—to capture real scenarios.
+3. **Create a spec catalogue** per aggregate—`EmployeesByFiltersSpecification`, etc.—to capture real scenarios.
 4. **Expose spec-friendly repository methods** such as `ListAsync(ISpecification<T>)` or `FirstOrDefaultAsync(ISpecification<T>)` so consumers pass intent instead of ad-hoc predicates.
 
 Once you capture filtering logic inside specs, you spend less time wiring boilerplate queries, gain flexibility when requirements change, and end up with small objects that are easy to test in isolation. That combination is why the specification pattern has become the backbone of data access in Template OnionAPI.
