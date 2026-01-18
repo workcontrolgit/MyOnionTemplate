@@ -19,7 +19,7 @@
             Departments = GenerateDepartments(rowDepartments, seedValue);
             SalaryRanges = GenerateSalaryRanges(rowSalaryRanges, seedValue);
             Positions = GeneratePositions(rowPositions, seedValue, Departments, SalaryRanges);
-            Employees = GenerateEmployees(rowEmployees, seedValue, Positions);
+            Employees = GenerateEmployees(rowEmployees, seedValue, Positions, Departments);
         }
 
         private static IReadOnlyCollection<SalaryRange> GenerateSalaryRanges(int rowCount, int seedValue)
@@ -52,7 +52,7 @@
             return faker.Generate(rowCount);
         }
 
-        private static IReadOnlyCollection<Employee> GenerateEmployees(int rowCount, int seedValue, IEnumerable<Position> positions)
+        private static IReadOnlyCollection<Employee> GenerateEmployees(int rowCount, int seedValue, IEnumerable<Position> positions, IEnumerable<Department> departments)
         {
             // Setup faker for generating Employee data with specific rules, using position information
             var faker = new Faker<Employee>()
@@ -69,6 +69,7 @@
                 .RuleFor(r => r.Email, (f, p) => f.Internet.Email(p.FirstName, p.LastName))
                 .RuleFor(r => r.Phone, f => f.Phone.PhoneNumber("(###)-###-####"))
                 .RuleFor(r => r.PositionId, f => f.PickRandom(positions).Id)
+                .RuleFor(r => r.DepartmentId, f => f.PickRandom(departments).Id)
                 .RuleFor(r => r.Created, f => f.Date.Past(f.Random.Number(1, 5), DateTime.Now))
                 .RuleFor(r => r.CreatedBy, f => f.Internet.UserName());
 

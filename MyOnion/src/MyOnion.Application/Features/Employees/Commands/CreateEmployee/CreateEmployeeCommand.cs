@@ -9,6 +9,7 @@ namespace MyOnion.Application.Features.Employees.Commands.CreateEmployee
         public string MiddleName { get; set; }
         public string LastName { get; set; }
         public Guid PositionId { get; set; }
+        public Guid DepartmentId { get; set; }
         public decimal Salary { get; set; }
         public DateTime Birthday { get; set; }
         public string Email { get; set; }

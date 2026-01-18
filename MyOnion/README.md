@@ -38,6 +38,23 @@ dotnet watch run --project MyOnion.WebApi/MyOnion.WebApi.csproj
 ```
 Navigate to `https://localhost:5001/swagger` for API exploration. Health checks are exposed at `/health`.
 
+## Docker Development
+```powershell
+# Create and export a dev HTTPS cert for container mounting
+$certPath = "$env:USERPROFILE\\.aspnet\\https\\myonion-dev.pfx"
+$certPassword = "devpassword"
+dotnet dev-certs https --clean
+dotnet dev-certs https --trust
+dotnet dev-certs https -ep $certPath -p $certPassword
+
+# Copy the example environment file and set passwords
+Copy-Item .env.example .env
+
+# Start the API + SQL Server
+docker compose up --build
+```
+Navigate to `https://localhost:44378/swagger/index.html` from the host.
+
 ## Coding Standards
 - Follow standard C# conventions (PascalCase for types, camelCase for locals/parameters, interfaces prefixed with `I`).
 - Place new features under `MyOnion.Application/Features/<FeatureName>` with paired request/response handlers.

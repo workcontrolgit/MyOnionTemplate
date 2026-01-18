@@ -1,0 +1,22 @@
+services:
+  myonion-webapi:
+    build:
+      context: .
+      dockerfile: src/MyOnion.WebApi/Dockerfile
+    environment:
+      ConnectionStrings__DefaultConnection: Server=myonion-sql;Database=MyOnionDb;User Id=sa;Password=${MYONION_SQL_PASSWORD};TrustServerCertificate=True
+    depends_on:
+      - myonion-sql
+
+  myonion-sql:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    environment:
+      ACCEPT_EULA: "Y"
+      MSSQL_SA_PASSWORD: ${MYONION_SQL_PASSWORD}
+    ports:
+      - "14333:1433"
+    volumes:
+      - myonion-sql-data:/var/opt/mssql
+
+volumes:
+  myonion-sql-data:
