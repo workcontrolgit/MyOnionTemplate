@@ -1,4 +1,4 @@
-using MyOnion.Infrastructure.Caching.Options;
+using MyOnion.WebApi.Caching.Options;
 
 namespace MyOnion.WebApi.Middlewares;
 

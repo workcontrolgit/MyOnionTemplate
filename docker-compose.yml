@@ -1,5 +1,6 @@
 services:
   myonion-webapi:
+    container_name: MyOnion.WebApi
     build:
       context: MyOnion
       dockerfile: src/MyOnion.WebApi/Dockerfile

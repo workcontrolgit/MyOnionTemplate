@@ -1,4 +1,5 @@
 #nullable enable
+using System.Diagnostics;
 using System.Text;
 using MyOnion.Application.Interfaces.Caching;
 
@@ -10,15 +11,18 @@ public sealed class GetEmployeesCachingDecorator : IPipelineBehavior<GetEmployee
     private readonly ICacheProvider _cacheProvider;
     private readonly ICacheEntryOptionsFactory _entryOptionsFactory;
     private readonly ICacheDiagnosticsPublisher _diagnosticsPublisher;
+    private readonly ICacheStatsCollector _statsCollector;
 
     public GetEmployeesCachingDecorator(
         ICacheProvider cacheProvider,
         ICacheEntryOptionsFactory entryOptionsFactory,
-        ICacheDiagnosticsPublisher diagnosticsPublisher)
+        ICacheDiagnosticsPublisher diagnosticsPublisher,
+        ICacheStatsCollector statsCollector)
     {
         _cacheProvider = cacheProvider;
         _entryOptionsFactory = entryOptionsFactory;
         _diagnosticsPublisher = diagnosticsPublisher;
+        _statsCollector = statsCollector;
     }
 
     public async Task<PagedResult<IEnumerable<Entity>>> Handle(
@@ -28,13 +32,16 @@ public sealed class GetEmployeesCachingDecorator : IPipelineBehavior<GetEmployee
     {
         var cacheKey = BuildCacheKey(request);
         var entryOptions = _entryOptionsFactory.Create(EndpointKey);
+        var start = Stopwatch.GetTimestamp();
         var cachedResponse = await _cacheProvider.GetAsync<CachedEmployeesPage>(cacheKey, cancellationToken).ConfigureAwait(false);
+        var latency = Stopwatch.GetElapsedTime(start);
         if (cachedResponse is not null)
         {
             var remainingTtl = cachedResponse.ExpiresAtUtc is { } expiresAt
                 ? expiresAt - DateTimeOffset.UtcNow
                 : (TimeSpan?)null;
             _diagnosticsPublisher.ReportHit(cacheKey, remainingTtl);
+            _statsCollector.RecordHit(latency);
             return ToPagedResult(cachedResponse);
         }
 
@@ -45,6 +52,7 @@ public sealed class GetEmployeesCachingDecorator : IPipelineBehavior<GetEmployee
         }
 
         _diagnosticsPublisher.ReportMiss(cacheKey, null);
+        _statsCollector.RecordMiss(latency);
         if (!TryBuildCachePayload(response, out var payload))
         {
             return response;

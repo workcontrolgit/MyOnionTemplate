@@ -1,5 +1,5 @@
 #nullable enable
-namespace MyOnion.Infrastructure.Caching.Options;
+namespace MyOnion.WebApi.Caching.Options;
 
 public sealed class CachingOptions
 {
@@ -67,14 +67,14 @@ public sealed class CacheDiagnosticsOptions
     public string KeyDisplayMode { get; set; } = DefaultKeyDisplayMode;
 }
 
-public static class CacheKeyDisplayModes
-{
-    public const string Raw = "Raw";
-    public const string Hash = "Hash";
-}
-
 public static class CacheProviders
 {
     public const string Memory = "Memory";
     public const string Distributed = "Distributed";
+}
+
+public static class CacheKeyDisplayModes
+{
+    public const string Raw = "Raw";
+    public const string Hash = "Hash";
 }

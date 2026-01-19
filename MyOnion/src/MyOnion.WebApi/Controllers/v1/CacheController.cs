@@ -10,10 +10,14 @@ namespace MyOnion.WebApi.Controllers.v1;
 public sealed class CacheController : BaseApiController
 {
     private readonly ICacheInvalidationService _cacheInvalidationService;
+    private readonly ICacheStatsCollector _statsCollector;
 
-    public CacheController(ICacheInvalidationService cacheInvalidationService)
+    public CacheController(
+        ICacheInvalidationService cacheInvalidationService,
+        ICacheStatsCollector statsCollector)
     {
         _cacheInvalidationService = cacheInvalidationService;
+        _statsCollector = statsCollector;
     }
 
     [HttpPost("invalidate")]
@@ -43,5 +47,21 @@ public sealed class CacheController : BaseApiController
         }
 
         return BadRequest("Specify a key, prefix, or set invalidateAll=true.");
+    }
+
+    [HttpGet("stats")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    public IActionResult Stats()
+    {
+        var snapshot = _statsCollector.Snapshot();
+        var total = snapshot.Hits + snapshot.Misses;
+        var hitRate = total == 0 ? 0 : (double)snapshot.Hits / total;
+        return Ok(new CacheStatsResponse(
+            snapshot.Hits,
+            snapshot.Misses,
+            hitRate,
+            snapshot.AverageHitLatencyMs,
+            snapshot.AverageMissLatencyMs,
+            snapshot.StartedAtUtc));
     }
 }

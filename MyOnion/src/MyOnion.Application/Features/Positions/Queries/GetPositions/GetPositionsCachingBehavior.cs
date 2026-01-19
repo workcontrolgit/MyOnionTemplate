@@ -1,4 +1,5 @@
 #nullable enable
+using System.Diagnostics;
 using System.Text;
 using MyOnion.Application.Common.Caching;
 using MyOnion.Application.Interfaces.Caching;
@@ -11,15 +12,18 @@ public sealed class GetPositionsCachingBehavior : IPipelineBehavior<GetPositions
     private readonly ICacheProvider _cacheProvider;
     private readonly ICacheEntryOptionsFactory _entryOptionsFactory;
     private readonly ICacheDiagnosticsPublisher _diagnosticsPublisher;
+    private readonly ICacheStatsCollector _statsCollector;
 
     public GetPositionsCachingBehavior(
         ICacheProvider cacheProvider,
         ICacheEntryOptionsFactory entryOptionsFactory,
-        ICacheDiagnosticsPublisher diagnosticsPublisher)
+        ICacheDiagnosticsPublisher diagnosticsPublisher,
+        ICacheStatsCollector statsCollector)
     {
         _cacheProvider = cacheProvider;
         _entryOptionsFactory = entryOptionsFactory;
         _diagnosticsPublisher = diagnosticsPublisher;
+        _statsCollector = statsCollector;
     }
 
     public async Task<PagedResult<IEnumerable<Entity>>> Handle(
@@ -29,13 +33,16 @@ public sealed class GetPositionsCachingBehavior : IPipelineBehavior<GetPositions
     {
         var cacheKey = BuildCacheKey(request);
         var entryOptions = _entryOptionsFactory.Create(EndpointKey);
+        var start = Stopwatch.GetTimestamp();
         var cachedResponse = await _cacheProvider.GetAsync<CachedPositionsPage>(cacheKey, cancellationToken).ConfigureAwait(false);
+        var latency = Stopwatch.GetElapsedTime(start);
         if (cachedResponse is not null)
         {
             var remainingTtl = cachedResponse.ExpiresAtUtc is { } expiresAt
                 ? expiresAt - DateTimeOffset.UtcNow
                 : (TimeSpan?)null;
             _diagnosticsPublisher.ReportHit(cacheKey, remainingTtl);
+            _statsCollector.RecordHit(latency);
             return ToPagedResult(cachedResponse);
         }
 
@@ -46,6 +53,7 @@ public sealed class GetPositionsCachingBehavior : IPipelineBehavior<GetPositions
         }
 
         _diagnosticsPublisher.ReportMiss(cacheKey, null);
+        _statsCollector.RecordMiss(latency);
         if (!TryBuildCachePayload(response, out var payload))
         {
             return response;

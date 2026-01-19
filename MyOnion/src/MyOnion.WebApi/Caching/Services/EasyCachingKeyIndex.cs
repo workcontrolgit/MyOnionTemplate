@@ -1,62 +1,66 @@
 #nullable enable
-using Microsoft.Extensions.Caching.Memory;
-using MyOnion.Infrastructure.Caching.Options;
+using EasyCaching.Core;
+using MyOnion.WebApi.Caching.Options;
 
-namespace MyOnion.Infrastructure.Caching.Services;
+namespace MyOnion.WebApi.Caching.Services;
 
-public sealed class MemoryCacheKeyIndex : ICacheKeyIndex
+public sealed class EasyCachingKeyIndex : ICacheKeyIndex
 {
-    private readonly IMemoryCache _cache;
+    private readonly IEasyCachingProviderFactory _providerFactory;
     private readonly ICacheKeyHasher _hasher;
     private readonly IOptionsMonitor<CachingOptions> _optionsMonitor;
 
-    public MemoryCacheKeyIndex(
-        IMemoryCache cache,
+    public EasyCachingKeyIndex(
+        IEasyCachingProviderFactory providerFactory,
         ICacheKeyHasher hasher,
         IOptionsMonitor<CachingOptions> optionsMonitor)
     {
-        _cache = cache;
+        _providerFactory = providerFactory;
         _hasher = hasher;
         _optionsMonitor = optionsMonitor;
     }
 
-    public Task TrackAsync(string logicalKey, CacheEntryOptions entryOptions, CancellationToken ct = default)
+    public async Task TrackAsync(string logicalKey, CacheEntryOptions entryOptions, CancellationToken ct = default)
     {
         var hashed = _hasher.Hash(logicalKey);
         if (string.IsNullOrWhiteSpace(hashed))
         {
-            return Task.CompletedTask;
+            return;
         }
 
         var options = _optionsMonitor.CurrentValue;
-        var ttl = ResolveIndexTtlSeconds(options, entryOptions);
+        var ttlSeconds = ResolveIndexTtlSeconds(options, entryOptions);
         var cacheKey = CacheKeyFormatter.BuildCacheKey(options, BuildHashKey(hashed));
-        var cacheOptions = new MemoryCacheEntryOptions
-        {
-            AbsoluteExpirationRelativeToNow = TimeSpan.FromSeconds(ttl)
-        };
-        if (options.ProviderSettings.Memory.SizeLimitMB is int sizeLimit && sizeLimit > 0)
-        {
-            cacheOptions.Size = 1;
-        }
-
-        _cache.Set(cacheKey, logicalKey, cacheOptions);
-        return Task.CompletedTask;
+        await GetProvider(options).SetAsync(cacheKey, logicalKey, TimeSpan.FromSeconds(ttlSeconds), ct).ConfigureAwait(false);
     }
 
-    public Task<string?> TryResolveAsync(string hashedKey, CancellationToken ct = default)
+    public async Task<string?> TryResolveAsync(string hashedKey, CancellationToken ct = default)
     {
+        if (string.IsNullOrWhiteSpace(hashedKey))
+        {
+            return null;
+        }
+
         var options = _optionsMonitor.CurrentValue;
         var cacheKey = CacheKeyFormatter.BuildCacheKey(options, BuildHashKey(hashedKey));
-        return Task.FromResult(_cache.TryGetValue(cacheKey, out string value) ? value : null);
+        var result = await GetProvider(options).GetAsync<string>(cacheKey, ct).ConfigureAwait(false);
+        return result.HasValue ? result.Value : null;
     }
 
     public Task RemoveAsync(string hashedKey, CancellationToken ct = default)
     {
         var options = _optionsMonitor.CurrentValue;
         var cacheKey = CacheKeyFormatter.BuildCacheKey(options, BuildHashKey(hashedKey));
-        _cache.Remove(cacheKey);
-        return Task.CompletedTask;
+        return GetProvider(options).RemoveAsync(cacheKey, ct);
+    }
+
+    private IEasyCachingProvider GetProvider(CachingOptions options)
+    {
+        var providerName = string.Equals(options.Provider, CacheProviders.Distributed, StringComparison.OrdinalIgnoreCase)
+            && !string.IsNullOrWhiteSpace(options.ProviderSettings.Distributed.ConnectionString)
+            ? CacheProviderNames.Redis
+            : CacheProviderNames.Memory;
+        return _providerFactory.GetCachingProvider(providerName);
     }
 
     private static string BuildHashKey(string hashed) => string.Concat("__hash:", hashed);
@@ -76,5 +80,11 @@ public sealed class MemoryCacheKeyIndex : ICacheKeyIndex
         }
 
         return Math.Max(entrySeconds, indexSeconds);
+    }
+
+    private static class CacheProviderNames
+    {
+        public const string Memory = "mem";
+        public const string Redis = "redis";
     }
 }

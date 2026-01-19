@@ -1,6 +1,6 @@
-using MyOnion.Infrastructure.Caching.Options;
+using MyOnion.WebApi.Caching.Options;
 
-namespace MyOnion.Infrastructure.Caching.Services;
+namespace MyOnion.WebApi.Caching.Services;
 
 public sealed class CacheInvalidationService : ICacheInvalidationService
 {

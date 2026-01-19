@@ -44,11 +44,11 @@ global using MyOnion.Application.Features.SalaryRanges.Commands.UpdateSalaryRang
 global using MyOnion.Application.Features.SalaryRanges.Queries.GetSalaryRangeById;
 global using MyOnion.Application.Features.SalaryRanges.Queries.GetSalaryRanges;
 global using MyOnion.Application.Interfaces.Caching;
-global using MyOnion.Infrastructure.Caching.Extensions;
 global using MyOnion.Infrastructure.Persistence;
 global using MyOnion.Infrastructure.Persistence.Contexts;
 global using MyOnion.Infrastructure.Persistence.SeedData;
 global using MyOnion.Infrastructure.Shared;
+global using MyOnion.WebApi.Caching;
 global using MyOnion.WebApi.Extensions;
 global using MyOnion.WebApi.Diagnostics;
 global using MyOnion.WebApi.Middlewares;

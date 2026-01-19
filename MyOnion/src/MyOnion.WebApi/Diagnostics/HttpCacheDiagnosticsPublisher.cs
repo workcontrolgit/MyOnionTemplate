@@ -3,7 +3,7 @@ using System.Globalization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Options;
 using MyOnion.Application.Interfaces.Caching;
-using MyOnion.Infrastructure.Caching.Options;
+using MyOnion.WebApi.Caching.Options;
 
 namespace MyOnion.WebApi.Diagnostics;
 

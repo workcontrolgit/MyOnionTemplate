@@ -2,7 +2,7 @@
 using System.Security.Cryptography;
 using System.Text;
 
-namespace MyOnion.Infrastructure.Caching.Services;
+namespace MyOnion.WebApi.Caching.Services;
 
 public sealed class CacheKeyHasher : ICacheKeyHasher
 {

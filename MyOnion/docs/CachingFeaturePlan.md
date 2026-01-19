@@ -32,8 +32,8 @@ Template OnionAPI needs a first-class caching layer so frequently requested endp
 
 ## Code Locations & Layering
 - **Interfaces/Contracts:** add `ICacheProvider` and `ICacheInvalidationService` under `MyOnion.Application/Interfaces` so handlers reference only abstractions.
-- **Implementations:** live in the new `MyOnion.Infrastructure.Caching` project (e.g., `MemoryCacheProvider`, `DistributedCacheProvider`, `CacheInvalidationService`).
-- **Alternative Shared Placement:** if we need these interfaces outside the application assembly, we can move them into `MyOnion.Infrastructure.Shared` (or another shared project) while still keeping implementations inside `MyOnion.Infrastructure.Caching`.
+- **Implementations:** live in `MyOnion.WebApi/Caching` (EasyCaching adapters, invalidation, and diagnostics).
+- **Alternative Shared Placement:** if we need these interfaces outside the application assembly, we can move the adapters into `MyOnion.Infrastructure.Shared` while keeping DI in WebApi.
 - **Composition Root:** `MyOnion.WebApi` (in `Program.cs` or `ServiceCollectionExtensions`) binds `CachingOptions` and selects the provider at runtime, defaulting to disabled caching for development profiles.
 - **Caching behavior:** implement cache logic as MediatR pipeline behaviors (not request handler decorators) to avoid recursive handler resolution. Register behaviors with Scrutor scanning for `IPipelineBehavior<,>`.
 
@@ -53,22 +53,23 @@ public sealed record CacheEntryOptions(TimeSpan AbsoluteTtl, TimeSpan? SlidingTt
 ```
 
 ```csharp
-// MyOnion.Infrastructure.Caching/Memory/MemoryCacheProvider.cs
-public sealed class MemoryCacheProvider : ICacheProvider
+// MyOnion.WebApi/Caching/Services/EasyCachingProviderAdapter.cs
+public sealed class EasyCachingProviderAdapter : ICacheProvider
 {
-    private readonly IMemoryCache _cache;
+    private readonly IEasyCachingProvider _provider;
     private readonly CachingOptions _options;
 
-    public MemoryCacheProvider(IMemoryCache cache, IOptions<CachingOptions> options)
+    public EasyCachingProviderAdapter(IEasyCachingProvider provider, IOptions<CachingOptions> options)
     {
-        _cache = cache;
+        _provider = provider;
         _options = options.Value;
     }
 
     public Task<T?> GetAsync<T>(string key, CancellationToken ct = default)
     {
         if (!_options.Enabled) return Task.FromResult<T?>(default);
-        return Task.FromResult(_cache.TryGetValue(BuildKey(key), out T value) ? value : default);
+        var result = await _provider.GetAsync<T>(BuildKey(key), ct);
+        return result.HasValue ? result.Value : default;
     }
 
     public Task SetAsync<T>(string key, T value, CacheEntryOptions entryOptions, CancellationToken ct = default)
@@ -81,24 +82,18 @@ public sealed class MemoryCacheProvider : ICacheProvider
             SlidingExpiration = entryOptions.SlidingTtl
         };
 
-        _cache.Set(BuildKey(key), value, opts);
+        await _provider.SetAsync(BuildKey(key), value, entryOptions.AbsoluteTtl, ct);
         return Task.CompletedTask;
     }
 
     public Task RemoveAsync(string key, CancellationToken ct = default)
     {
-        _cache.Remove(BuildKey(key));
-        return Task.CompletedTask;
+        return _provider.RemoveAsync(BuildKey(key), ct);
     }
 
     public Task RemoveByPrefixAsync(string prefix, CancellationToken ct = default)
     {
-        foreach (var cacheKey in _options.Index.GetKeys(prefix))
-        {
-            _cache.Remove(cacheKey);
-        }
-
-        return Task.CompletedTask;
+        return _provider.RemoveByPrefixAsync(BuildKey(prefix), ct);
     }
 
     private string BuildKey(string key) => $"{_options.KeyPrefix}:{key}";
@@ -150,7 +145,7 @@ public sealed class MemoryCacheProvider : ICacheProvider
 - When provider is `Distributed`, support optional pub/sub or `IDistributedCache.Remove` to propagate invalidations across nodes.
 
 ## Implementation Outline
-1. New project `MyOnion.Infrastructure.Caching` containing options, provider implementations, and invalidation service.
+1. Add EasyCaching adapters, options, and invalidation service under `MyOnion.WebApi/Caching`.
 2. Register the caching module in `MyOnion.WebApi` composition root, binding options and selecting provider at runtime.
 3. Introduce caching pipeline behaviors for read-heavy queries (e.g., `GetEmployeesQueryHandler`) that accept `CacheEntryOptions` so handlers can opt into custom TTLs or sliding expirations; fall back to `DefaultCacheDurationSeconds`. Register behaviors via Scrutor scanning for `IPipelineBehavior<,>`.
 4. Add middleware or filters to respect the secure `X-Debug-Disable-Cache` header for debugging.
@@ -158,9 +153,9 @@ public sealed class MemoryCacheProvider : ICacheProvider
 6. Cache DTO-style projections for list endpoints to avoid serializing EF navigation graphs; skip caching when a request includes heavy nav fields.
 
 ## Rollout Steps
-1. Scaffold `MyOnion.Infrastructure.Caching` project with `CachingOptions`, provider interfaces, and dependency injection extensions.
-2. Update solution files and pipelines to build/test the new project.
-3. Implement memory + distributed providers with shared abstractions and configuration binding.
+1. Add EasyCaching adapters, options, and DI extensions in `MyOnion.WebApi/Caching`.
+2. Update solution files and pipelines to build/test the new wiring.
+3. Implement memory + distributed providers via EasyCaching with shared abstractions and configuration binding.
 4. Add caching decorators and sample usage around employee/position list endpoints.
 5. Implement administrative invalidation endpoint + repository invalidation hooks.
 6. Document configuration samples and usage in README/docs.

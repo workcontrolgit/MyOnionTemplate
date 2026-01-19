@@ -1,6 +1,6 @@
-using MyOnion.Infrastructure.Caching.Options;
+using MyOnion.WebApi.Caching.Options;
 
-namespace MyOnion.Infrastructure.Caching.Services;
+namespace MyOnion.WebApi.Caching.Services;
 
 public sealed class CacheEntryOptionsFactory : ICacheEntryOptionsFactory
 {
@@ -20,10 +20,7 @@ public sealed class CacheEntryOptionsFactory : ICacheEntryOptionsFactory
         }
 
         var lookupKey = string.IsNullOrWhiteSpace(endpointKey) ? string.Empty : endpointKey;
-        if (!options.PerEndpoint.TryGetValue(lookupKey, out var endpointOptions))
-        {
-            endpointOptions = null;
-        }
+        options.PerEndpoint.TryGetValue(lookupKey, out var endpointOptions);
 
         var absoluteSeconds = endpointOptions?.AbsoluteTtlSeconds ?? options.DefaultCacheDurationSeconds;
         if (absoluteSeconds <= 0)

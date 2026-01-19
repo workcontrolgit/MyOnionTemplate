@@ -1,5 +1,5 @@
 #nullable enable
-namespace MyOnion.Infrastructure.Caching.Services;
+namespace MyOnion.WebApi.Caching.Services;
 
 public sealed class CacheBypassContext : ICacheBypassContext
 {
