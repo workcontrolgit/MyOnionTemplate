@@ -32,6 +32,7 @@ namespace MyOnion.Application.Features.Employees.Commands.CreateEmployee
             public async Task<Result<Guid>> Handle(CreateEmployeeCommand request, CancellationToken cancellationToken)
             {
                 var employee = _mapper.Map<Employee>(request);
+                employee.Id = Guid.NewGuid();
                 await _repository.AddAsync(employee);
                 return Result<Guid>.Success(employee.Id);
             }

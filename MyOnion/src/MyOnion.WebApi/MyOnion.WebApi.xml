@@ -49,14 +49,6 @@
             </summary>
             <param name="id">Employee identifier.</param>
         </member>
-        <member name="M:MyOnion.WebApi.Controllers.v1.EmployeesController.Paged(MyOnion.Application.Features.Employees.Queries.GetEmployees.PagedEmployeesQuery)">
-            <summary>
-            Retrieves a paged list of employees.
-            Support Ngx-DataTables https://medium.com/scrum-and-coke/angular-11-pagination-of-zillion-rows-45d8533538c0
-            </summary>
-            <param name="query">The query parameters for the paged list.</param>
-            <returns>A paged list of employees.</returns>
-        </member>
         <member name="M:MyOnion.WebApi.Controllers.v1.EmployeesController.Post(MyOnion.Application.Features.Employees.Commands.CreateEmployee.CreateEmployeeCommand)">
             <summary>
             Creates a new employee.

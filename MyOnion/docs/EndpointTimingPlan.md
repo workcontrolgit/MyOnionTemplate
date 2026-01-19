@@ -13,7 +13,7 @@
 
 2. **API Response Augmentation**
    - For JSON APIs, include the elapsed time (e.g., `x-execution-time-ms`) as a response header.
-   - Extend `Result`, `PagedResult`, and `PagedDataTableResult` with an `ExecutionTimeMs` field; populate it from the timing middleware before serialization so clients see the metric in every Result payload.
+   - Extend `Result` and `PagedResult` with an `ExecutionTimeMs` field; populate it from the timing middleware before serialization so clients see the metric in every Result payload.
 
 3. **Configuration & Observability**
    - Provide configuration flags to enable/disable timing and header injection per environment.
