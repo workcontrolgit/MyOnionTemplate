@@ -9,17 +9,18 @@ namespace MyOnion.WebApi.Diagnostics;
 
 public sealed class HttpCacheDiagnosticsPublisher : ICacheDiagnosticsPublisher
 {
-    private const string CacheKeyHeaderName = "X-Cache-Key";
-    private const string CacheDurationHeaderName = "X-Cache-Duration-Ms";
     private readonly IHttpContextAccessor _httpContextAccessor;
     private readonly IOptionsMonitor<CachingOptions> _optionsMonitor;
+    private readonly ICacheKeyHasher _cacheKeyHasher;
 
     public HttpCacheDiagnosticsPublisher(
         IHttpContextAccessor httpContextAccessor,
-        IOptionsMonitor<CachingOptions> optionsMonitor)
+        IOptionsMonitor<CachingOptions> optionsMonitor,
+        ICacheKeyHasher cacheKeyHasher)
     {
         _httpContextAccessor = httpContextAccessor;
         _optionsMonitor = optionsMonitor;
+        _cacheKeyHasher = cacheKeyHasher;
     }
 
     public void ReportHit(string cacheKey, TimeSpan? cacheDuration) => WriteStatus("HIT", cacheKey, cacheDuration);
@@ -43,16 +44,35 @@ public sealed class HttpCacheDiagnosticsPublisher : ICacheDiagnosticsPublisher
         var headerName = string.IsNullOrWhiteSpace(diagnostics.HeaderName)
             ? CacheDiagnosticsOptions.DefaultHeaderName
             : diagnostics.HeaderName;
+        var keyHeaderName = string.IsNullOrWhiteSpace(diagnostics.KeyHeaderName)
+            ? CacheDiagnosticsOptions.DefaultKeyHeaderName
+            : diagnostics.KeyHeaderName;
+        var durationHeaderName = string.IsNullOrWhiteSpace(diagnostics.DurationHeaderName)
+            ? CacheDiagnosticsOptions.DefaultDurationHeaderName
+            : diagnostics.DurationHeaderName;
 
         context.Response.Headers[headerName] = status;
         if (!string.IsNullOrWhiteSpace(cacheKey))
         {
-            context.Response.Headers[CacheKeyHeaderName] = cacheKey;
+            var keyValue = ShouldEmitRawKey(diagnostics)
+                ? cacheKey
+                : _cacheKeyHasher.Hash(cacheKey);
+            context.Response.Headers[keyHeaderName] = keyValue;
         }
 
         if (cacheDuration is { } duration && duration > TimeSpan.Zero)
         {
-            context.Response.Headers[CacheDurationHeaderName] = ((long)duration.TotalMilliseconds).ToString(CultureInfo.InvariantCulture);
+            context.Response.Headers[durationHeaderName] = ((long)duration.TotalMilliseconds).ToString(CultureInfo.InvariantCulture);
         }
+    }
+
+    private static bool ShouldEmitRawKey(CacheDiagnosticsOptions diagnostics)
+    {
+        if (diagnostics is null)
+        {
+            return false;
+        }
+
+        return string.Equals(diagnostics.KeyDisplayMode, CacheKeyDisplayModes.Raw, StringComparison.OrdinalIgnoreCase);
     }
 }

@@ -16,6 +16,7 @@ public class CreateEmployeeCommandHandlerTests
             Email = "jane@example.com",
             EmployeeNumber = "E-1",
             PositionId = Guid.NewGuid(),
+            DepartmentId = Guid.NewGuid(),
             Birthday = DateTime.UtcNow.AddYears(-30)
         };
 

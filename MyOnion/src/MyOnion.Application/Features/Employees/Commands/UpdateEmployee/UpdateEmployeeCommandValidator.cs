@@ -29,6 +29,9 @@ namespace MyOnion.Application.Features.Employees.Commands.UpdateEmployee
             RuleFor(e => e.PositionId)
                 .NotEmpty().WithMessage("{PropertyName} is required.");
 
+            RuleFor(e => e.DepartmentId)
+                .NotEmpty().WithMessage("{PropertyName} is required.");
+
             RuleFor(e => e.Salary)
                 .GreaterThanOrEqualTo(0).WithMessage("{PropertyName} must be positive.");
 

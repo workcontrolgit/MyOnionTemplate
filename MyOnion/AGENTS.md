@@ -20,5 +20,8 @@ Add xUnit-based projects under a future `tests/` folder (e.g., `tests/MyOnion.Ap
 ## Commit & Pull Request Guidelines
 Existing history uses short imperative messages ("Add project files"), so continue that style: start with a verb, keep under 72 characters, and mention scope when useful (e.g., `Add customer filtering middleware`). PRs should describe the change, list validation commands, reference linked issues, and attach screenshots or sample responses whenever API contracts move. Ensure CI is green before requesting review.
 
+### Check-In Requests
+When a user asks to "check in" code, prepare a concise commit message, stage the relevant changes, and perform the commit. Call out any uncommitted unrelated changes before committing and confirm if any files should be excluded.
+
 ## Security & Configuration Tips
 Never commit real connection strings or secrets; keep shared defaults in `MyOnion.WebApi/appsettings.Development.json` and override locally with `dotnet user-secrets` or environment variables. Configure `Sts:ServerUrl`, `Sts:Audience`, and optional `Sts:ValidIssuer` before running so JWT validation stays strict. Define environment-specific CORS origins under `Cors:AllowedOrigins` to avoid the fallback permissive policy. Infrastructure persistence uses SQL connection resiliency + DbContext pooling, so prefer scoped services and avoid capturing contexts beyond a request. Validate that new settings are documented and loaded via strongly typed options classes in `Infrastructure.Shared` or `WebApi` extensions, and prefer IServiceCollection helpers over manual configuration lookups.

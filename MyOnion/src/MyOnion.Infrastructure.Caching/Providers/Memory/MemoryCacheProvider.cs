@@ -11,17 +11,20 @@ public sealed class MemoryCacheProvider : ICacheProvider
     private readonly IMemoryCache _cache;
     private readonly IOptionsMonitor<CachingOptions> _optionsMonitor;
     private readonly ICacheBypassContext _bypassContext;
+    private readonly ICacheKeyIndex _cacheKeyIndex;
     private readonly ConcurrentDictionary<string, ConcurrentDictionary<string, byte>> _prefixIndex = new(StringComparer.OrdinalIgnoreCase);
     private readonly ConcurrentDictionary<string, string> _keyToPrefix = new(StringComparer.OrdinalIgnoreCase);
 
     public MemoryCacheProvider(
         IMemoryCache cache,
         IOptionsMonitor<CachingOptions> optionsMonitor,
-        ICacheBypassContext bypassContext)
+        ICacheBypassContext bypassContext,
+        ICacheKeyIndex cacheKeyIndex)
     {
         _cache = cache;
         _optionsMonitor = optionsMonitor;
         _bypassContext = bypassContext;
+        _cacheKeyIndex = cacheKeyIndex;
     }
 
     public Task<T?> GetAsync<T>(string key, CancellationToken ct = default)
@@ -36,12 +39,12 @@ public sealed class MemoryCacheProvider : ICacheProvider
         return Task.FromResult(_cache.TryGetValue(cacheKey, out T value) ? value : default);
     }
 
-    public Task SetAsync<T>(string key, T value, CacheEntryOptions entryOptions, CancellationToken ct = default)
+    public async Task SetAsync<T>(string key, T value, CacheEntryOptions entryOptions, CancellationToken ct = default)
     {
         var options = _optionsMonitor.CurrentValue;
         if (!IsCacheEnabled(options) || entryOptions.AbsoluteTtl <= TimeSpan.Zero)
         {
-            return Task.CompletedTask;
+            return;
         }
 
         var cacheKey = CacheKeyFormatter.BuildCacheKey(options, key);
@@ -57,7 +60,7 @@ public sealed class MemoryCacheProvider : ICacheProvider
 
         _cache.Set(cacheKey, value, memoryOptions);
         TrackKey(options, key, cacheKey);
-        return Task.CompletedTask;
+        await _cacheKeyIndex.TrackAsync(key, entryOptions, ct).ConfigureAwait(false);
     }
 
     public Task RemoveAsync(string key, CancellationToken ct = default)

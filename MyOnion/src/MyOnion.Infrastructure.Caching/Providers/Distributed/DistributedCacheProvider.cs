@@ -16,15 +16,18 @@ public sealed class DistributedCacheProvider : ICacheProvider
     private readonly IDistributedCache _cache;
     private readonly IOptionsMonitor<CachingOptions> _optionsMonitor;
     private readonly ICacheBypassContext _bypassContext;
+    private readonly ICacheKeyIndex _cacheKeyIndex;
 
     public DistributedCacheProvider(
         IDistributedCache cache,
         IOptionsMonitor<CachingOptions> optionsMonitor,
-        ICacheBypassContext bypassContext)
+        ICacheBypassContext bypassContext,
+        ICacheKeyIndex cacheKeyIndex)
     {
         _cache = cache;
         _optionsMonitor = optionsMonitor;
         _bypassContext = bypassContext;
+        _cacheKeyIndex = cacheKeyIndex;
     }
 
     public async Task<T?> GetAsync<T>(string key, CancellationToken ct = default)
@@ -62,7 +65,8 @@ public sealed class DistributedCacheProvider : ICacheProvider
         };
 
         await _cache.SetAsync(cacheKey, payload, distributedOptions, ct).ConfigureAwait(false);
-        await TrackKeyAsync(options, key, cacheKey, ct).ConfigureAwait(false);
+        await TrackKeyAsync(options, key, cacheKey, entryOptions, ct).ConfigureAwait(false);
+        await _cacheKeyIndex.TrackAsync(key, entryOptions, ct).ConfigureAwait(false);
     }
 
     public async Task RemoveAsync(string key, CancellationToken ct = default)
@@ -88,7 +92,12 @@ public sealed class DistributedCacheProvider : ICacheProvider
 
     private bool IsCacheEnabled(CachingOptions options) => options.Enabled && !options.DisableCache && !_bypassContext.ShouldBypass;
 
-    private async Task TrackKeyAsync(CachingOptions options, string logicalKey, string cacheKey, CancellationToken ct)
+    private async Task TrackKeyAsync(
+        CachingOptions options,
+        string logicalKey,
+        string cacheKey,
+        CacheEntryOptions entryOptions,
+        CancellationToken ct)
     {
         var logicalPrefix = ExtractPrefix(logicalKey);
         if (string.IsNullOrWhiteSpace(logicalPrefix))
@@ -98,14 +107,24 @@ public sealed class DistributedCacheProvider : ICacheProvider
 
         var prefixKey = CacheKeyFormatter.BuildPrefixKey(options, logicalPrefix);
         var indexKey = BuildIndexKey(prefixKey);
-        var keys = await ReadTrackedKeysAsync(indexKey, ct).ConfigureAwait(false);
-        if (!keys.Contains(cacheKey))
+        var ttlSeconds = ResolveIndexTtlSeconds(options, entryOptions);
+        for (var attempt = 0; attempt < 3; attempt++)
         {
-            keys.Add(cacheKey);
-            await WriteTrackedKeysAsync(options, indexKey, keys, ct).ConfigureAwait(false);
+            var keys = await ReadTrackedKeysAsync(indexKey, ct).ConfigureAwait(false);
+            if (!keys.Contains(cacheKey))
+            {
+                keys.Add(cacheKey);
+                await WriteTrackedKeysAsync(options, indexKey, keys, ttlSeconds, ct).ConfigureAwait(false);
+            }
+
+            var verifyKeys = await ReadTrackedKeysAsync(indexKey, ct).ConfigureAwait(false);
+            if (verifyKeys.Contains(cacheKey))
+            {
+                break;
+            }
         }
 
-        await AddPrefixToCatalogAsync(options, prefixKey, ct).ConfigureAwait(false);
+        await AddPrefixToCatalogAsync(options, prefixKey, ttlSeconds, ct).ConfigureAwait(false);
     }
 
     private async Task RemoveFromIndexAsync(CachingOptions options, string logicalKey, string cacheKey, CancellationToken ct)
@@ -131,7 +150,7 @@ public sealed class DistributedCacheProvider : ICacheProvider
         }
         else
         {
-            await WriteTrackedKeysAsync(options, indexKey, keys, ct).ConfigureAwait(false);
+            await WriteTrackedKeysAsync(options, indexKey, keys, options.ProviderSettings.Distributed.IndexKeyTtlSeconds, ct).ConfigureAwait(false);
         }
     }
 
@@ -160,7 +179,7 @@ public sealed class DistributedCacheProvider : ICacheProvider
         await RemovePrefixFromCatalogAsync(options, prefixKey, ct).ConfigureAwait(false);
     }
 
-    private async Task AddPrefixToCatalogAsync(CachingOptions options, string prefixKey, CancellationToken ct)
+    private async Task AddPrefixToCatalogAsync(CachingOptions options, string prefixKey, int ttlSeconds, CancellationToken ct)
     {
         var catalogKey = BuildCatalogKey(options);
         var catalog = await ReadTrackedKeysAsync(catalogKey, ct).ConfigureAwait(false);
@@ -170,7 +189,7 @@ public sealed class DistributedCacheProvider : ICacheProvider
         }
 
         catalog.Add(prefixKey);
-        await WriteTrackedKeysAsync(options, catalogKey, catalog, ct).ConfigureAwait(false);
+        await WriteTrackedKeysAsync(options, catalogKey, catalog, ttlSeconds, ct).ConfigureAwait(false);
     }
 
     private async Task RemovePrefixFromCatalogAsync(CachingOptions options, string prefixKey, CancellationToken ct)
@@ -188,7 +207,7 @@ public sealed class DistributedCacheProvider : ICacheProvider
         }
         else
         {
-            await WriteTrackedKeysAsync(options, catalogKey, catalog, ct).ConfigureAwait(false);
+            await WriteTrackedKeysAsync(options, catalogKey, catalog, options.ProviderSettings.Distributed.IndexKeyTtlSeconds, ct).ConfigureAwait(false);
         }
     }
 
@@ -208,15 +227,36 @@ public sealed class DistributedCacheProvider : ICacheProvider
         return JsonSerializer.Deserialize<List<string>>(json, SerializerOptions) ?? new List<string>();
     }
 
-    private Task WriteTrackedKeysAsync(CachingOptions options, string indexKey, List<string> keys, CancellationToken ct)
+    private Task WriteTrackedKeysAsync(
+        CachingOptions options,
+        string indexKey,
+        List<string> keys,
+        int ttlSeconds,
+        CancellationToken ct)
     {
         var json = JsonSerializer.SerializeToUtf8Bytes(keys, SerializerOptions);
-        var ttlSeconds = options.ProviderSettings.Distributed.IndexKeyTtlSeconds;
         var distributedOptions = new DistributedCacheEntryOptions
         {
             AbsoluteExpirationRelativeToNow = TimeSpan.FromSeconds(ttlSeconds > 0 ? ttlSeconds : options.DefaultCacheDurationSeconds)
         };
         return _cache.SetAsync(indexKey, json, distributedOptions, ct);
+    }
+
+    private static int ResolveIndexTtlSeconds(CachingOptions options, CacheEntryOptions entryOptions)
+    {
+        var entrySeconds = (int)Math.Ceiling(entryOptions.AbsoluteTtl.TotalSeconds);
+        if (entrySeconds <= 0)
+        {
+            entrySeconds = options.DefaultCacheDurationSeconds > 0 ? options.DefaultCacheDurationSeconds : 60;
+        }
+
+        var indexSeconds = options.ProviderSettings.Distributed.IndexKeyTtlSeconds;
+        if (indexSeconds <= 0)
+        {
+            indexSeconds = options.DefaultCacheDurationSeconds > 0 ? options.DefaultCacheDurationSeconds : 60;
+        }
+
+        return Math.Max(entrySeconds, indexSeconds);
     }
 
     private static string ExtractPrefix(string logicalKey)

@@ -53,4 +53,14 @@ namespace MyOnion.Application.Specifications.Employees
         }
     }
 
+    public class EmployeeByIdWithPositionSpecification : BaseSpecification<Employee>
+    {
+        public EmployeeByIdWithPositionSpecification(Guid id)
+            : base(e => e.Id == id)
+        {
+            AddInclude(e => e.Position);
+            AddInclude("Position.Department");
+            AddInclude(e => e.Department);
+        }
+    }
 }

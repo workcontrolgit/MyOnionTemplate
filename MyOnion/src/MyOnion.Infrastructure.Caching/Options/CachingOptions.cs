@@ -52,10 +52,25 @@ public sealed class EndpointCacheOptions
 public sealed class CacheDiagnosticsOptions
 {
     public const string DefaultHeaderName = "X-Cache-Status";
+    public const string DefaultKeyHeaderName = "X-Cache-Key";
+    public const string DefaultDurationHeaderName = "X-Cache-Duration-Ms";
+    public const string DefaultKeyDisplayMode = CacheKeyDisplayModes.Hash;
 
     public bool EmitCacheStatusHeader { get; set; }
 
     public string HeaderName { get; set; } = DefaultHeaderName;
+
+    public string KeyHeaderName { get; set; } = DefaultKeyHeaderName;
+
+    public string DurationHeaderName { get; set; } = DefaultDurationHeaderName;
+
+    public string KeyDisplayMode { get; set; } = DefaultKeyDisplayMode;
+}
+
+public static class CacheKeyDisplayModes
+{
+    public const string Raw = "Raw";
+    public const string Hash = "Hash";
 }
 
 public static class CacheProviders

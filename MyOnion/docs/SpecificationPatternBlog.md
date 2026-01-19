@@ -1,4 +1,4 @@
-# Harnessing Specifications to Simplify .NET APIs in Template OnionAPI
+ÿþ# Harnessing Specifications to Simplify .NET APIs in Template OnionAPI
 
 The Template OnionAPI template leans on the specification pattern to capture query intent in small, reusable objects. Instead of scattering filters, includes, and pagination across repositories, each concern lives in a single spec that any handler can reuse. This post covers what the specification abstraction looks like in the template, why it pays off, and a practical example you can lift into your own .NET apps.
 
