@@ -1,6 +1,6 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 18
-VisualStudioVersion = 18.1.11312.151
+# Visual Studio Version 17
+VisualStudioVersion = 17.14.36811.4 d17.14
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Presentation", "Presentation", "{02EA681E-C7D8-13C7-8484-4AC65E1B71E8}"
 EndProject
@@ -30,6 +30,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MyOnion.WebApi.Tests", "MyO
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Scripts", "Scripts", "{970105CD-17A1-432B-9380-266245D30F44}"
 	ProjectSection(SolutionItems) = preProject
+		MyOnion\scripts\Create-DevCert.ps1 = MyOnion\scripts\Create-DevCert.ps1
 		MyOnion\scripts\Build-OnionTemplate.ps1 = MyOnion\scripts\Build-OnionTemplate.ps1
 		MyOnion\scripts\Install-OnionTemplateLocally.ps1 = MyOnion\scripts\Install-OnionTemplateLocally.ps1
 	EndProjectSection
@@ -40,6 +41,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Docs", "Docs", "{50A5EEAC-F
 		MyOnion\docs\Automapper Replacment with Mapster Plan.md = MyOnion\docs\Automapper Replacment with Mapster Plan.md
 		MyOnion\docs\DataShapingBlog.md = MyOnion\docs\DataShapingBlog.md
 		MyOnion\docs\DataShapingUpgradePlan.md = MyOnion\docs\DataShapingUpgradePlan.md
+		MyOnion\docs\Docker Support Plan.md = MyOnion\docs\Docker Support Plan.md
 		MyOnion\docs\EndpointTimingBlog.md = MyOnion\docs\EndpointTimingBlog.md
 		MyOnion\docs\EndpointTimingPlan.md = MyOnion\docs\EndpointTimingPlan.md
 		MyOnion\docs\MediatR-Replacement-Plan.md = MyOnion\docs\MediatR-Replacement-Plan.md
@@ -53,6 +55,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Docs", "Docs", "{50A5EEAC-F
 		MyOnion\docs\Template-Onion-API-Net10-Blog.md = MyOnion\docs\Template-Onion-API-Net10-Blog.md
 		MyOnion\docs\TestingPlans\TestCoverage100Plan.md = MyOnion\docs\TestingPlans\TestCoverage100Plan.md
 	EndProjectSection
+EndProject
+Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "docker-compose", "docker-compose.dcproj", "{81DDED9D-158B-E303-5F62-77A2896D2A5A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -160,6 +164,18 @@ Global
 		{D123FCB2-AA53-45E7-88B8-C81104C57F4C}.Release|x64.Build.0 = Release|Any CPU
 		{D123FCB2-AA53-45E7-88B8-C81104C57F4C}.Release|x86.ActiveCfg = Release|Any CPU
 		{D123FCB2-AA53-45E7-88B8-C81104C57F4C}.Release|x86.Build.0 = Release|Any CPU
+		{81DDED9D-158B-E303-5F62-77A2896D2A5A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{81DDED9D-158B-E303-5F62-77A2896D2A5A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{81DDED9D-158B-E303-5F62-77A2896D2A5A}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{81DDED9D-158B-E303-5F62-77A2896D2A5A}.Debug|x64.Build.0 = Debug|Any CPU
+		{81DDED9D-158B-E303-5F62-77A2896D2A5A}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{81DDED9D-158B-E303-5F62-77A2896D2A5A}.Debug|x86.Build.0 = Debug|Any CPU
+		{81DDED9D-158B-E303-5F62-77A2896D2A5A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{81DDED9D-158B-E303-5F62-77A2896D2A5A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{81DDED9D-158B-E303-5F62-77A2896D2A5A}.Release|x64.ActiveCfg = Release|Any CPU
+		{81DDED9D-158B-E303-5F62-77A2896D2A5A}.Release|x64.Build.0 = Release|Any CPU
+		{81DDED9D-158B-E303-5F62-77A2896D2A5A}.Release|x86.ActiveCfg = Release|Any CPU
+		{81DDED9D-158B-E303-5F62-77A2896D2A5A}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

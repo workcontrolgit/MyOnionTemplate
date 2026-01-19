@@ -9,6 +9,7 @@ namespace MyOnion.Application.Features.Employees.Commands.CreateEmployee
         public string MiddleName { get; set; }
         public string LastName { get; set; }
         public Guid PositionId { get; set; }
+        public Guid DepartmentId { get; set; }
         public decimal Salary { get; set; }
         public DateTime Birthday { get; set; }
         public string Email { get; set; }
@@ -31,6 +32,7 @@ namespace MyOnion.Application.Features.Employees.Commands.CreateEmployee
             public async Task<Result<Guid>> Handle(CreateEmployeeCommand request, CancellationToken cancellationToken)
             {
                 var employee = _mapper.Map<Employee>(request);
+                employee.Id = Guid.NewGuid();
                 await _repository.AddAsync(employee);
                 return Result<Guid>.Success(employee.Id);
             }

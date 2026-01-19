@@ -15,6 +15,7 @@ public class UpdateEmployeeCommandHandlerTests
             Email = "jane@example.com",
             EmployeeNumber = "E-1",
             PositionId = Guid.NewGuid(),
+            DepartmentId = Guid.NewGuid(),
             Salary = 5000,
             Birthday = DateTime.UtcNow.AddYears(-30)
         };
@@ -27,6 +28,7 @@ public class UpdateEmployeeCommandHandlerTests
 
         result.IsSuccess.Should().BeTrue();
         employee.FirstName.Should().Be("Jane");
+        employee.DepartmentId.Should().Be(command.DepartmentId);
         _repositoryMock.Verify(r => r.UpdateAsync(employee), Times.Once);
     }
 

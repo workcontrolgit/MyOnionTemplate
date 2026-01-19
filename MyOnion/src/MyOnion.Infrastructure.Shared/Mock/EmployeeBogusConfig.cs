@@ -38,6 +38,10 @@
 
             // Rule for generating a phone number with a specific format
             RuleFor(p => p.Phone, f => f.Phone.PhoneNumber("(###)-###-####"));
+
+            // Rule for generating placeholder foreign keys
+            RuleFor(p => p.PositionId, f => Guid.NewGuid());
+            RuleFor(p => p.DepartmentId, f => Guid.NewGuid());
         }
     }
 }
