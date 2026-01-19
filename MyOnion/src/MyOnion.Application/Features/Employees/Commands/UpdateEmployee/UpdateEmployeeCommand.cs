@@ -22,10 +22,14 @@ namespace MyOnion.Application.Features.Employees.Commands.UpdateEmployee
         public class UpdateEmployeeCommandHandler : IRequestHandler<UpdateEmployeeCommand, Result<Guid>>
         {
             private readonly IEmployeeRepositoryAsync _repository;
+            private readonly ICacheInvalidationService _cacheInvalidationService;
 
-            public UpdateEmployeeCommandHandler(IEmployeeRepositoryAsync repository)
+            public UpdateEmployeeCommandHandler(
+                IEmployeeRepositoryAsync repository,
+                ICacheInvalidationService cacheInvalidationService)
             {
                 _repository = repository;
+                _cacheInvalidationService = cacheInvalidationService;
             }
 
             public async Task<Result<Guid>> Handle(UpdateEmployeeCommand command, CancellationToken cancellationToken)
@@ -50,6 +54,7 @@ namespace MyOnion.Application.Features.Employees.Commands.UpdateEmployee
                 employee.Phone = command.Phone;
 
                 await _repository.UpdateAsync(employee);
+                await _cacheInvalidationService.InvalidatePrefixAsync(CacheKeyPrefixes.EmployeesAll, cancellationToken);
 
                 return Result<Guid>.Success(employee.Id);
             }

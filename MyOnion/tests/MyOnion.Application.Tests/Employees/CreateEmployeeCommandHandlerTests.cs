@@ -4,6 +4,7 @@ public class CreateEmployeeCommandHandlerTests
 {
     private readonly Mock<IEmployeeRepositoryAsync> _repositoryMock = new();
     private readonly Mock<IMapper> _mapperMock = new();
+    private readonly Mock<ICacheInvalidationService> _cacheInvalidationServiceMock = new();
 
     [Fact]
     public async Task Handle_ShouldPersistEmployeeAndReturnId()
@@ -24,12 +25,16 @@ public class CreateEmployeeCommandHandlerTests
         _mapperMock.Setup(m => m.Map<Employee>(command)).Returns(employee);
         _repositoryMock.Setup(r => r.AddAsync(employee)).ReturnsAsync(employee);
 
-        var handler = new CreateEmployeeCommand.CreateEmployeeCommandHandler(_repositoryMock.Object, _mapperMock.Object);
+        var handler = new CreateEmployeeCommand.CreateEmployeeCommandHandler(
+            _repositoryMock.Object,
+            _mapperMock.Object,
+            _cacheInvalidationServiceMock.Object);
 
         var result = await handler.Handle(command, CancellationToken.None);
 
         result.IsSuccess.Should().BeTrue();
         result.Value.Should().Be(employee.Id);
         _repositoryMock.Verify(r => r.AddAsync(employee), Times.Once);
+        _cacheInvalidationServiceMock.Verify(s => s.InvalidatePrefixAsync(CacheKeyPrefixes.EmployeesAll, It.IsAny<CancellationToken>()), Times.Once);
     }
 }

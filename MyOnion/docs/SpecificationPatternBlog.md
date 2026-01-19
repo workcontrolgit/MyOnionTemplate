@@ -1,4 +1,4 @@
-ÿþ# Harnessing Specifications to Simplify .NET APIs in Template OnionAPI
+ï»¿# Harnessing Specifications to Simplify .NET APIs in Template OnionAPI
 
 The Template OnionAPI template leans on the specification pattern to capture query intent in small, reusable objects. Instead of scattering filters, includes, and pagination across repositories, each concern lives in a single spec that any handler can reuse. This post covers what the specification abstraction looks like in the template, why it pays off, and a practical example you can lift into your own .NET apps.
 
@@ -20,13 +20,13 @@ public interface ISpecification<T>
 ```
 Source: `MyOnion/src/MyOnion.Application/Specifications/ISpecification.cs:1`
 
-`BaseSpecification<T>` wires up helpers for adding includes, applying paging, and setting ordering, while `SpecificationEvaluator` turns any `ISpecification<T>` into a composed EF Core query. Repositories no longer need to know which navigation properties to include or how to apply paging loops—the spec carries that intent.
+`BaseSpecification<T>` wires up helpers for adding includes, applying paging, and setting ordering, while `SpecificationEvaluator` turns any `ISpecification<T>` into a composed EF Core query. Repositories no longer need to know which navigation properties to include or how to apply paging loopsï¿½the spec carries that intent.
 
 ## Why Use Specifications
 
-- **Less code** – Shared specs eliminate repetitive `if` blocks across handlers and repositories; the filtering rules live in one place.
-- **Flexibility** – Each spec exposes paging, ordering, and include knobs, so you can handle exports, dashboards, and filtered lists with the same class by toggling constructor parameters.
-- **Testability** – Specifications are just objects; you can unit test their predicates and the evaluator with an in-memory context before wiring them into the API.
+- **Less code** ï¿½ Shared specs eliminate repetitive `if` blocks across handlers and repositories; the filtering rules live in one place.
+- **Flexibility** ï¿½ Each spec exposes paging, ordering, and include knobs, so you can handle exports, dashboards, and filtered lists with the same class by toggling constructor parameters.
+- **Testability** ï¿½ Specifications are just objects; you can unit test their predicates and the evaluator with an in-memory context before wiring them into the API.
 
 These benefits compound over time. Adding a new filter becomes one predicate addition, and multiple consumers stay in sync automatically.
 
@@ -114,8 +114,8 @@ Because specifications are immutable, multiple handlers can share the same insta
 
 1. **Define a spec contract** just like `ISpecification<T>` so every query exposes the same knobs.
 2. **Build a base class** with helpers to add includes, paging, and ordering; keep the API expressive but focused.
-3. **Create a spec catalogue** per aggregate—`EmployeesByFiltersSpecification`, `EmployeesKeywordSpecification`, etc.—to capture real scenarios.
+3. **Create a spec catalogue** per aggregateï¿½`EmployeesByFiltersSpecification`, etc.ï¿½to capture real scenarios.
 4. **Expose spec-friendly repository methods** such as `ListAsync(ISpecification<T>)` or `FirstOrDefaultAsync(ISpecification<T>)` so consumers pass intent instead of ad-hoc predicates.
 
 Once you capture filtering logic inside specs, you spend less time wiring boilerplate queries, gain flexibility when requirements change, and end up with small objects that are easy to test in isolation. That combination is why the specification pattern has become the backbone of data access in Template OnionAPI.
-
+
