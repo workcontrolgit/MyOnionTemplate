@@ -255,6 +255,7 @@ public sealed class DashboardController : BaseApiController
 - Cache the dashboard response for 5 minutes by key `Dashboard:Metrics`.
 - Publish domain/application events on create/update/delete for Employees/Positions/Departments/SalaryRanges.
 - Handle events in a dedicated cache invalidation handler to clear `Dashboard:Metrics` (and other related keys if needed).
+- Use `EventDispatcher` to emit a `*ChangedEvent` after each successful write command; cache invalidation runs as the event handler.
 
 ## DI Registration
 Add reader registration in `MyOnion.Infrastructure.Persistence` DI:
