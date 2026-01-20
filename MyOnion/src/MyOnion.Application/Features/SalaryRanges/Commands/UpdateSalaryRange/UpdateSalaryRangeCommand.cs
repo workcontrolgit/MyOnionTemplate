@@ -1,3 +1,5 @@
+using MyOnion.Application.Events;
+
 namespace MyOnion.Application.Features.SalaryRanges.Commands.UpdateSalaryRange
 {
     /// <summary>
@@ -13,10 +15,14 @@ namespace MyOnion.Application.Features.SalaryRanges.Commands.UpdateSalaryRange
         public class UpdateSalaryRangeCommandHandler : IRequestHandler<UpdateSalaryRangeCommand, Result<Guid>>
         {
             private readonly ISalaryRangeRepositoryAsync _repository;
+            private readonly IEventDispatcher _eventDispatcher;
 
-            public UpdateSalaryRangeCommandHandler(ISalaryRangeRepositoryAsync repository)
+            public UpdateSalaryRangeCommandHandler(
+                ISalaryRangeRepositoryAsync repository,
+                IEventDispatcher eventDispatcher)
             {
                 _repository = repository;
+                _eventDispatcher = eventDispatcher;
             }
 
             public async Task<Result<Guid>> Handle(UpdateSalaryRangeCommand command, CancellationToken cancellationToken)
@@ -32,8 +38,11 @@ namespace MyOnion.Application.Features.SalaryRanges.Commands.UpdateSalaryRange
                 salaryRange.MaxSalary = command.MaxSalary;
 
                 await _repository.UpdateAsync(salaryRange);
+                await _eventDispatcher.PublishAsync(new SalaryRangeChangedEvent(salaryRange.Id), cancellationToken);
                 return Result<Guid>.Success(salaryRange.Id);
             }
         }
     }
 }
+
+

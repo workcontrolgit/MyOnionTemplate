@@ -1,3 +1,5 @@
+using MyOnion.Application.Events;
+
 namespace MyOnion.Application.Features.Employees.Commands.UpdateEmployee
 {
     /// <summary>
@@ -22,14 +24,14 @@ namespace MyOnion.Application.Features.Employees.Commands.UpdateEmployee
         public class UpdateEmployeeCommandHandler : IRequestHandler<UpdateEmployeeCommand, Result<Guid>>
         {
             private readonly IEmployeeRepositoryAsync _repository;
-            private readonly ICacheInvalidationService _cacheInvalidationService;
+            private readonly IEventDispatcher _eventDispatcher;
 
             public UpdateEmployeeCommandHandler(
                 IEmployeeRepositoryAsync repository,
-                ICacheInvalidationService cacheInvalidationService)
+                IEventDispatcher eventDispatcher)
             {
                 _repository = repository;
-                _cacheInvalidationService = cacheInvalidationService;
+                _eventDispatcher = eventDispatcher;
             }
 
             public async Task<Result<Guid>> Handle(UpdateEmployeeCommand command, CancellationToken cancellationToken)
@@ -54,7 +56,7 @@ namespace MyOnion.Application.Features.Employees.Commands.UpdateEmployee
                 employee.Phone = command.Phone;
 
                 await _repository.UpdateAsync(employee);
-                await _cacheInvalidationService.InvalidatePrefixAsync(CacheKeyPrefixes.EmployeesAll, cancellationToken);
+                await _eventDispatcher.PublishAsync(new EmployeeChangedEvent(employee.Id), cancellationToken);
 
                 return Result<Guid>.Success(employee.Id);
             }
