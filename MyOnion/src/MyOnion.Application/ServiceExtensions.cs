@@ -32,7 +32,7 @@ namespace MyOnion.Application
             services.AddScoped<IDataShapeHelper<Department>, DataShapeHelper<Department>>();
             services.AddScoped<IDataShapeHelper<SalaryRange>, DataShapeHelper<SalaryRange>>();
             services.AddScoped<IModelHelper, ModelHelper>();
-            services.AddSingleton<IEventDispatcher, EventDispatcher>();
+            services.AddScoped<IEventDispatcher, EventDispatcher>();
             services.AddTransient<IPipelineBehavior<GetEmployeesQuery, PagedResult<IEnumerable<Entity>>>, GetEmployeesCachingDecorator>();
             services.AddTransient<IPipelineBehavior<GetPositionsQuery, PagedResult<IEnumerable<Entity>>>, GetPositionsCachingBehavior>();
             // Register IDataShapeHelper implementations without relying on deprecated API surface.
