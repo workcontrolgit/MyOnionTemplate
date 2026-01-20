@@ -6,6 +6,15 @@ services:
       dockerfile: src/MyOnion.WebApi/Dockerfile
     environment:
       ConnectionStrings__DefaultConnection: Server=myonion-sql;Database=MyOnionDb;User Id=sa;Password=${MYONION_SQL_PASSWORD};TrustServerCertificate=True
+      ASPNETCORE_ENVIRONMENT: Development
+      ASPNETCORE_URLS: https://+:8443;http://+:8080
+      ASPNETCORE_Kestrel__Certificates__Default__Path: /https/myonion-dev.pfx
+      ASPNETCORE_Kestrel__Certificates__Default__Password: ${MYONION_HTTPS_CERT_PASSWORD}
+    ports:
+      - "8080:8080"
+      - "44378:8443"
+    volumes:
+      - ${USERPROFILE}/.aspnet/https:/https:ro
     depends_on:
       - myonion-sql
 

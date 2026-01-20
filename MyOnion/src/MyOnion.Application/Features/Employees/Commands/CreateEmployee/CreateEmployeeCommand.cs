@@ -1,3 +1,5 @@
+using MyOnion.Application.Events;
+
 namespace MyOnion.Application.Features.Employees.Commands.CreateEmployee
 {
     /// <summary>
@@ -22,16 +24,16 @@ namespace MyOnion.Application.Features.Employees.Commands.CreateEmployee
         {
             private readonly IEmployeeRepositoryAsync _repository;
             private readonly IMapper _mapper;
-            private readonly ICacheInvalidationService _cacheInvalidationService;
+            private readonly IEventDispatcher _eventDispatcher;
 
             public CreateEmployeeCommandHandler(
                 IEmployeeRepositoryAsync repository,
                 IMapper mapper,
-                ICacheInvalidationService cacheInvalidationService)
+                IEventDispatcher eventDispatcher)
             {
                 _repository = repository;
                 _mapper = mapper;
-                _cacheInvalidationService = cacheInvalidationService;
+                _eventDispatcher = eventDispatcher;
             }
 
             public async Task<Result<Guid>> Handle(CreateEmployeeCommand request, CancellationToken cancellationToken)
@@ -39,7 +41,7 @@ namespace MyOnion.Application.Features.Employees.Commands.CreateEmployee
                 var employee = _mapper.Map<Employee>(request);
                 employee.Id = Guid.NewGuid();
                 await _repository.AddAsync(employee);
-                await _cacheInvalidationService.InvalidatePrefixAsync(CacheKeyPrefixes.EmployeesAll, cancellationToken);
+                await _eventDispatcher.PublishAsync(new EmployeeChangedEvent(employee.Id), cancellationToken);
                 return Result<Guid>.Success(employee.Id);
             }
         }

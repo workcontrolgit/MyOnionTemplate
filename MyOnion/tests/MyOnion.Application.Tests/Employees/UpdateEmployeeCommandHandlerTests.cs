@@ -3,7 +3,7 @@
 public class UpdateEmployeeCommandHandlerTests
 {
     private readonly Mock<IEmployeeRepositoryAsync> _repositoryMock = new();
-    private readonly Mock<ICacheInvalidationService> _cacheInvalidationServiceMock = new();
+    private readonly Mock<IEventDispatcher> _eventDispatcherMock = new();
 
     [Fact]
     public async Task Handle_ShouldUpdateEmployee()
@@ -26,14 +26,16 @@ public class UpdateEmployeeCommandHandlerTests
 
         var handler = new UpdateEmployeeCommand.UpdateEmployeeCommandHandler(
             _repositoryMock.Object,
-            _cacheInvalidationServiceMock.Object);
+            _eventDispatcherMock.Object);
         var result = await handler.Handle(command, CancellationToken.None);
 
         result.IsSuccess.Should().BeTrue();
         employee.FirstName.Should().Be("Jane");
         employee.DepartmentId.Should().Be(command.DepartmentId);
         _repositoryMock.Verify(r => r.UpdateAsync(employee), Times.Once);
-        _cacheInvalidationServiceMock.Verify(s => s.InvalidatePrefixAsync(CacheKeyPrefixes.EmployeesAll, It.IsAny<CancellationToken>()), Times.Once);
+        _eventDispatcherMock.Verify(s => s.PublishAsync(
+            It.Is<EmployeeChangedEvent>(e => e.EmployeeId == employee.Id),
+            It.IsAny<CancellationToken>()), Times.Once);
     }
 
     [Fact]
@@ -44,7 +46,7 @@ public class UpdateEmployeeCommandHandlerTests
 
         var handler = new UpdateEmployeeCommand.UpdateEmployeeCommandHandler(
             _repositoryMock.Object,
-            _cacheInvalidationServiceMock.Object);
+            _eventDispatcherMock.Object);
 
         await FluentActions.Awaiting(() => handler.Handle(command, CancellationToken.None))
             .Should().ThrowAsync<ApiException>()

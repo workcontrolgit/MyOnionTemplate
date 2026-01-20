@@ -4,6 +4,7 @@ public class CreatePositionCommandHandlerTests
 {
     private readonly Mock<IPositionRepositoryAsync> _repositoryMock = new();
     private readonly Mock<IMapper> _mapperMock = new();
+    private readonly Mock<IEventDispatcher> _eventDispatcherMock = new();
 
     [Fact]
     public async Task Handle_ShouldPersistPositionAndReturnSuccess()
@@ -28,7 +29,10 @@ public class CreatePositionCommandHandlerTests
         _mapperMock.Setup(m => m.Map<Position>(command)).Returns(position);
         _repositoryMock.Setup(r => r.AddAsync(position)).ReturnsAsync(position);
 
-        var handler = new CreatePositionCommandHandler(_repositoryMock.Object, _mapperMock.Object);
+        var handler = new CreatePositionCommandHandler(
+            _repositoryMock.Object,
+            _mapperMock.Object,
+            _eventDispatcherMock.Object);
 
         // Act
         var result = await handler.Handle(command, CancellationToken.None);
@@ -37,5 +41,8 @@ public class CreatePositionCommandHandlerTests
         result.IsSuccess.Should().BeTrue();
         result.Value.Should().Be(position.Id);
         _repositoryMock.Verify(r => r.AddAsync(position), Times.Once);
+        _eventDispatcherMock.Verify(s => s.PublishAsync(
+            It.Is<PositionChangedEvent>(e => e.PositionId == position.Id),
+            It.IsAny<CancellationToken>()), Times.Once);
     }
 }

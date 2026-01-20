@@ -1,4 +1,5 @@
 using System.Reflection;
+using MyOnion.Infrastructure.Persistence.Readers;
 namespace MyOnion.Infrastructure.Persistence
 {
     public static class ServiceRegistration
@@ -42,6 +43,8 @@ namespace MyOnion.Infrastructure.Persistence
                 );
 
             #endregion Repositories
+
+            services.AddScoped<IDashboardMetricsReader, DashboardMetricsReader>();
         }
 
         private static void ConfigureCommonOptions(IServiceProvider provider, DbContextOptionsBuilder options)

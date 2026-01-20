@@ -1,3 +1,5 @@
+using MyOnion.Application.Events;
+
 namespace MyOnion.Application.Features.Employees.Commands.DeleteEmployeeById
 {
     /// <summary>
@@ -10,14 +12,14 @@ namespace MyOnion.Application.Features.Employees.Commands.DeleteEmployeeById
         public class DeleteEmployeeByIdCommandHandler : IRequestHandler<DeleteEmployeeByIdCommand, Result<Guid>>
         {
             private readonly IEmployeeRepositoryAsync _repository;
-            private readonly ICacheInvalidationService _cacheInvalidationService;
+            private readonly IEventDispatcher _eventDispatcher;
 
             public DeleteEmployeeByIdCommandHandler(
                 IEmployeeRepositoryAsync repository,
-                ICacheInvalidationService cacheInvalidationService)
+                IEventDispatcher eventDispatcher)
             {
                 _repository = repository;
-                _cacheInvalidationService = cacheInvalidationService;
+                _eventDispatcher = eventDispatcher;
             }
 
             public async Task<Result<Guid>> Handle(DeleteEmployeeByIdCommand command, CancellationToken cancellationToken)
@@ -29,7 +31,7 @@ namespace MyOnion.Application.Features.Employees.Commands.DeleteEmployeeById
                 }
 
                 await _repository.DeleteAsync(entity);
-                await _cacheInvalidationService.InvalidatePrefixAsync(CacheKeyPrefixes.EmployeesAll, cancellationToken);
+                await _eventDispatcher.PublishAsync(new EmployeeChangedEvent(entity.Id), cancellationToken);
                 return Result<Guid>.Success(entity.Id);
             }
         }

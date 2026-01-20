@@ -1,4 +1,6 @@
-﻿namespace MyOnion.Application.Features.Positions.Commands.CreatePosition
+using MyOnion.Application.Events;
+
+namespace MyOnion.Application.Features.Positions.Commands.CreatePosition
 {
     // This class represents a command to create a new position.
     public partial class CreatePositionCommand : IRequest<Result<Guid>>
@@ -28,12 +30,17 @@
 
         // An object mapper to convert between different data types.
         private readonly IMapper _mapper;
+        private readonly IEventDispatcher _eventDispatcher;
 
         // Constructor that injects the position repository and mapper into the handler.
-        public CreatePositionCommandHandler(IPositionRepositoryAsync repository, IMapper mapper)
+        public CreatePositionCommandHandler(
+            IPositionRepositoryAsync repository,
+            IMapper mapper,
+            IEventDispatcher eventDispatcher)
         {
             _repository = repository;
             _mapper = mapper;
+            _eventDispatcher = eventDispatcher;
         }
 
         // This method is called when a new position creation command is issued.
@@ -44,9 +51,12 @@
 
             // Adds the new position to the database asynchronously.
             await _repository.AddAsync(position);
+            await _eventDispatcher.PublishAsync(new PositionChangedEvent(position.Id), cancellationToken);
 
             // Returns a response containing the ID of the newly created position.
             return Result<Guid>.Success(position.Id);
         }
     }
 }
+
+

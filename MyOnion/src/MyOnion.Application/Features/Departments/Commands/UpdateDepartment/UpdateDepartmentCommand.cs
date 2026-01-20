@@ -1,3 +1,5 @@
+using MyOnion.Application.Events;
+
 namespace MyOnion.Application.Features.Departments.Commands.UpdateDepartment
 {
     /// <summary>
@@ -14,10 +16,14 @@ namespace MyOnion.Application.Features.Departments.Commands.UpdateDepartment
         public class UpdateDepartmentCommandHandler : IRequestHandler<UpdateDepartmentCommand, Result<Guid>>
         {
             private readonly IDepartmentRepositoryAsync _repository;
+            private readonly IEventDispatcher _eventDispatcher;
 
-            public UpdateDepartmentCommandHandler(IDepartmentRepositoryAsync repository)
+            public UpdateDepartmentCommandHandler(
+                IDepartmentRepositoryAsync repository,
+                IEventDispatcher eventDispatcher)
             {
                 _repository = repository;
+                _eventDispatcher = eventDispatcher;
             }
 
             public async Task<Result<Guid>> Handle(UpdateDepartmentCommand command, CancellationToken cancellationToken)
@@ -30,6 +36,7 @@ namespace MyOnion.Application.Features.Departments.Commands.UpdateDepartment
 
                 department.Name = command.Name;
                 await _repository.UpdateAsync(department);
+                await _eventDispatcher.PublishAsync(new DepartmentChangedEvent(department.Id), cancellationToken);
 
                 return Result<Guid>.Success(department.Id);
             }
