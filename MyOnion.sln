@@ -40,6 +40,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Docs", "Docs", "{50A5EEAC-F
 		MyOnion\docs\Dashboard API Plan.md = MyOnion\docs\Dashboard API Plan.md
 		MyOnion\docs\Guid Assignment Technical Approach.md = MyOnion\docs\Guid Assignment Technical Approach.md
 		MyOnion\docs\EasyCaching Migration Plan.md = MyOnion\docs\EasyCaching Migration Plan.md
+		MyOnion\docs\EasyCachingBlog.md = MyOnion\docs\EasyCachingBlog.md
 		MyOnion\docs\.NET10 Upgrade Plan.md = MyOnion\docs\.NET10 Upgrade Plan.md
 		MyOnion\docs\Automapper Replacment with Mapster Plan.md = MyOnion\docs\Automapper Replacment with Mapster Plan.md
 		MyOnion\docs\DataShapingBlog.md = MyOnion\docs\DataShapingBlog.md
