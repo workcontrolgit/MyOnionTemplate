@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PackageManifest Version="2.0.0" xmlns="http://schemas.microsoft.com/developer/vsx-schema/2011" xmlns:d="http://schemas.microsoft.com/developer/vsx-schema-design/2011">
     <Metadata>
-        <Identity Id="VSIXTemplateOnionAPI.253e3774-ce3b-4788-b76a-d17a369a0a04" Version="10.1.1" Language="en-US" Publisher="Fuji Nduyen" />
+        <Identity Id="VSIXTemplateOnionAPI.253e3774-ce3b-4788-b76a-d17a369a0a04" Version="10.1.2" Language="en-US" Publisher="Fuji Nguyen" />
         <DisplayName>Template OnionAPI</DisplayName>
         <Description xml:space="preserve">Visual Studio template that scaffolds a .NET 10 ASP.NET Core Web API following clean architecture with Domain, Application, Infrastructure.Persistence, Infrastructure.Shared, and WebApi projects wired with a lightweight mediator, FluentValidation, EF Core, Swagger, and Serilog.  The source code includes features such as data filtering, sorting, ordering and shaping.</Description>
     </Metadata>
