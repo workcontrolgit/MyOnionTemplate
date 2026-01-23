@@ -1,8 +1,8 @@
 # Open-Source Messaging and Mapping in Template OnionAPI v10.1.2
 
-MediatR and AutoMapper are moving to commercial licensing, so Template OnionAPI replaces them with open-source, lightweight alternatives: an in-house mediator (`MyOnion.Application.Messaging`) and Mapster. This keeps the same CQRS + mapping ergonomics while staying free to use in every environment.
+Template OnionAPI ships as a Visual Studio template and stays committed to open-source, free dependencies. Download the template here: https://marketplace.visualstudio.com/items?itemName=workcontrol.VSIXTemplateOnionAPI
 
-Solution Docs: [MediatR-Replacement-Plan](MediatR-Replacement-Plan.md) and [Automapper Replacment with Mapster Plan](Automapper%20Replacment%20with%20Mapster%20Plan.md)
+MediatR and AutoMapper are moving to commercial licensing, so Template OnionAPI replaces them with open-source, lightweight alternatives: an in-house mediator (`MyOnion.Application.Messaging`) and Mapster. This keeps the same CQRS + mapping ergonomics while staying free to use in every environment.
 
 ## What the Replacement Does
 
