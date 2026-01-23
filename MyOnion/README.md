@@ -1,10 +1,10 @@
 # MyOnion
 
-MyOnion is a .NET 10 clean architecture reference API that demonstrates Domain-Driven Design patterns using ASP.NET Core, MediatR, FluentValidation, and EF Core. The solution is organized into Domain, Application, Infrastructure.Persistence, Infrastructure.Shared, and WebApi projects, keeping dependencies flowing inward so UI concerns never reference infrastructure details directly.
+MyOnion is a .NET 10 clean architecture reference API that demonstrates Domain-Driven Design patterns using ASP.NET Core, Mapster, a lightweight in-house mediator, FluentValidation, and EF Core. The solution is organized into Domain, Application, Infrastructure.Persistence, Infrastructure.Shared, and WebApi projects, keeping dependencies flowing inward so UI concerns never reference infrastructure details directly.
 
 ## Project Layout
 - `MyOnion.Domain` - Entities, enums, shared value objects, and domain abstractions.
-- `MyOnion.Application` - DTOs, Behaviours, MediatR request/handler pipelines, validators, and service interfaces.
+- `MyOnion.Application` - DTOs, Behaviours, Mapster mappings, mediator request/handler pipelines, validators, and service interfaces.
 - `MyOnion.Infrastructure.Persistence` - EF Core DbContext, repositories, and seed data used to back the application layer.
 - `MyOnion.Infrastructure.Shared` - Cross-cutting services (e.g., external integrations, mocks) registered for DI.
 - `MyOnion.WebApi` - ASP.NET Core host exposing controllers, middleware, Swagger UI, and configuration.
@@ -37,6 +37,23 @@ dotnet build MyOnion.sln -c Release
 dotnet watch run --project MyOnion.WebApi/MyOnion.WebApi.csproj
 ```
 Navigate to `https://localhost:5001/swagger` for API exploration. Health checks are exposed at `/health`.
+
+## Docker Development
+```powershell
+# Create and export a dev HTTPS cert for container mounting
+$certPath = "$env:USERPROFILE\\.aspnet\\https\\myonion-dev.pfx"
+$certPassword = "devpassword"
+dotnet dev-certs https --clean
+dotnet dev-certs https --trust
+dotnet dev-certs https -ep $certPath -p $certPassword
+
+# Copy the example environment file and set passwords
+Copy-Item .env.example .env
+
+# Start the API + SQL Server
+docker compose up --build
+```
+Navigate to `https://localhost:44378/swagger/index.html` from the host.
 
 ## Coding Standards
 - Follow standard C# conventions (PascalCase for types, camelCase for locals/parameters, interfaces prefixed with `I`).

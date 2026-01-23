@@ -9,6 +9,10 @@
         public Guid PositionId { get; set; } // A unique identifier for the position that the employee holds.
         // Navigation Property for Position
         public virtual Position Position { get; set; } // A reference to the Position entity that the employee is associated with. This allows you to retrieve information about the employee's position without having to make additional database queries.
+        // Foreign Key for Home Department
+        public Guid DepartmentId { get; set; } // A unique identifier for the employee's home department.
+        // Navigation Property for Home Department
+        public virtual Department Department { get; set; } // A reference to the Department entity that represents the employee's home organization.
         // Salary of the Employee
         public decimal Salary { get; set; } // The monthly salary of the employee.
 

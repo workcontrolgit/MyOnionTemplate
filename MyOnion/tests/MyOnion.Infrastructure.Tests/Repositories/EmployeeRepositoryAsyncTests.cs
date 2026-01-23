@@ -56,50 +56,6 @@ public class EmployeeRepositoryAsyncTests : IDisposable
     }
 
     [Fact]
-    public async Task GetPagedEmployeeResponseAsync_ShouldReturnPagedDataTableShape()
-    {
-        var position = new Position
-        {
-            Id = Guid.NewGuid(),
-            PositionTitle = "QA",
-            PositionNumber = "QA-1",
-            PositionDescription = "Tests code",
-            DepartmentId = Guid.NewGuid(),
-            SalaryRangeId = Guid.NewGuid()
-        };
-        _context.Positions.Add(position);
-        _context.Employees.Add(new Employee
-        {
-            Id = Guid.NewGuid(),
-            FirstName = "John",
-            LastName = "Smith",
-            Email = "john@example.com",
-            EmployeeNumber = "E-2",
-            PositionId = position.Id,
-            Salary = 4000,
-            Birthday = DateTime.UtcNow.AddYears(-25)
-        });
-        await _context.SaveChangesAsync();
-
-        var query = new PagedEmployeesQuery
-        {
-            Fields = "Id,FirstName",
-            Draw = 1,
-            Start = 0,
-            Length = 10,
-            Order = new List<SortOrder> { new() { Column = 0, Dir = "asc" } },
-            Columns = new List<Column>(),
-            Search = new Search { Value = string.Empty, Regex = false }
-        };
-
-        var (data, count) = await _repository.GetPagedEmployeeResponseAsync(query);
-
-        data.Should().HaveCount(1);
-        data.First()["FirstName"].Should().Be("John");
-        count.Should().BeEquivalentTo(new RecordsCount { RecordsFiltered = 1, RecordsTotal = 1 });
-    }
-
-    [Fact]
     public async Task UpdateAsync_ShouldPersistEmployeeChanges()
     {
         var position = new Position

@@ -61,6 +61,11 @@
         public virtual Position Position { get; set; }
 
         /// <summary>
+        /// Gets or sets the employee's home department identifier.
+        /// </summary>
+        public Guid DepartmentId { get; set; }
+
+        /// <summary>
         /// Gets or sets the salary of the employee.
         /// </summary>
         public decimal Salary { get; set; }

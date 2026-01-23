@@ -4,6 +4,7 @@ public class CreateEmployeeCommandHandlerTests
 {
     private readonly Mock<IEmployeeRepositoryAsync> _repositoryMock = new();
     private readonly Mock<IMapper> _mapperMock = new();
+    private readonly Mock<IEventDispatcher> _eventDispatcherMock = new();
 
     [Fact]
     public async Task Handle_ShouldPersistEmployeeAndReturnId()
@@ -15,6 +16,7 @@ public class CreateEmployeeCommandHandlerTests
             Email = "jane@example.com",
             EmployeeNumber = "E-1",
             PositionId = Guid.NewGuid(),
+            DepartmentId = Guid.NewGuid(),
             Birthday = DateTime.UtcNow.AddYears(-30)
         };
 
@@ -23,12 +25,18 @@ public class CreateEmployeeCommandHandlerTests
         _mapperMock.Setup(m => m.Map<Employee>(command)).Returns(employee);
         _repositoryMock.Setup(r => r.AddAsync(employee)).ReturnsAsync(employee);
 
-        var handler = new CreateEmployeeCommand.CreateEmployeeCommandHandler(_repositoryMock.Object, _mapperMock.Object);
+        var handler = new CreateEmployeeCommand.CreateEmployeeCommandHandler(
+            _repositoryMock.Object,
+            _mapperMock.Object,
+            _eventDispatcherMock.Object);
 
         var result = await handler.Handle(command, CancellationToken.None);
 
         result.IsSuccess.Should().BeTrue();
         result.Value.Should().Be(employee.Id);
         _repositoryMock.Verify(r => r.AddAsync(employee), Times.Once);
+        _eventDispatcherMock.Verify(s => s.PublishAsync(
+            It.Is<EmployeeChangedEvent>(e => e.EmployeeId == employee.Id),
+            It.IsAny<CancellationToken>()), Times.Once);
     }
 }

@@ -10,6 +10,10 @@
     <PackageProjectUrl>https://github.com/workcontrolgit</PackageProjectUrl>
     <Version>1.0.0</Version>
     <AssetTargetFallback>$(AssetTargetFallback);net8.0;netstandard2.0</AssetTargetFallback>
+    <UserSecretsId>d7dba4fb-c08e-453d-9e13-d7d0f8ba8ff0</UserSecretsId>
+    <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
+    <DockerfileContext>..\..\..</DockerfileContext>
+    <DockerComposeProjectPath>..\..\..\docker-compose.dcproj</DockerComposeProjectPath>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
@@ -26,12 +30,22 @@
 
   <ItemGroup>
     <PackageReference Include="Asp.Versioning.Mvc.ApiExplorer" Version="8.1.1" />
+    <PackageReference Include="EasyCaching.Core" Version="1.8.0" />
+    <PackageReference Include="EasyCaching.InMemory" Version="1.8.0" />
+    <PackageReference Include="EasyCaching.Redis" Version="1.8.0" />
+    <PackageReference Include="EasyCaching.Serialization.SystemTextJson" Version="1.8.0" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="10.0.1" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="10.0.2">
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+      <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
+    <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.22.1" />
     <PackageReference Include="NSwag.AspNetCore" Version="14.6.3" />
     <PackageReference Include="Serilog.AspNetCore" Version="10.0.0" />
   </ItemGroup>
   
   <ItemGroup>
+    <ProjectReference Include="..\MyOnion.Application\MyOnion.Application.csproj" />
     <ProjectReference Include="..\MyOnion.Infrastructure.Persistence\MyOnion.Infrastructure.Persistence.csproj" />
     <ProjectReference Include="..\MyOnion.Infrastructure.Shared\MyOnion.Infrastructure.Shared.csproj" />
   </ItemGroup>

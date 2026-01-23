@@ -75,6 +75,7 @@ namespace MyOnion.Application.Features.Positions.Queries.GetPositions
             // response wrapper
             return PagedResult<IEnumerable<Entity>>.Success(data, objRequest.PageNumber, objRequest.PageSize, recordCount);
         }
+
     }
 }
 

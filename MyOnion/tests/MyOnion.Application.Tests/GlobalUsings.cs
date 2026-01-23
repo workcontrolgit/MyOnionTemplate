@@ -1,5 +1,5 @@
-global using AutoMapper;
 global using FluentAssertions;
+global using MapsterMapper;
 global using Moq;
 global using MyOnion.Application.Exceptions;
 global using MyOnion.Application.Features.Departments.Commands.CreateDepartment;
@@ -19,7 +19,10 @@ global using MyOnion.Application.Features.SalaryRanges.Commands.CreateSalaryRang
 global using MyOnion.Application.Features.SalaryRanges.Commands.DeleteSalaryRangeById;
 global using MyOnion.Application.Features.SalaryRanges.Commands.UpdateSalaryRange;
 global using MyOnion.Application.Features.SalaryRanges.Queries.GetSalaryRanges;
+global using MyOnion.Application.Common.Caching;
+global using MyOnion.Application.Events;
 global using MyOnion.Application.Interfaces;
+global using MyOnion.Application.Interfaces.Caching;
 global using MyOnion.Application.Interfaces.Repositories;
 global using MyOnion.Application.Parameters;
 global using MyOnion.Domain.Entities;

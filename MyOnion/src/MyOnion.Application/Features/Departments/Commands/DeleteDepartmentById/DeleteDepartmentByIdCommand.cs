@@ -1,3 +1,5 @@
+using MyOnion.Application.Events;
+
 namespace MyOnion.Application.Features.Departments.Commands.DeleteDepartmentById
 {
     /// <summary>
@@ -10,10 +12,14 @@ namespace MyOnion.Application.Features.Departments.Commands.DeleteDepartmentById
         public class DeleteDepartmentByIdCommandHandler : IRequestHandler<DeleteDepartmentByIdCommand, Result<Guid>>
         {
             private readonly IDepartmentRepositoryAsync _repository;
+            private readonly IEventDispatcher _eventDispatcher;
 
-            public DeleteDepartmentByIdCommandHandler(IDepartmentRepositoryAsync repository)
+            public DeleteDepartmentByIdCommandHandler(
+                IDepartmentRepositoryAsync repository,
+                IEventDispatcher eventDispatcher)
             {
                 _repository = repository;
+                _eventDispatcher = eventDispatcher;
             }
 
             public async Task<Result<Guid>> Handle(DeleteDepartmentByIdCommand command, CancellationToken cancellationToken)
@@ -25,6 +31,7 @@ namespace MyOnion.Application.Features.Departments.Commands.DeleteDepartmentById
                 }
 
                 await _repository.DeleteAsync(entity);
+                await _eventDispatcher.PublishAsync(new DepartmentChangedEvent(entity.Id), cancellationToken);
                 return Result<Guid>.Success(entity.Id);
             }
         }

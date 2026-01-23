@@ -65,5 +65,6 @@
             // response wrapper
             return PagedResult<IEnumerable<Entity>>.Success(data, objRequest.PageNumber, objRequest.PageSize, recordCount);
         }
+
     }
 }

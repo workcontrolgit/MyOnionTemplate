@@ -1,4 +1,4 @@
-# Specification Pattern Upgrade Plan
+﻿����# Specification Pattern Upgrade Plan
 
 ## Objective
 Introduce an Arcadis-style specification pattern to centralize filtering, ordering, paging, and eager-loading logic for EF Core repositories while preserving current data-shaping behaviors consumed by the application layer.
@@ -53,4 +53,4 @@ Introduce an Arcadis-style specification pattern to centralize filtering, orderi
 1. Specification interfaces, evaluator, and tests.
 2. Updated generic repository + spec-enabled methods.
 3. Refactored Employee & Position repositories using specs.
-4. Documentation referencing this plan and usage examples.
+4. Documentation referencing this plan and usage examples.

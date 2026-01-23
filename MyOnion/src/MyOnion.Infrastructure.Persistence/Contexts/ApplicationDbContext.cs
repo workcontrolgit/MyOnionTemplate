@@ -20,7 +20,41 @@
         public DbSet<Employee> Employees { get; set; } // Entity set for employees
         public DbSet<SalaryRange> SalaryRanges { get; set; } // Entity set for salary ranges
 
+        public override int SaveChanges()
+        {
+            AssignIds();
+            UpdateAuditFields();
+            return base.SaveChanges();
+        }
+
         public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = new CancellationToken())
+        {
+            AssignIds();
+            UpdateAuditFields();
+            return base.SaveChangesAsync(cancellationToken); // Call base method to save changes asynchronously with specified cancellation token
+        }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            base.OnModelCreating(modelBuilder);
+
+            // Configuring data model using EF Core Fluent API, using helper class
+            ApplicationDbContextHelpers.DatabaseModelCreating(modelBuilder);
+        }
+
+        private void AssignIds()
+        {
+            foreach (var entry in ChangeTracker.Entries<BaseEntity>()
+                .Where(e => e.State == EntityState.Added))
+            {
+                if (entry.Entity.Id == Guid.Empty)
+                {
+                    entry.Entity.Id = Guid.NewGuid();
+                }
+            }
+        }
+
+        private void UpdateAuditFields()
         {
             foreach (var entry in ChangeTracker.Entries<AuditableBaseEntity>())
             {
@@ -35,16 +69,6 @@
                         break;
                 }
             }
-            return base.SaveChangesAsync(cancellationToken); // Call base method to save changes asynchronously with specified cancellation token
         }
-
-        protected override void OnModelCreating(ModelBuilder modelBuilder)
-        {
-            base.OnModelCreating(modelBuilder);
-
-            // Configuring data model using EF Core Fluent API, using helper class
-            ApplicationDbContextHelpers.DatabaseModelCreating(modelBuilder);
-        }
-
     }
 }
