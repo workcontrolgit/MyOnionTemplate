@@ -11,21 +11,27 @@ namespace MyOnion.WebApi.Middlewares
         private readonly RequestDelegate _next;
         private readonly IOptionsMonitor<ExecutionTimingOptions> _optionsMonitor;
         private readonly ILogger<RequestTimingMiddleware> _logger;
+        private readonly IFeatureManagerSnapshot _featureManager;
 
         public RequestTimingMiddleware(
             RequestDelegate next,
             IOptionsMonitor<ExecutionTimingOptions> optionsMonitor,
-            ILogger<RequestTimingMiddleware> logger)
+            ILogger<RequestTimingMiddleware> logger,
+            IFeatureManagerSnapshot featureManager)
         {
             _next = next ?? throw new ArgumentNullException(nameof(next));
             _optionsMonitor = optionsMonitor;
             _logger = logger;
+            _featureManager = featureManager;
         }
 
         public async Task InvokeAsync(HttpContext context)
         {
             var options = _optionsMonitor.CurrentValue;
-            if (!options.Enabled)
+            var enabled = await _featureManager.IsEnabledAsync("ExecutionTimingEnabled").ConfigureAwait(false);
+            var includeHeader = await _featureManager.IsEnabledAsync("ExecutionTimingIncludeHeader").ConfigureAwait(false);
+            var logTimings = await _featureManager.IsEnabledAsync("ExecutionTimingLogTimings").ConfigureAwait(false);
+            if (!enabled)
             {
                 await _next(context);
                 return;
@@ -34,7 +40,7 @@ namespace MyOnion.WebApi.Middlewares
             var stopwatch = Stopwatch.StartNew();
             context.Items[ExecutionTimingConstants.StopwatchItemKey] = stopwatch;
 
-            if (options.IncludeHeader)
+            if (includeHeader)
             {
                 context.Response.OnStarting(state =>
                 {
@@ -60,7 +66,7 @@ namespace MyOnion.WebApi.Middlewares
                 var elapsed = stopwatch.Elapsed.TotalMilliseconds;
                 context.Items[ExecutionTimingConstants.ElapsedItemKey] = elapsed;
 
-                if (options.LogTimings)
+                if (logTimings)
                 {
                     _logger.LogInformation("Request {Method} {Path} executed in {Elapsed} ms", context.Request.Method, context.Request.Path, elapsed);
                 }

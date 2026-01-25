@@ -9,6 +9,7 @@
         /// <param name="filter">The filter used to get the list of salary ranges.</param>
         /// <returns>A list of salary ranges.</returns>
         [HttpGet]
+        [AllowAnonymous]
         public async Task<IActionResult> Get([FromQuery] GetSalaryRangesQuery filter)
         {
             return Ok(await Mediator.Send(filter));
@@ -19,6 +20,7 @@
         /// </summary>
         /// <param name="id">Salary range identifier.</param>
         [HttpGet("{id}")]
+        [AllowAnonymous]
         public async Task<IActionResult> Get(Guid id)
         {
             return Ok(await Mediator.Send(new GetSalaryRangeByIdQuery { Id = id }));
@@ -29,6 +31,7 @@
         /// </summary>
         /// <param name="command">Salary range payload.</param>
         [HttpPost]
+        [Authorize]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> Post(CreateSalaryRangeCommand command)
@@ -43,6 +46,7 @@
         /// <param name="id">Salary range identifier.</param>
         /// <param name="command">Update payload.</param>
         [HttpPut("{id}")]
+        [Authorize]
         public async Task<IActionResult> Put(Guid id, UpdateSalaryRangeCommand command)
         {
             if (id != command.Id)
@@ -58,6 +62,7 @@
         /// </summary>
         /// <param name="id">Salary range identifier.</param>
         [HttpDelete("{id}")]
+        [Authorize(Policy = AuthorizationConsts.AdminPolicy)]
         public async Task<IActionResult> Delete(Guid id)
         {
             return Ok(await Mediator.Send(new DeleteSalaryRangeByIdCommand { Id = id }));
