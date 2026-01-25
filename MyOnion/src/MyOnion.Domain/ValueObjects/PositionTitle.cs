@@ -8,6 +8,10 @@ namespace MyOnion.Domain.ValueObjects
     {
         public string Value { get; }
 
+        private PositionTitle()
+        {
+        }
+
         public PositionTitle(string value)
         {
             Value = Normalize(value);

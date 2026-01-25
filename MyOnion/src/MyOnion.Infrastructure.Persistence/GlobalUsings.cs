@@ -7,7 +7,6 @@ global using System.Threading.Tasks;
 global using FluentValidation;
 global using LinqKit;
 global using Microsoft.EntityFrameworkCore;
-global using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 global using Microsoft.Extensions.Configuration;
 global using Microsoft.Extensions.DependencyInjection;
 global using Microsoft.Extensions.Logging;
