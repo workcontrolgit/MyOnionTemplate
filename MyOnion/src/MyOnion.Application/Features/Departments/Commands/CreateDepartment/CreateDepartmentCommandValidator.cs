@@ -9,7 +9,7 @@ namespace MyOnion.Application.Features.Departments.Commands.CreateDepartment
         {
             RuleFor(d => d.Name)
                 .NotEmpty().WithMessage("{PropertyName} is required.")
-                .MaximumLength(100).WithMessage("{PropertyName} must not exceed 100 characters.");
+                .MaximumLength(250).WithMessage("{PropertyName} must not exceed 250 characters.");
         }
     }
 }

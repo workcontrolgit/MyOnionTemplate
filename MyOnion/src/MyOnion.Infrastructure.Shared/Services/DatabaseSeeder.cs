@@ -44,7 +44,7 @@
             var faker = new Faker<Department>()
                 .UseSeed(seedValue)
                 .RuleFor(r => r.Id, f => Guid.NewGuid())
-                .RuleFor(r => r.Name, f => f.Commerce.Department())
+                .RuleFor(r => r.Name, f => new DepartmentName(f.Commerce.Department()))
                 .RuleFor(r => r.Created, f => f.Date.Past(f.Random.Number(1, 5), DateTime.Now))
                 .RuleFor(r => r.CreatedBy, f => f.Internet.UserName());
 
@@ -62,11 +62,12 @@
                 .RuleFor(r => r.EmployeeNumber, f => f.Commerce.Ean13())
                 .RuleFor(r => r.Salary, f => f.Random.Number(20000, 110000))
                 .RuleFor(r => r.Prefix, (f, r) => f.Name.Prefix((Name.Gender)r.Gender))
-                .RuleFor(r => r.FirstName, (f, r) => f.Name.FirstName((Name.Gender)r.Gender))
-                .RuleFor(r => r.MiddleName, (f, r) => f.Name.FirstName((Name.Gender)r.Gender))
-                .RuleFor(r => r.LastName, (f, r) => f.Name.LastName((Name.Gender)r.Gender))
+                .RuleFor(r => r.Name, (f, r) => new PersonName(
+                    f.Name.FirstName((Name.Gender)r.Gender),
+                    f.Name.FirstName((Name.Gender)r.Gender),
+                    f.Name.LastName((Name.Gender)r.Gender)))
                 .RuleFor(r => r.Birthday, f => f.Person.DateOfBirth)
-                .RuleFor(r => r.Email, (f, p) => f.Internet.Email(p.FirstName, p.LastName))
+                .RuleFor(r => r.Email, (f, p) => f.Internet.Email(p.Name.FirstName, p.Name.LastName))
                 .RuleFor(r => r.Phone, f => f.Phone.PhoneNumber("(###)-###-####"))
                 .RuleFor(r => r.PositionId, f => f.PickRandom(positions).Id)
                 .RuleFor(r => r.DepartmentId, f => f.PickRandom(departments).Id)
@@ -87,7 +88,7 @@
             var faker = new Faker<Position>()
                 .UseSeed(seedValue)
                 .RuleFor(r => r.Id, f => Guid.NewGuid())
-                .RuleFor(o => o.PositionTitle, f => f.Name.JobTitle())
+                .RuleFor(o => o.PositionTitle, f => new PositionTitle(f.Name.JobTitle()))
                 .RuleFor(o => o.PositionNumber, f => f.Commerce.Ean13())
                 .RuleFor(o => o.PositionDescription, f => f.Lorem.Paragraphs(2))
                 .RuleFor(r => r.DepartmentId, f => f.PickRandom(departments).Id)

@@ -24,6 +24,7 @@ global using MyOnion.Application.Specifications.Positions;
 global using MyOnion.Application.Specifications.SalaryRanges;
 global using MyOnion.Domain.Common;
 global using MyOnion.Domain.Entities;
+global using MyOnion.Domain.ValueObjects;
 global using MyOnion.Infrastructure.Persistence.Contexts;
 global using MyOnion.Infrastructure.Persistence.Repository;
 global using MyOnion.Infrastructure.Persistence.Specifications;

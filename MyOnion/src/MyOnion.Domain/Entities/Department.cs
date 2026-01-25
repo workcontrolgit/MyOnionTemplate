@@ -1,10 +1,12 @@
-﻿namespace MyOnion.Domain.Entities
+using MyOnion.Domain.ValueObjects;
+
+namespace MyOnion.Domain.Entities
 {
     // Represents a department in the organization.
     public class Department : AuditableBaseEntity
     {
         // Gets or sets the name of the department.
-        public string Name { get; set; }
+        public DepartmentName Name { get; set; }
 
         // Navigation property for related positions.
         // This property allows for easy access to all positions associated with this department.

@@ -59,6 +59,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Docs", "Docs", "{50A5EEAC-F
 		MyOnion\docs\SpecificationUpgradePlan.md = MyOnion\docs\SpecificationUpgradePlan.md
 		MyOnion\docs\Template-Onion-API-Net10-Blog.md = MyOnion\docs\Template-Onion-API-Net10-Blog.md
 		MyOnion\docs\TestingPlans\TestCoverage100Plan.md = MyOnion\docs\TestingPlans\TestCoverage100Plan.md
+		MyOnion\docs\ValueObjectDesign.md = MyOnion\docs\ValueObjectDesign.md
 	EndProjectSection
 EndProject
 Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "docker-compose", "docker-compose.dcproj", "{81DDED9D-158B-E303-5F62-77A2896D2A5A}"

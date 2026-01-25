@@ -8,7 +8,7 @@ namespace MyOnion.Application.Specifications.Positions
             AddInclude(p => p.Department);
             AddInclude(p => p.SalaryRange);
 
-            var orderBy = string.IsNullOrWhiteSpace(request.OrderBy) ? "PositionNumber" : request.OrderBy;
+            var orderBy = ResolveOrderBy(request.OrderBy);
             ApplyOrderBy(orderBy);
 
             if (applyPaging && request.PageSize > 0)
@@ -30,16 +30,31 @@ namespace MyOnion.Application.Specifications.Positions
             if (!string.IsNullOrWhiteSpace(request.PositionTitle))
             {
                 var term = request.PositionTitle.Trim();
-                predicate = predicate.Or(p => p.PositionTitle.Contains(term));
+                predicate = predicate.Or(p => p.PositionTitle.Value.Contains(term));
             }
 
             if (!string.IsNullOrWhiteSpace(request.Department))
             {
                 var term = request.Department.Trim();
-                predicate = predicate.Or(p => p.Department.Name.Contains(term));
+                predicate = predicate.Or(p => p.Department.Name.Value.Contains(term));
             }
 
             return predicate.IsStarted ? predicate : null;
+        }
+
+        private static string ResolveOrderBy(string orderBy)
+        {
+            if (string.IsNullOrWhiteSpace(orderBy))
+            {
+                return "PositionNumber";
+            }
+
+            return orderBy switch
+            {
+                "PositionTitle" => "PositionTitle.Value",
+                "Department" => "Department.Name.Value",
+                _ => orderBy
+            };
         }
     }
 

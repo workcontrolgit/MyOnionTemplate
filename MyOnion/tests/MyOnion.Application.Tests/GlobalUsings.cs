@@ -26,3 +26,4 @@ global using MyOnion.Application.Interfaces.Caching;
 global using MyOnion.Application.Interfaces.Repositories;
 global using MyOnion.Application.Parameters;
 global using MyOnion.Domain.Entities;
+global using MyOnion.Domain.ValueObjects;

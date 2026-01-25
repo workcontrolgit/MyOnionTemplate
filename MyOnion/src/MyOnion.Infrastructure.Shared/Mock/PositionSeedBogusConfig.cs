@@ -13,7 +13,7 @@
             RuleFor(m => m.Id, f => Guid.NewGuid());
 
             // Rule to generate a job title and assign to `PositionTitle` property
-            RuleFor(o => o.PositionTitle, f => f.Name.JobTitle());
+            RuleFor(o => o.PositionTitle, f => new PositionTitle(f.Name.JobTitle()));
 
             // Rule to generate a 13-digit EAN code and assign to `PositionNumber` property
             RuleFor(o => o.PositionNumber, f => f.Commerce.Ean13());

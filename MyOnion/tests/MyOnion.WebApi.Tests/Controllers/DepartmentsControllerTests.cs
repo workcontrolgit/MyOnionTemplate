@@ -52,7 +52,7 @@ public class DepartmentsControllerTests
     public async Task GetById_ShouldForwardQueryToMediator()
     {
         var id = Guid.NewGuid();
-        var response = Result<Department>.Success(new Department { Id = id, Name = "HR" });
+        var response = Result<Department>.Success(new Department { Id = id, Name = new DepartmentName("HR") });
         _mediatorMock.Setup(m => m.Send(It.Is<GetDepartmentByIdQuery>(q => q.Id == id), It.IsAny<CancellationToken>())).ReturnsAsync(response);
 
         var result = await _controller.Get(id);

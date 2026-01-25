@@ -2,6 +2,7 @@ using MyOnion.Application.Features.Departments.Commands.CreateDepartment;
 using MyOnion.Application.Features.Employees.Commands.CreateEmployee;
 using MyOnion.Application.Features.Positions.DTOs;
 using MyOnion.Application.Features.SalaryRanges.Commands.CreateSalaryRange;
+using MyOnion.Domain.ValueObjects;
 
 namespace MyOnion.Application.Mappings
 {
@@ -11,21 +12,35 @@ namespace MyOnion.Application.Mappings
         public void Register(TypeAdapterConfig config)
         {
             // Maps an Employee entity to a GetEmployeesViewModel, and vice versa.
-            config.NewConfig<Employee, GetEmployeesViewModel>().TwoWays();
+            config.NewConfig<Employee, GetEmployeesViewModel>()
+                .Map(dest => dest.FirstName, src => src.Name.FirstName)
+                .Map(dest => dest.MiddleName, src => src.Name.MiddleName)
+                .Map(dest => dest.LastName, src => src.Name.LastName);
+            config.NewConfig<GetEmployeesViewModel, Employee>()
+                .Map(dest => dest.Name, src => new PersonName(src.FirstName, src.MiddleName, src.LastName));
 
             // Maps a Position entity to a PositionSummaryDto, and vice versa.
-            config.NewConfig<Position, PositionSummaryDto>().TwoWays();
+            config.NewConfig<Position, PositionSummaryDto>()
+                .Map(dest => dest.PositionTitle, src => src.PositionTitle.Value);
+            config.NewConfig<PositionSummaryDto, Position>()
+                .Map(dest => dest.PositionTitle, src => new PositionTitle(src.PositionTitle));
             // Maps a Department entity to a GetDepartmentsViewModel, and vice versa.
-            config.NewConfig<Department, GetDepartmentsViewModel>().TwoWays();
+            config.NewConfig<Department, GetDepartmentsViewModel>()
+                .Map(dest => dest.Name, src => src.Name.Value);
+            config.NewConfig<GetDepartmentsViewModel, Department>()
+                .Map(dest => dest.Name, src => new DepartmentName(src.Name));
 
             // Maps a SalaryRange entity to a GetSalaryRangesViewModel, and vice versa.
             config.NewConfig<SalaryRange, GetSalaryRangesViewModel>().TwoWays();
             // Maps a CreatePositionCommand to a Position entity.
-            config.NewConfig<CreatePositionCommand, Position>();
+            config.NewConfig<CreatePositionCommand, Position>()
+                .Map(dest => dest.PositionTitle, src => new PositionTitle(src.PositionTitle));
             // Maps a CreateDepartmentCommand to a Department entity.
-            config.NewConfig<CreateDepartmentCommand, Department>();
+            config.NewConfig<CreateDepartmentCommand, Department>()
+                .Map(dest => dest.Name, src => new DepartmentName(src.Name));
             // Maps a CreateEmployeeCommand to an Employee entity.
-            config.NewConfig<CreateEmployeeCommand, Employee>();
+            config.NewConfig<CreateEmployeeCommand, Employee>()
+                .Map(dest => dest.Name, src => new PersonName(src.FirstName, src.MiddleName, src.LastName));
             // Maps a CreateSalaryRangeCommand to a SalaryRange entity.
             config.NewConfig<CreateSalaryRangeCommand, SalaryRange>();
         }
