@@ -68,7 +68,7 @@ public class PositionRepositoryAsyncTests : IDisposable
         var (data, count) = await _repository.GetPositionReponseAsync(query);
 
         data.Should().HaveCount(1);
-        data.First()["PositionTitle"].Should().Be("QA Engineer");
+        data.First()["PositionTitle"].Should().BeOfType<PositionTitle>().Which.Value.Should().Be("QA Engineer");
         count.Should().BeEquivalentTo(new RecordsCount { RecordsFiltered = 1, RecordsTotal = 1 });
     }
 

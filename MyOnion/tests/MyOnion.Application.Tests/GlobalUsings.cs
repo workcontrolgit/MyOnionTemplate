@@ -20,10 +20,13 @@ global using MyOnion.Application.Features.SalaryRanges.Commands.DeleteSalaryRang
 global using MyOnion.Application.Features.SalaryRanges.Commands.UpdateSalaryRange;
 global using MyOnion.Application.Features.SalaryRanges.Queries.GetSalaryRanges;
 global using MyOnion.Application.Common.Caching;
+global using MyOnion.Application.Common.Results;
 global using MyOnion.Application.Events;
 global using MyOnion.Application.Interfaces;
 global using MyOnion.Application.Interfaces.Caching;
 global using MyOnion.Application.Interfaces.Repositories;
 global using MyOnion.Application.Parameters;
+global using MyOnion.Application.Specifications.Departments;
+global using MyOnion.Application.Specifications.Positions;
 global using MyOnion.Domain.Entities;
 global using MyOnion.Domain.ValueObjects;

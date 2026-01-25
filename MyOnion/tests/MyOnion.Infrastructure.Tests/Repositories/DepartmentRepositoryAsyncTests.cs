@@ -31,7 +31,7 @@ public class DepartmentRepositoryAsyncTests : IDisposable
         var (data, count) = await _repository.GetDepartmentResponseAsync(query);
 
         data.Should().HaveCount(1);
-        data.First()["Name"].Should().Be("Engineering");
+        data.First()["Name"].Should().BeOfType<DepartmentName>().Which.Value.Should().Be("Engineering");
         count.RecordsFiltered.Should().Be(1);
         count.RecordsTotal.Should().Be(1);
     }
