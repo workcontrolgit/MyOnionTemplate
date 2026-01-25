@@ -11,13 +11,13 @@ namespace MyOnion.WebApi.Middlewares
         private readonly RequestDelegate _next;
         private readonly IOptionsMonitor<ExecutionTimingOptions> _optionsMonitor;
         private readonly ILogger<RequestTimingMiddleware> _logger;
-        private readonly IFeatureManagerSnapshot _featureManager;
+        private readonly IFeatureManager _featureManager;
 
         public RequestTimingMiddleware(
             RequestDelegate next,
             IOptionsMonitor<ExecutionTimingOptions> optionsMonitor,
             ILogger<RequestTimingMiddleware> logger,
-            IFeatureManagerSnapshot featureManager)
+            IFeatureManager featureManager)
         {
             _next = next ?? throw new ArgumentNullException(nameof(next));
             _optionsMonitor = optionsMonitor;
