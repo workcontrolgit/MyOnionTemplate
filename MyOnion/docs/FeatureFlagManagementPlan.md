@@ -14,7 +14,7 @@ For onboarding and demo environments, the tutorial UI should access the API with
 - **ExecutionTimingIncludeHeader**: Toggle `ExecutionTiming.IncludeHeader`.
 - **ExecutionTimingIncludePayload**: Toggle `ExecutionTiming.IncludeResultPayload`.
 - **ExecutionTimingLogTimings**: Toggle `ExecutionTiming.LogTimings`.
-- **UseInMemoryDatabase**: Toggle `UseInMemoryDatabase` (dev-only guard).
+- **UseInMemoryDatabase**: Toggle `UseInMemoryDatabase` (startup-only, dev guard).
 
 ## Task Checklist
 
@@ -39,7 +39,7 @@ For onboarding and demo environments, the tutorial UI should access the API with
 }
 ```
 - [ ] For tutorial environments, set `AuthEnabled` to `false` in `appsettings.Development.json` or user secrets.
- - [ ] Align existing appsettings values with flags (document precedence if both exist).
+- [ ] Align existing appsettings values with flags and document precedence.
 
 ### 3) Authorization Wiring (Sample)
 Implement a fallback policy that only enforces auth when the flag is enabled:
@@ -85,4 +85,12 @@ builder.Services.AddAuthorization(options =>
 
 ## Risks
 - Misconfiguring the flag could open production endpoints. Use environment-specific configuration and CI checks.
- - Conflicting appsettings values can cause confusion; document precedence clearly.
+- Conflicting appsettings values can cause confusion; document precedence clearly.
+- Fallback policy may secure endpoints that previously allowed anonymous access. Use `[AllowAnonymous]` explicitly where required.
+- Avoid forcing JWT configuration when `AuthEnabled=false` (tutorial mode); bypass JWT registration if flag is off.
+- Feature flags that change persistence providers (`UseInMemoryDatabase`) should be startup-only, not runtime.
+- Enforce hashed cache keys in production when diagnostics headers are enabled.
+
+## Precedence
+- FeatureManagement flags override appsettings toggles (e.g., `CacheEnabled` overrides `Caching.Enabled`).
+- Document exceptions where runtime toggles are not supported (e.g., provider selection).

@@ -24,8 +24,18 @@ public class HttpCacheDiagnosticsPublisherTests
         var accessor = new HttpContextAccessor { HttpContext = context };
         var hasher = new Mock<ICacheKeyHasher>();
         hasher.Setup(h => h.Hash("cache-key")).Returns("hashed-key");
+        var environment = new Mock<IHostEnvironment>();
+        environment.SetupGet(e => e.EnvironmentName).Returns(Environments.Development);
 
-        var publisher = new HttpCacheDiagnosticsPublisher(accessor, optionsMonitor.Object, hasher.Object);
+        var featureManager = new Mock<IFeatureManagerSnapshot>();
+        featureManager.Setup(f => f.IsEnabledAsync("CacheDiagnosticsHeaders")).ReturnsAsync(true);
+
+        var publisher = new HttpCacheDiagnosticsPublisher(
+            accessor,
+            optionsMonitor.Object,
+            hasher.Object,
+            environment.Object,
+            featureManager.Object);
 
         publisher.ReportHit("cache-key", TimeSpan.FromMilliseconds(25));
 

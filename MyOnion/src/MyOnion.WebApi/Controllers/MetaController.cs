@@ -5,6 +5,7 @@
     {
         // An HTTP GET endpoint at "/info" that returns information about the application
         [HttpGet("/info")]
+        [AllowAnonymous]
         public ActionResult<string> Info()
         {
             // Get the assembly information for the current application

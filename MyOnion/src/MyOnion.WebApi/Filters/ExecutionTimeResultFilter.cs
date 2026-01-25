@@ -11,16 +11,22 @@ namespace MyOnion.WebApi.Filters
     public sealed class ExecutionTimeResultFilter : IAsyncResultFilter
     {
         private readonly IOptionsMonitor<ExecutionTimingOptions> _optionsMonitor;
+        private readonly IFeatureManagerSnapshot _featureManager;
 
-        public ExecutionTimeResultFilter(IOptionsMonitor<ExecutionTimingOptions> optionsMonitor)
+        public ExecutionTimeResultFilter(
+            IOptionsMonitor<ExecutionTimingOptions> optionsMonitor,
+            IFeatureManagerSnapshot featureManager)
         {
             _optionsMonitor = optionsMonitor;
+            _featureManager = featureManager;
         }
 
         public async Task OnResultExecutionAsync(ResultExecutingContext context, ResultExecutionDelegate next)
         {
             var options = _optionsMonitor.CurrentValue;
-            if (!options.Enabled || !options.IncludeResultPayload)
+            var enabled = await _featureManager.IsEnabledAsync("ExecutionTimingEnabled").ConfigureAwait(false);
+            var includePayload = await _featureManager.IsEnabledAsync("ExecutionTimingIncludePayload").ConfigureAwait(false);
+            if (!enabled || !includePayload)
             {
                 await next();
                 return;

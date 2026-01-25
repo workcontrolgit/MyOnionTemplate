@@ -10,17 +10,20 @@ public sealed class EasyCachingProviderAdapter : ICacheProvider
     private readonly IOptionsMonitor<CachingOptions> _optionsMonitor;
     private readonly ICacheBypassContext _bypassContext;
     private readonly ICacheKeyIndex _cacheKeyIndex;
+    private readonly IFeatureManagerSnapshot _featureManager;
 
     public EasyCachingProviderAdapter(
         IEasyCachingProviderFactory providerFactory,
         IOptionsMonitor<CachingOptions> optionsMonitor,
         ICacheBypassContext bypassContext,
-        ICacheKeyIndex cacheKeyIndex)
+        ICacheKeyIndex cacheKeyIndex,
+        IFeatureManagerSnapshot featureManager)
     {
         _providerFactory = providerFactory;
         _optionsMonitor = optionsMonitor;
         _bypassContext = bypassContext;
         _cacheKeyIndex = cacheKeyIndex;
+        _featureManager = featureManager;
     }
 
     public async Task<T?> GetAsync<T>(string key, CancellationToken ct = default)
@@ -69,7 +72,10 @@ public sealed class EasyCachingProviderAdapter : ICacheProvider
     }
 
     private bool IsCacheEnabled(CachingOptions options)
-        => options.Enabled && !options.DisableCache && !_bypassContext.ShouldBypass;
+    {
+        var featureEnabled = _featureManager.IsEnabledAsync("CacheEnabled").GetAwaiter().GetResult();
+        return featureEnabled && options.Enabled && !options.DisableCache && !_bypassContext.ShouldBypass;
+    }
 
     private IEasyCachingProvider GetProvider(CachingOptions options)
     {

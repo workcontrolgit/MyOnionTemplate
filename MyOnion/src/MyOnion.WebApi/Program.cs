@@ -26,12 +26,39 @@ try
     builder.Services.AddSwaggerExtension();
     builder.Services.AddControllersExtension(builder.Configuration);
     // Configure CORS policies
-    builder.Services.AddCorsExtension(builder.Configuration);
+    builder.Services.AddCorsExtension(builder.Configuration, builder.Environment);
     // Add Health Checks service
     builder.Services.AddHealthChecks();
-    // Set up API security with JWT
-    builder.Services.AddJWTAuthentication(builder.Configuration);
-    builder.Services.AddAuthorizationPolicies(builder.Configuration);
+    builder.Services.AddFeatureManagement();
+    builder.Services.AddScoped<IAuthorizationHandler, AuthEnabledRequirementHandler>();
+    var authEnabled = builder.Configuration.GetSection("FeatureManagement").GetValue<bool>("AuthEnabled");
+    var adminRole = builder.Configuration["ApiRoles:AdminRole"];
+    var managerRole = builder.Configuration["ApiRoles:ManagerRole"];
+    var employeeRole = builder.Configuration["ApiRoles:EmployeeRole"];
+    builder.Services.AddAuthorization(options =>
+    {
+        options.DefaultPolicy = authEnabled
+            ? new AuthorizationPolicyBuilder().AddRequirements(new AuthEnabledRequirement()).Build()
+            : new AuthorizationPolicyBuilder().RequireAssertion(_ => true).Build();
+
+        if (authEnabled)
+        {
+            options.AddPolicy(AuthorizationConsts.AdminPolicy, policy => policy.RequireRole(adminRole));
+            options.AddPolicy(AuthorizationConsts.ManagerPolicy, policy => policy.RequireRole(managerRole, adminRole));
+            options.AddPolicy(AuthorizationConsts.EmployeePolicy, policy => policy.RequireRole(employeeRole, managerRole, adminRole));
+        }
+        else
+        {
+            options.AddPolicy(AuthorizationConsts.AdminPolicy, policy => policy.RequireAssertion(_ => true));
+            options.AddPolicy(AuthorizationConsts.ManagerPolicy, policy => policy.RequireAssertion(_ => true));
+            options.AddPolicy(AuthorizationConsts.EmployeePolicy, policy => policy.RequireAssertion(_ => true));
+        }
+    });
+    // Set up API security with JWT when auth is enabled
+    if (authEnabled)
+    {
+        builder.Services.AddJWTAuthentication(builder.Configuration);
+    }
     // Add API versioning extension
     builder.Services.AddApiVersioningExtension();
     // Add API explorer for Swagger
