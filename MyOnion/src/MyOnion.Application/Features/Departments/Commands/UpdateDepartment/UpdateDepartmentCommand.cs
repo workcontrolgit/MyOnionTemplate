@@ -1,4 +1,5 @@
 using MyOnion.Application.Events;
+using MyOnion.Domain.ValueObjects;
 
 namespace MyOnion.Application.Features.Departments.Commands.UpdateDepartment
 {
@@ -34,7 +35,7 @@ namespace MyOnion.Application.Features.Departments.Commands.UpdateDepartment
                     throw new ApiException("Department Not Found.");
                 }
 
-                department.Name = command.Name;
+                department.Name = new DepartmentName(command.Name);
                 await _repository.UpdateAsync(department);
                 await _eventDispatcher.PublishAsync(new DepartmentChangedEvent(department.Id), cancellationToken);
 

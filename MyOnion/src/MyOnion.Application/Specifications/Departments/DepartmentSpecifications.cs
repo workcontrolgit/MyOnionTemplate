@@ -21,7 +21,7 @@ namespace MyOnion.Application.Specifications.Departments
             if (!string.IsNullOrWhiteSpace(request.Name))
             {
                 var term = request.Name.Trim();
-                predicate = predicate.And(d => d.Name.Contains(term));
+                predicate = predicate.And(d => d.Name.Value.Contains(term));
             }
 
             return predicate.IsStarted ? predicate : null;

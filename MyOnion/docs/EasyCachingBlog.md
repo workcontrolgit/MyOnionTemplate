@@ -1,8 +1,9 @@
-# EasyCaching in Template OnionAPI: Fast, Observable, and Invalidation-Friendly
+# EasyCaching in Template OnionAPI v10.1.2: Fast, Observable, and Invalidation-Friendly
 
 Template OnionAPI moves caching to EasyCaching so response caches are faster, cheaper to operate, and easier to invalidate across memory or Redis. This blog highlights how the EasyCaching adapter works, how invalidation stays reliable, and how diagnostics keep cache behavior visible during development.
 
-Solution Docs: [EasyCaching Migration Plan](EasyCaching%20Migration%20Plan.md)
+EasyCaching is a NuGet package that provides a unified, provider-agnostic caching abstraction for .NET, with first-party providers for in-memory, Redis, and more. Its features include async APIs, serialization helpers, and easy provider switching; the benefits are faster responses, lower database load, and consistent cache behavior across environments.
+
 
 ## What the EasyCaching Upgrade Does
 
@@ -36,7 +37,7 @@ public async Task<T?> GetAsync<T>(string key, CancellationToken ct = default)
     return result.HasValue ? result.Value : default;
 }
 ```
-Source: https://github.com/workcontrolgit/MyOnionTemplate/blob/main/MyOnion/src/MyOnion.WebApi/Caching/Services/EasyCachingProviderAdapter.cs
+Source: https://github.com/workcontrolgit/MyOnionTemplate/blob/master/MyOnion/src/MyOnion.WebApi/Caching/Services/EasyCachingProviderAdapter.cs
 
 Invalidation can clear a single key or whole prefixes, while honoring the hash-based diagnostics mode.
 
@@ -58,7 +59,7 @@ private async Task InvalidateByKeyAsync(string key, CancellationToken ct)
     await _cacheProvider.RemoveAsync(key, ct).ConfigureAwait(false);
 }
 ```
-Source: https://github.com/workcontrolgit/MyOnionTemplate/blob/main/MyOnion/src/MyOnion.WebApi/Caching/Services/CacheInvalidationService.cs
+Source: https://github.com/workcontrolgit/MyOnionTemplate/blob/master/MyOnion/src/MyOnion.WebApi/Caching/Services/CacheInvalidationService.cs
 
 DI wiring keeps the adapter and EasyCaching providers configured from `appsettings.json`.
 
@@ -84,7 +85,7 @@ services.AddEasyCaching(options =>
     }
 });
 ```
-Source: https://github.com/workcontrolgit/MyOnionTemplate/blob/main/MyOnion/src/MyOnion.WebApi/Caching/ServiceCollectionExtensions.cs
+Source: https://github.com/workcontrolgit/MyOnionTemplate/blob/master/MyOnion/src/MyOnion.WebApi/Caching/ServiceCollectionExtensions.cs
 
 ## Invalidation Use Case: Dashboard Metrics
 
@@ -97,15 +98,7 @@ public async Task HandleAsync(EmployeeChangedEvent domainEvent, CancellationToke
     await _cacheInvalidationService.InvalidateKeyAsync(CacheKeyPrefixes.DashboardMetrics, ct);
 }
 ```
-Source: https://github.com/workcontrolgit/MyOnionTemplate/blob/main/MyOnion/src/MyOnion.Application/Events/Handlers/CacheInvalidationEventHandler.cs
-
-Sequence overview:
-```
-Write command -> Domain event -> CacheInvalidationEventHandler
--> Invalidate Employees/Positions prefixes
--> Invalidate Dashboard:Metrics
--> Next dashboard read repopulates cache
-```
+Source: https://github.com/workcontrolgit/MyOnionTemplate/blob/master/MyOnion/src/MyOnion.Application/Events/Handlers/CacheInvalidationEventHandler.cs
 
 How to verify:
 - Hit `GET /api/v1/Dashboard/Metrics` twice; expect MISS then HIT via `X-Cache-Status`.

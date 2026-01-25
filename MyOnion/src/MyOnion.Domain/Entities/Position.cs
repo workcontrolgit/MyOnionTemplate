@@ -1,9 +1,11 @@
-﻿namespace MyOnion.Domain.Entities
+using MyOnion.Domain.ValueObjects;
+
+namespace MyOnion.Domain.Entities
 {
     public class Position : AuditableBaseEntity
     {
         // Property representing the title of the position.
-        public string PositionTitle { get; set; }
+        public PositionTitle PositionTitle { get; set; }
 
         // Property representing the number of the position.
         public string PositionNumber { get; set; }

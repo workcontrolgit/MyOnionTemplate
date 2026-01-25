@@ -1,4 +1,5 @@
 using MyOnion.Application.Events;
+using MyOnion.Domain.ValueObjects;
 
 namespace MyOnion.Application.Features.Positions.Commands.UpdatePosition
 {
@@ -39,7 +40,7 @@ namespace MyOnion.Application.Features.Positions.Commands.UpdatePosition
                 else
                 {
                     // Update the position with the new values from the command
-                    position.PositionTitle = command.PositionTitle;
+                    position.PositionTitle = new PositionTitle(command.PositionTitle);
                     position.PositionDescription = command.PositionDescription;
 
                     await _repository.UpdateAsync(position); // Save the updated position to the repository

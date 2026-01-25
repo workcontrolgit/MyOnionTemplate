@@ -1,4 +1,5 @@
 using MyOnion.Application.Events;
+using MyOnion.Domain.ValueObjects;
 
 namespace MyOnion.Application.Features.Employees.Commands.UpdateEmployee
 {
@@ -42,9 +43,7 @@ namespace MyOnion.Application.Features.Employees.Commands.UpdateEmployee
                     throw new ApiException("Employee Not Found.");
                 }
 
-                employee.FirstName = command.FirstName;
-                employee.MiddleName = command.MiddleName;
-                employee.LastName = command.LastName;
+                employee.Name = new PersonName(command.FirstName, command.MiddleName, command.LastName);
                 employee.PositionId = command.PositionId;
                 employee.DepartmentId = command.DepartmentId;
                 employee.Salary = command.Salary;

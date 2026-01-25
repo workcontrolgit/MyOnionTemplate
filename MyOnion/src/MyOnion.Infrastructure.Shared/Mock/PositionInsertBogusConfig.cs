@@ -11,7 +11,7 @@
             RuleFor(o => o.Id, f => Guid.NewGuid());
 
             // Generate a random job title for the PositionTitle property.
-            RuleFor(o => o.PositionTitle, f => f.Name.JobTitle());
+            RuleFor(o => o.PositionTitle, f => new PositionTitle(f.Name.JobTitle()));
 
             // Generate a random 13-digit EAN number for the PositionNumber property.
             RuleFor(o => o.PositionNumber, f => f.Commerce.Ean13());

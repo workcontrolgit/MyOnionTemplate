@@ -1,10 +1,19 @@
-﻿namespace MyOnion.Domain.Entities
+using System.ComponentModel.DataAnnotations.Schema;
+using MyOnion.Domain.ValueObjects;
+
+namespace MyOnion.Domain.Entities
 {
     public class Employee : AuditableBaseEntity // Inheriting from a base entity that includes audit information such as created/modified dates and user IDs.
     {
-        public string FirstName { get; set; } // The first name of the employee.
-        public string MiddleName { get; set; } // The middle name of the employee, if applicable.
-        public string LastName { get; set; } // The last name of the employee.
+        public PersonName Name { get; set; } // The employee's name.
+        [NotMapped]
+        public string FirstName => Name?.FirstName;
+        [NotMapped]
+        public string MiddleName => Name?.MiddleName;
+        [NotMapped]
+        public string LastName => Name?.LastName;
+        [NotMapped]
+        public string FullName => Name?.FullName;
         // Foreign Key for Position
         public Guid PositionId { get; set; } // A unique identifier for the position that the employee holds.
         // Navigation Property for Position

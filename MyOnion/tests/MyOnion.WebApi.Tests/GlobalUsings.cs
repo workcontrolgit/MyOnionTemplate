@@ -21,4 +21,5 @@ global using MyOnion.Application.Features.SalaryRanges.Queries.GetSalaryRangeByI
 global using MyOnion.Application.Features.SalaryRanges.Queries.GetSalaryRanges;
 global using MyOnion.Application.Parameters;
 global using MyOnion.Domain.Entities;
+global using MyOnion.Domain.ValueObjects;
 global using MyOnion.WebApi.Controllers.v1;

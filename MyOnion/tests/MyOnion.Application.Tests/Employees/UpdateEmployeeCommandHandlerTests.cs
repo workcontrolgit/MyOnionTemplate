@@ -21,7 +21,7 @@ public class UpdateEmployeeCommandHandlerTests
             Birthday = DateTime.UtcNow.AddYears(-30)
         };
 
-        var employee = new Employee { Id = command.Id };
+        var employee = new Employee { Id = command.Id, Name = new PersonName("Old", null, "Name") };
         _repositoryMock.Setup(r => r.GetByIdAsync(command.Id)).ReturnsAsync(employee);
 
         var handler = new UpdateEmployeeCommand.UpdateEmployeeCommandHandler(
@@ -30,7 +30,7 @@ public class UpdateEmployeeCommandHandlerTests
         var result = await handler.Handle(command, CancellationToken.None);
 
         result.IsSuccess.Should().BeTrue();
-        employee.FirstName.Should().Be("Jane");
+        employee.Name.FirstName.Should().Be("Jane");
         employee.DepartmentId.Should().Be(command.DepartmentId);
         _repositoryMock.Verify(r => r.UpdateAsync(employee), Times.Once);
         _eventDispatcherMock.Verify(s => s.PublishAsync(

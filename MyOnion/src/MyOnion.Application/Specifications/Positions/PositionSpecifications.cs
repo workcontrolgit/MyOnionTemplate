@@ -30,13 +30,13 @@ namespace MyOnion.Application.Specifications.Positions
             if (!string.IsNullOrWhiteSpace(request.PositionTitle))
             {
                 var term = request.PositionTitle.Trim();
-                predicate = predicate.Or(p => p.PositionTitle.Contains(term));
+                predicate = predicate.Or(p => p.PositionTitle.Value.Contains(term));
             }
 
             if (!string.IsNullOrWhiteSpace(request.Department))
             {
                 var term = request.Department.Trim();
-                predicate = predicate.Or(p => p.Department.Name.Contains(term));
+                predicate = predicate.Or(p => p.Department.Name.Value.Contains(term));
             }
 
             return predicate.IsStarted ? predicate : null;

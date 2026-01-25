@@ -23,7 +23,7 @@ public class CreatePositionCommandHandlerTests
         {
             Id = Guid.NewGuid(),
             PositionNumber = command.PositionNumber,
-            PositionTitle = command.PositionTitle
+            PositionTitle = new PositionTitle(command.PositionTitle)
         };
 
         _mapperMock.Setup(m => m.Map<Position>(command)).Returns(position);

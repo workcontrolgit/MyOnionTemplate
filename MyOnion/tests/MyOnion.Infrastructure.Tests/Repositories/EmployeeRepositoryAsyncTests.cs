@@ -26,7 +26,7 @@ public class EmployeeRepositoryAsyncTests : IDisposable
         var position = new Position
         {
             Id = Guid.NewGuid(),
-            PositionTitle = "Developer",
+            PositionTitle = new PositionTitle("Developer"),
             PositionNumber = "DEV-1",
             PositionDescription = "Writes code",
             DepartmentId = Guid.NewGuid(),
@@ -36,8 +36,7 @@ public class EmployeeRepositoryAsyncTests : IDisposable
         _context.Employees.Add(new Employee
         {
             Id = Guid.NewGuid(),
-            FirstName = "Jane",
-            LastName = "Doe",
+            Name = new PersonName("Jane", null, "Doe"),
             Email = "jane@example.com",
             EmployeeNumber = "E-1",
             PositionId = position.Id,
@@ -61,7 +60,7 @@ public class EmployeeRepositoryAsyncTests : IDisposable
         var position = new Position
         {
             Id = Guid.NewGuid(),
-            PositionTitle = "Support",
+            PositionTitle = new PositionTitle("Support"),
             PositionNumber = "SUP-1",
             PositionDescription = "Supports",
             DepartmentId = Guid.NewGuid(),
@@ -71,8 +70,7 @@ public class EmployeeRepositoryAsyncTests : IDisposable
         var employee = new Employee
         {
             Id = Guid.NewGuid(),
-            FirstName = "Alan",
-            LastName = "Turing",
+            Name = new PersonName("Alan", null, "Turing"),
             Email = "alan@example.com",
             EmployeeNumber = "E-3",
             PositionId = position.Id,
@@ -82,11 +80,11 @@ public class EmployeeRepositoryAsyncTests : IDisposable
         _context.Employees.Add(employee);
         await _context.SaveChangesAsync();
 
-        employee.FirstName = "Albert";
+        employee.Name = new PersonName("Albert", employee.Name.MiddleName, employee.Name.LastName);
         await _repository.UpdateAsync(employee);
 
         var updated = await _context.Employees.FindAsync(employee.Id);
-        updated!.FirstName.Should().Be("Albert");
+        updated!.Name.FirstName.Should().Be("Albert");
     }
 
     [Fact]
@@ -95,7 +93,7 @@ public class EmployeeRepositoryAsyncTests : IDisposable
         var position = new Position
         {
             Id = Guid.NewGuid(),
-            PositionTitle = "Support",
+            PositionTitle = new PositionTitle("Support"),
             PositionNumber = "SUP-2",
             PositionDescription = "Supports",
             DepartmentId = Guid.NewGuid(),
@@ -105,8 +103,7 @@ public class EmployeeRepositoryAsyncTests : IDisposable
         var employee = new Employee
         {
             Id = Guid.NewGuid(),
-            FirstName = "Beth",
-            LastName = "Smith",
+            Name = new PersonName("Beth", null, "Smith"),
             Email = "beth@example.com",
             EmployeeNumber = "E-4",
             PositionId = position.Id,

@@ -6,7 +6,7 @@ namespace MyOnion.Application.Specifications.Employees
             : base(BuildFilterExpression(request))
         {
             AddInclude(e => e.Position);
-            var orderBy = string.IsNullOrWhiteSpace(request.OrderBy) ? "LastName" : request.OrderBy;
+            var orderBy = ResolveOrderBy(request.OrderBy);
             ApplyOrderBy(orderBy);
 
             if (applyPaging && request.PageSize > 0)
@@ -22,13 +22,13 @@ namespace MyOnion.Application.Specifications.Employees
             if (!string.IsNullOrWhiteSpace(request.LastName))
             {
                 var term = request.LastName.ToLower().Trim();
-                predicate = predicate.Or(p => p.LastName.ToLower().Contains(term));
+                predicate = predicate.Or(p => p.Name.LastName.ToLower().Contains(term));
             }
 
             if (!string.IsNullOrWhiteSpace(request.FirstName))
             {
                 var term = request.FirstName.ToLower().Trim();
-                predicate = predicate.Or(p => p.FirstName.ToLower().Contains(term));
+                predicate = predicate.Or(p => p.Name.FirstName.ToLower().Contains(term));
             }
 
             if (!string.IsNullOrWhiteSpace(request.Email))
@@ -46,10 +46,26 @@ namespace MyOnion.Application.Specifications.Employees
             if (!string.IsNullOrWhiteSpace(request.PositionTitle))
             {
                 var term = request.PositionTitle.ToLower().Trim();
-                predicate = predicate.Or(p => p.Position.PositionTitle.ToLower().Contains(term));
+                predicate = predicate.Or(p => p.Position.PositionTitle.Value.ToLower().Contains(term));
             }
 
             return predicate.IsStarted ? predicate : null;
+        }
+
+        private static string ResolveOrderBy(string orderBy)
+        {
+            if (string.IsNullOrWhiteSpace(orderBy))
+            {
+                return "Name.LastName";
+            }
+
+            return orderBy switch
+            {
+                "FirstName" => "Name.FirstName",
+                "MiddleName" => "Name.MiddleName",
+                "LastName" => "Name.LastName",
+                _ => orderBy
+            };
         }
     }
 

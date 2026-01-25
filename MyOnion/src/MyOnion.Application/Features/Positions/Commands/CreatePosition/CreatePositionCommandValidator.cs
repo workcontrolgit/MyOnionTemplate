@@ -26,7 +26,7 @@
             RuleFor(p => p.PositionTitle)
                 .NotEmpty().WithMessage("{PropertyName} is required.")
                 .NotNull()
-                .MaximumLength(50).WithMessage("{PropertyName} must not exceed 50 characters.");
+                .MaximumLength(250).WithMessage("{PropertyName} must not exceed 250 characters.");
         }
 
         /// <summary>

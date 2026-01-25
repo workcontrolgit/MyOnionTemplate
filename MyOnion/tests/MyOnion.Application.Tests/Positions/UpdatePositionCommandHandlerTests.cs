@@ -15,7 +15,7 @@ public class UpdatePositionCommandHandlerTests
             PositionDescription = "Updated description"
         };
 
-        var position = new Position { Id = command.Id, PositionTitle = "Old", PositionDescription = "Old desc" };
+        var position = new Position { Id = command.Id, PositionTitle = new PositionTitle("Old"), PositionDescription = "Old desc" };
         _repositoryMock.Setup(r => r.GetByIdAsync(command.Id)).ReturnsAsync(position);
 
         var handler = new UpdatePositionCommand.UpdatePositionCommandHandler(
@@ -25,7 +25,7 @@ public class UpdatePositionCommandHandlerTests
         var result = await handler.Handle(command, CancellationToken.None);
 
         result.IsSuccess.Should().BeTrue();
-        position.PositionTitle.Should().Be("Updated");
+        position.PositionTitle.Value.Should().Be("Updated");
         _repositoryMock.Verify(r => r.UpdateAsync(position), Times.Once);
         _eventDispatcherMock.Verify(s => s.PublishAsync(
             It.Is<PositionChangedEvent>(e => e.PositionId == position.Id),
