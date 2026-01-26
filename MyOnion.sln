@@ -37,23 +37,23 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Scripts", "Scripts", "{9701
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Docs", "Docs", "{50A5EEAC-F7BC-4A33-8708-BA75054DC7C7}"
 	ProjectSection(SolutionItems) = preProject
-		MyOnion\docs\Dashboard API Plan.md = MyOnion\docs\Dashboard API Plan.md
-		MyOnion\docs\Guid Assignment Technical Approach.md = MyOnion\docs\Guid Assignment Technical Approach.md
-		MyOnion\docs\EasyCaching Migration Plan.md = MyOnion\docs\EasyCaching Migration Plan.md
-		MyOnion\docs\EasyCachingBlog.md = MyOnion\docs\EasyCachingBlog.md
 		MyOnion\docs\.NET10 Upgrade Plan.md = MyOnion\docs\.NET10 Upgrade Plan.md
 		MyOnion\docs\Automapper Replacment with Mapster Plan.md = MyOnion\docs\Automapper Replacment with Mapster Plan.md
+		MyOnion\docs\Dashboard API Plan.md = MyOnion\docs\Dashboard API Plan.md
 		MyOnion\docs\DataShapingBlog.md = MyOnion\docs\DataShapingBlog.md
 		MyOnion\docs\DataShapingUpgradePlan.md = MyOnion\docs\DataShapingUpgradePlan.md
 		MyOnion\docs\Docker Support Plan.md = MyOnion\docs\Docker Support Plan.md
+		MyOnion\docs\EasyCaching Migration Plan.md = MyOnion\docs\EasyCaching Migration Plan.md
+		MyOnion\docs\EasyCachingBlog.md = MyOnion\docs\EasyCachingBlog.md
 		MyOnion\docs\EndpointTimingBlog.md = MyOnion\docs\EndpointTimingBlog.md
 		MyOnion\docs\EndpointTimingPlan.md = MyOnion\docs\EndpointTimingPlan.md
+		MyOnion\docs\FeatureFlagManagementPlan.md = MyOnion\docs\FeatureFlagManagementPlan.md
+		MyOnion\docs\Guid Assignment Technical Approach.md = MyOnion\docs\Guid Assignment Technical Approach.md
 		MyOnion\docs\Mediator-Mapster-Replacement-Blog.md = MyOnion\docs\Mediator-Mapster-Replacement-Blog.md
 		MyOnion\docs\MediatR-Replacement-Plan.md = MyOnion\docs\MediatR-Replacement-Plan.md
+		MyOnion\docs\PerformanceAndSecurityEnhancementPlan.md = MyOnion\docs\PerformanceAndSecurityEnhancementPlan.md
 		MyOnion\docs\TestingPlans\Positions-Unit-Testing.md = MyOnion\docs\TestingPlans\Positions-Unit-Testing.md
 		MyOnion\docs\PositionTestingBlog.md = MyOnion\docs\PositionTestingBlog.md
-		MyOnion\docs\PerformanceAndSecurityEnhancementPlan.md = MyOnion\docs\PerformanceAndSecurityEnhancementPlan.md
-		MyOnion\docs\FeatureFlagManagementPlan.md = MyOnion\docs\FeatureFlagManagementPlan.md
 		MyOnion\README.md = MyOnion\README.md
 		MyOnion\docs\Result Pattern.md = MyOnion\docs\Result Pattern.md
 		MyOnion\docs\ResultPatternBlog.md = MyOnion\docs\ResultPatternBlog.md
@@ -65,7 +65,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Docs", "Docs", "{50A5EEAC-F
 		MyOnion\docs\ValueObjectDesign.md = MyOnion\docs\ValueObjectDesign.md
 	EndProjectSection
 EndProject
-Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "docker-compose", "docker-compose.dcproj", "{81DDED9D-158B-E303-5F62-77A2896D2A5A}"
+Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "docker-compose", "MyOnion\docker-compose.dcproj", "{81DDED9D-158B-E303-5F62-77A2896D2A5A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
