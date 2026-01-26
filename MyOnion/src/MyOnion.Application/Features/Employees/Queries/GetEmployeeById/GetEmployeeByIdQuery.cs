@@ -30,9 +30,9 @@ namespace MyOnion.Application.Features.Employees.Queries.GetEmployeeById
                 var dto = new EmployeeDetailsDto
                 {
                     Id = entity.Id,
-                    FirstName = entity.FirstName,
-                    MiddleName = entity.MiddleName,
-                    LastName = entity.LastName,
+                    FirstName = entity.Name?.FirstName,
+                    MiddleName = entity.Name?.MiddleName,
+                    LastName = entity.Name?.LastName,
                     Birthday = entity.Birthday,
                     Email = entity.Email,
                     Gender = entity.Gender,
@@ -41,9 +41,9 @@ namespace MyOnion.Application.Features.Employees.Queries.GetEmployeeById
                     Phone = entity.Phone,
                     Salary = entity.Salary,
                     PositionId = entity.PositionId,
-                    PositionTitle = entity.Position?.PositionTitle,
+                    PositionTitle = entity.Position?.PositionTitle?.Value,
                     DepartmentId = entity.DepartmentId,
-                    DepartmentName = entity.Department?.Name
+                    DepartmentName = entity.Department?.Name?.Value
                 };
 
                 return Result<EmployeeDetailsDto>.Success(dto);

@@ -23,7 +23,7 @@ public class DepartmentRepositoryAsyncTests : IDisposable
     [Fact]
     public async Task GetDepartmentResponseAsync_ShouldReturnShapedData()
     {
-        _context.Departments.Add(new Department { Id = Guid.NewGuid(), Name = "Engineering" });
+        _context.Departments.Add(new Department { Id = Guid.NewGuid(), Name = new DepartmentName("Engineering") });
         await _context.SaveChangesAsync();
 
         var query = new GetDepartmentsQuery { Fields = "Id,Name", PageNumber = 1, PageSize = 5 };
@@ -31,7 +31,7 @@ public class DepartmentRepositoryAsyncTests : IDisposable
         var (data, count) = await _repository.GetDepartmentResponseAsync(query);
 
         data.Should().HaveCount(1);
-        data.First()["Name"].Should().Be("Engineering");
+        data.First()["Name"].Should().BeOfType<DepartmentName>().Which.Value.Should().Be("Engineering");
         count.RecordsFiltered.Should().Be(1);
         count.RecordsTotal.Should().Be(1);
     }
@@ -39,21 +39,21 @@ public class DepartmentRepositoryAsyncTests : IDisposable
     [Fact]
     public async Task UpdateAsync_ShouldPersistChanges()
     {
-        var department = new Department { Id = Guid.NewGuid(), Name = "Ops" };
+        var department = new Department { Id = Guid.NewGuid(), Name = new DepartmentName("Ops") };
         _context.Departments.Add(department);
         await _context.SaveChangesAsync();
 
-        department.Name = "Operations";
+        department.Name = new DepartmentName("Operations");
         await _repository.UpdateAsync(department);
 
         var updated = await _context.Departments.FindAsync(department.Id);
-        updated!.Name.Should().Be("Operations");
+        updated!.Name.Value.Should().Be("Operations");
     }
 
     [Fact]
     public async Task DeleteAsync_ShouldRemoveDepartment()
     {
-        var department = new Department { Id = Guid.NewGuid(), Name = "Temp" };
+        var department = new Department { Id = Guid.NewGuid(), Name = new DepartmentName("Temp") };
         _context.Departments.Add(department);
         await _context.SaveChangesAsync();
 

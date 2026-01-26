@@ -27,11 +27,11 @@ public sealed class DashboardMetricsReader : IDashboardMetricsReader
 
         var deptTask = await _context.Employees
             .AsNoTracking()
-            .GroupBy(e => new { e.DepartmentId, e.Department.Name })
+            .GroupBy(e => new { e.DepartmentId, DepartmentName = e.Department.Name.Value })
             .Select(g => new DepartmentMetricDto
             {
                 DepartmentId = g.Key.DepartmentId,
-                DepartmentName = g.Key.Name,
+                DepartmentName = g.Key.DepartmentName,
                 EmployeeCount = g.Count()
             })
             .OrderByDescending(d => d.EmployeeCount)
@@ -39,7 +39,7 @@ public sealed class DashboardMetricsReader : IDashboardMetricsReader
 
         var positionTask = await _context.Employees
             .AsNoTracking()
-            .GroupBy(e => new { e.PositionId, e.Position.PositionTitle })
+            .GroupBy(e => new { e.PositionId, PositionTitle = e.Position.PositionTitle.Value })
             .Select(g => new PositionMetricDto
             {
                 PositionId = g.Key.PositionId,
@@ -83,9 +83,9 @@ public sealed class DashboardMetricsReader : IDashboardMetricsReader
             .Select(e => new RecentEmployeeDto
             {
                 Id = e.Id,
-                FullName = $"{e.FirstName} {e.LastName}",
-                PositionTitle = e.Position.PositionTitle,
-                DepartmentName = e.Department.Name,
+                FullName = $"{e.Name.FirstName} {e.Name.LastName}",
+                PositionTitle = e.Position.PositionTitle.Value,
+                DepartmentName = e.Department.Name.Value,
                 CreatedAt = e.Created
             })
             .ToListAsync(ct);

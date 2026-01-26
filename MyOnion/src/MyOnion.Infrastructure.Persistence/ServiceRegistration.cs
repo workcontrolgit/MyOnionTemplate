@@ -6,7 +6,9 @@ namespace MyOnion.Infrastructure.Persistence
     {
         public static void AddPersistenceInfrastructure(this IServiceCollection services, IConfiguration configuration)
         {
-            if (configuration.GetValue<bool>("UseInMemoryDatabase"))
+            var featureUseInMemory = configuration.GetSection("FeatureManagement").GetValue<bool?>("UseInMemoryDatabase");
+            var useInMemory = featureUseInMemory ?? configuration.GetValue<bool>("UseInMemoryDatabase");
+            if (useInMemory)
             {
                 services.AddDbContext<ApplicationDbContext>((provider, options) =>
                 {
@@ -50,9 +52,14 @@ namespace MyOnion.Infrastructure.Persistence
         private static void ConfigureCommonOptions(IServiceProvider provider, DbContextOptionsBuilder options)
         {
             var loggerFactory = provider.GetRequiredService<ILoggerFactory>();
-            options.UseLoggerFactory(loggerFactory)
-                .EnableSensitiveDataLogging()
+            var environment = provider.GetRequiredService<IHostEnvironment>();
+            var builder = options.UseLoggerFactory(loggerFactory)
                 .EnableDetailedErrors();
+
+            if (environment.IsDevelopment())
+            {
+                builder.EnableSensitiveDataLogging();
+            }
         }
     }
 }

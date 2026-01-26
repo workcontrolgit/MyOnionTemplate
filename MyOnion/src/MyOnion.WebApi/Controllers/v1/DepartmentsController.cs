@@ -9,6 +9,7 @@
         /// <param name="filter">The filter used to get the list of departments.</param>
         /// <returns>A list of departments.</returns>
         [HttpGet]
+        [AllowAnonymous]
         public async Task<IActionResult> Get([FromQuery] GetDepartmentsQuery filter)
         {
             return Ok(await Mediator.Send(filter));
@@ -19,6 +20,7 @@
         /// </summary>
         /// <param name="id">Department identifier.</param>
         [HttpGet("{id}")]
+        [AllowAnonymous]
         public async Task<IActionResult> Get(Guid id)
         {
             return Ok(await Mediator.Send(new GetDepartmentByIdQuery { Id = id }));
@@ -29,6 +31,7 @@
         /// </summary>
         /// <param name="command">Department payload.</param>
         [HttpPost]
+        [Authorize]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> Post(CreateDepartmentCommand command)
@@ -43,6 +46,7 @@
         /// <param name="id">Department identifier.</param>
         /// <param name="command">Update payload.</param>
         [HttpPut("{id}")]
+        [Authorize]
         public async Task<IActionResult> Put(Guid id, UpdateDepartmentCommand command)
         {
             if (id != command.Id)
@@ -58,6 +62,7 @@
         /// </summary>
         /// <param name="id">Department identifier.</param>
         [HttpDelete("{id}")]
+        [Authorize(Policy = AuthorizationConsts.AdminPolicy)]
         public async Task<IActionResult> Delete(Guid id)
         {
             return Ok(await Mediator.Send(new DeleteDepartmentByIdCommand { Id = id }));

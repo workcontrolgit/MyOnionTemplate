@@ -9,7 +9,7 @@ public class UpdateDepartmentCommandHandlerTests
     public async Task Handle_ShouldUpdateDepartment()
     {
         var command = new UpdateDepartmentCommand { Id = Guid.NewGuid(), Name = "Finance" };
-        var department = new Department { Id = command.Id, Name = "Old" };
+        var department = new Department { Id = command.Id, Name = new DepartmentName("Old") };
         _repositoryMock.Setup(r => r.GetByIdAsync(command.Id)).ReturnsAsync(department);
 
         var handler = new UpdateDepartmentCommand.UpdateDepartmentCommandHandler(
@@ -18,7 +18,7 @@ public class UpdateDepartmentCommandHandlerTests
         var result = await handler.Handle(command, CancellationToken.None);
 
         result.IsSuccess.Should().BeTrue();
-        department.Name.Should().Be("Finance");
+        department.Name.Value.Should().Be("Finance");
         _repositoryMock.Verify(r => r.UpdateAsync(department), Times.Once);
         _eventDispatcherMock.Verify(s => s.PublishAsync(
             It.Is<DepartmentChangedEvent>(e => e.DepartmentId == department.Id),

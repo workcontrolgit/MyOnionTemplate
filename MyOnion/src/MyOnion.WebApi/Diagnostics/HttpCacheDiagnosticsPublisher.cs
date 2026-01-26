@@ -12,15 +12,21 @@ public sealed class HttpCacheDiagnosticsPublisher : ICacheDiagnosticsPublisher
     private readonly IHttpContextAccessor _httpContextAccessor;
     private readonly IOptionsMonitor<CachingOptions> _optionsMonitor;
     private readonly ICacheKeyHasher _cacheKeyHasher;
+    private readonly IHostEnvironment _environment;
+    private readonly IFeatureManagerSnapshot _featureManager;
 
     public HttpCacheDiagnosticsPublisher(
         IHttpContextAccessor httpContextAccessor,
         IOptionsMonitor<CachingOptions> optionsMonitor,
-        ICacheKeyHasher cacheKeyHasher)
+        ICacheKeyHasher cacheKeyHasher,
+        IHostEnvironment environment,
+        IFeatureManagerSnapshot featureManager)
     {
         _httpContextAccessor = httpContextAccessor;
         _optionsMonitor = optionsMonitor;
         _cacheKeyHasher = cacheKeyHasher;
+        _environment = environment;
+        _featureManager = featureManager;
     }
 
     public void ReportHit(string cacheKey, TimeSpan? cacheDuration) => WriteStatus("HIT", cacheKey, cacheDuration);
@@ -30,7 +36,8 @@ public sealed class HttpCacheDiagnosticsPublisher : ICacheDiagnosticsPublisher
     private void WriteStatus(string status, string cacheKey, TimeSpan? cacheDuration)
     {
         var diagnostics = _optionsMonitor.CurrentValue.Diagnostics;
-        if (diagnostics is null || !diagnostics.EmitCacheStatusHeader)
+        var diagnosticsEnabled = _featureManager.IsEnabledAsync("CacheDiagnosticsHeaders").GetAwaiter().GetResult();
+        if (diagnostics is null || !diagnostics.EmitCacheStatusHeader || !diagnosticsEnabled)
         {
             return;
         }
@@ -54,7 +61,7 @@ public sealed class HttpCacheDiagnosticsPublisher : ICacheDiagnosticsPublisher
         context.Response.Headers[headerName] = status;
         if (!string.IsNullOrWhiteSpace(cacheKey))
         {
-            var keyValue = ShouldEmitRawKey(diagnostics)
+            var keyValue = ShouldEmitRawKey(diagnostics, _environment)
                 ? cacheKey
                 : _cacheKeyHasher.Hash(cacheKey);
             context.Response.Headers[keyHeaderName] = keyValue;
@@ -66,9 +73,14 @@ public sealed class HttpCacheDiagnosticsPublisher : ICacheDiagnosticsPublisher
         }
     }
 
-    private static bool ShouldEmitRawKey(CacheDiagnosticsOptions diagnostics)
+    private static bool ShouldEmitRawKey(CacheDiagnosticsOptions diagnostics, IHostEnvironment environment)
     {
         if (diagnostics is null)
+        {
+            return false;
+        }
+
+        if (!environment.IsDevelopment())
         {
             return false;
         }

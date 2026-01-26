@@ -2,7 +2,7 @@ services:
   myonion-webapi:
     container_name: MyOnion.WebApi
     build:
-      context: MyOnion
+      context: .
       dockerfile: src/MyOnion.WebApi/Dockerfile
     environment:
       ConnectionStrings__DefaultConnection: Server=myonion-sql;Database=MyOnionDb;User Id=sa;Password=${MYONION_SQL_PASSWORD};TrustServerCertificate=True

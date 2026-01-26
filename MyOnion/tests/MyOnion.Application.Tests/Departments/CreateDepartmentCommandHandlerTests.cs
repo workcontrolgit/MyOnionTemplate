@@ -10,7 +10,7 @@ public class CreateDepartmentCommandHandlerTests
     public async Task Handle_ShouldPersistDepartmentAndReturnId()
     {
         var command = new CreateDepartmentCommand { Name = "Engineering" };
-        var department = new Department { Id = Guid.NewGuid(), Name = command.Name };
+        var department = new Department { Id = Guid.NewGuid(), Name = new DepartmentName(command.Name) };
 
         _mapperMock.Setup(m => m.Map<Department>(command)).Returns(department);
         _repositoryMock.Setup(r => r.AddAsync(department)).ReturnsAsync(department);

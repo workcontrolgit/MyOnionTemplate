@@ -60,12 +60,17 @@ namespace MyOnion.WebApi.Extensions
         }
 
         // Extension method to configure CORS with a policy to allow any origin, header, and method
-        public static void AddCorsExtension(this IServiceCollection services, IConfiguration configuration)
+        public static void AddCorsExtension(this IServiceCollection services, IConfiguration configuration, IWebHostEnvironment environment)
         {
             var configuredOrigins = configuration.GetSection("Cors:AllowedOrigins").Get<string[]>()?
                 .Where(origin => !string.IsNullOrWhiteSpace(origin))
                 .Select(origin => origin.Trim())
                 .ToArray() ?? Array.Empty<string>();
+
+            if (configuredOrigins.Length == 0 && !environment.IsDevelopment())
+            {
+                throw new InvalidOperationException("Cors:AllowedOrigins must be configured in non-development environments.");
+            }
 
             services.AddCors(options =>
             {

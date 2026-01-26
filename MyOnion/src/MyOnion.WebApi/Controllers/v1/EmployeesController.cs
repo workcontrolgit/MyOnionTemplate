@@ -10,6 +10,7 @@
         /// <param name="filter">The filter used to get the list of employees.</param>
         /// <returns>A list of employees.</returns>
         [HttpGet]
+        [AllowAnonymous]
         public async Task<IActionResult> Get([FromQuery] GetEmployeesQuery filter)
         {
             return Ok(await Mediator.Send(filter));
@@ -20,6 +21,7 @@
         /// </summary>
         /// <param name="id">Employee identifier.</param>
         [HttpGet("{id}")]
+        [AllowAnonymous]
         public async Task<IActionResult> Get(Guid id)
         {
             return Ok(await Mediator.Send(new GetEmployeeByIdQuery { Id = id }));
@@ -30,6 +32,7 @@
         /// </summary>
         /// <param name="command">Employee payload.</param>
         [HttpPost]
+        [Authorize]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> Post(CreateEmployeeCommand command)
@@ -44,6 +47,7 @@
         /// <param name="id">Employee identifier.</param>
         /// <param name="command">Update payload.</param>
         [HttpPut("{id}")]
+        [Authorize]
         public async Task<IActionResult> Put(Guid id, UpdateEmployeeCommand command)
         {
             if (id != command.Id)
@@ -59,6 +63,7 @@
         /// </summary>
         /// <param name="id">Employee identifier.</param>
         [HttpDelete("{id}")]
+        [Authorize(Policy = AuthorizationConsts.AdminPolicy)]
         public async Task<IActionResult> Delete(Guid id)
         {
             return Ok(await Mediator.Send(new DeleteEmployeeByIdCommand { Id = id }));

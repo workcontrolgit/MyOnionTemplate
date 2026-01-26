@@ -17,6 +17,7 @@ global using MyOnion.Application.Exceptions;
 global using MyOnion.Application.Interfaces;
 global using MyOnion.Domain.Entities;
 global using MyOnion.Domain.Enums;
+global using MyOnion.Domain.ValueObjects;
 global using MyOnion.Domain.Settings;
 global using MyOnion.Infrastructure.Shared.Mock;
 global using MyOnion.Infrastructure.Shared.Services;

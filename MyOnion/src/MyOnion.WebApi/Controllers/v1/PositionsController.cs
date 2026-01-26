@@ -10,6 +10,7 @@
         /// <param name="filter">The filter used to query the positions.</param>
         /// <returns>A list of positions.</returns>
         [HttpGet]
+        [AllowAnonymous]
         public async Task<IActionResult> Get([FromQuery] GetPositionsQuery filter)
         {
             return Ok(await Mediator.Send(filter));
@@ -21,7 +22,7 @@
         /// <param name="id">The Id of the position.</param>
         /// <returns>The position with the specified Id.</returns>
         [HttpGet("{id}")]
-        //[Authorize]
+        [AllowAnonymous]
         public async Task<IActionResult> Get(Guid id)
         {
             return Ok(await Mediator.Send(new GetPositionByIdQuery { Id = id }));
@@ -33,7 +34,7 @@
         /// <param name="command">The command containing the data for the new position.</param>
         /// <returns>A 201 Created response containing the newly created position.</returns>
         [HttpPost]
-        //[Authorize]
+        [Authorize]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> Post(CreatePositionCommand command)
@@ -49,7 +50,7 @@
         /// <returns>The result of the command.</returns>
         [HttpPost]
         [Route("AddMock")]
-        //[Authorize]
+        [Authorize]
         public async Task<IActionResult> AddMock(InsertMockPositionCommand command)
         {
             return Ok(await Mediator.Send(command));
@@ -62,7 +63,7 @@
         /// <param name="command">The command containing the updated information.</param>
         /// <returns>The updated position.</returns>
         [HttpPut("{id}")]
-        //[Authorize(Policy = AuthorizationConsts.ManagerPolicy)]
+        [Authorize]
         public async Task<IActionResult> Put(Guid id, UpdatePositionCommand command)
         {
             if (id != command.Id)
@@ -78,7 +79,7 @@
         /// <param name="id">The Id of the position to delete.</param>
         /// <returns>The result of the deletion.</returns>
         [HttpDelete("{id}")]
-        //[Authorize(Policy = AuthorizationConsts.AdminPolicy)]
+        [Authorize(Policy = AuthorizationConsts.AdminPolicy)]
         public async Task<IActionResult> Delete(Guid id)
         {
             return Ok(await Mediator.Send(new DeletePositionByIdCommand { Id = id }));

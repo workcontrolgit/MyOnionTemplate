@@ -20,7 +20,11 @@ public class CreateEmployeeCommandHandlerTests
             Birthday = DateTime.UtcNow.AddYears(-30)
         };
 
-        var employee = new Employee { Id = Guid.NewGuid(), FirstName = command.FirstName };
+        var employee = new Employee
+        {
+            Id = Guid.NewGuid(),
+            Name = new PersonName(command.FirstName, command.MiddleName, command.LastName)
+        };
 
         _mapperMock.Setup(m => m.Map<Employee>(command)).Returns(employee);
         _repositoryMock.Setup(r => r.AddAsync(employee)).ReturnsAsync(employee);

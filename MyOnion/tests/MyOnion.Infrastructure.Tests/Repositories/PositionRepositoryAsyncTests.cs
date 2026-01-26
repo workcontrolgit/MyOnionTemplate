@@ -29,7 +29,7 @@ public class PositionRepositoryAsyncTests : IDisposable
         {
             Id = Guid.NewGuid(),
             PositionNumber = "ENG-01",
-            PositionTitle = "Engineer",
+            PositionTitle = new PositionTitle("Engineer"),
             PositionDescription = "Builds things",
             DepartmentId = Guid.NewGuid(),
             SalaryRangeId = Guid.NewGuid()
@@ -49,11 +49,11 @@ public class PositionRepositoryAsyncTests : IDisposable
         {
             Id = Guid.NewGuid(),
             PositionNumber = "QA-01",
-            PositionTitle = "QA Engineer",
+            PositionTitle = new PositionTitle("QA Engineer"),
             PositionDescription = "Tests things",
             DepartmentId = Guid.NewGuid(),
             SalaryRangeId = Guid.NewGuid(),
-            Department = new Department { Id = Guid.NewGuid(), Name = "Engineering" },
+            Department = new Department { Id = Guid.NewGuid(), Name = new DepartmentName("Engineering") },
             SalaryRange = new SalaryRange { Id = Guid.NewGuid(), MinSalary = 1, MaxSalary = 2 }
         });
         await _context.SaveChangesAsync();
@@ -68,7 +68,7 @@ public class PositionRepositoryAsyncTests : IDisposable
         var (data, count) = await _repository.GetPositionReponseAsync(query);
 
         data.Should().HaveCount(1);
-        data.First()["PositionTitle"].Should().Be("QA Engineer");
+        data.First()["PositionTitle"].Should().BeOfType<PositionTitle>().Which.Value.Should().Be("QA Engineer");
         count.Should().BeEquivalentTo(new RecordsCount { RecordsFiltered = 1, RecordsTotal = 1 });
     }
 
@@ -79,7 +79,7 @@ public class PositionRepositoryAsyncTests : IDisposable
         {
             Id = Guid.NewGuid(),
             PositionNumber = "ENG-02",
-            PositionTitle = "Engineer",
+            PositionTitle = new PositionTitle("Engineer"),
             PositionDescription = "Builds",
             DepartmentId = Guid.NewGuid(),
             SalaryRangeId = Guid.NewGuid()
@@ -87,11 +87,11 @@ public class PositionRepositoryAsyncTests : IDisposable
         _context.Positions.Add(position);
         await _context.SaveChangesAsync();
 
-        position.PositionTitle = "Senior Engineer";
+        position.PositionTitle = new PositionTitle("Senior Engineer");
         await _repository.UpdateAsync(position);
 
         var updated = await _context.Positions.FindAsync(position.Id);
-        updated!.PositionTitle.Should().Be("Senior Engineer");
+        updated!.PositionTitle.Value.Should().Be("Senior Engineer");
     }
 
     [Fact]
@@ -101,7 +101,7 @@ public class PositionRepositoryAsyncTests : IDisposable
         {
             Id = Guid.NewGuid(),
             PositionNumber = "ENG-03",
-            PositionTitle = "Engineer",
+            PositionTitle = new PositionTitle("Engineer"),
             PositionDescription = "Builds",
             DepartmentId = Guid.NewGuid(),
             SalaryRangeId = Guid.NewGuid()

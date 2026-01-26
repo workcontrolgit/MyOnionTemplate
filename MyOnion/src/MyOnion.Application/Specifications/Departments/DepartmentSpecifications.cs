@@ -5,7 +5,7 @@ namespace MyOnion.Application.Specifications.Departments
         public DepartmentsByFiltersSpecification(GetDepartmentsQuery request, bool applyPaging = true)
             : base(BuildFilterExpression(request))
         {
-            var orderBy = string.IsNullOrWhiteSpace(request.OrderBy) ? "Name" : request.OrderBy;
+            var orderBy = ResolveOrderBy(request.OrderBy);
             ApplyOrderBy(orderBy);
 
             if (applyPaging && request.PageSize > 0)
@@ -21,10 +21,24 @@ namespace MyOnion.Application.Specifications.Departments
             if (!string.IsNullOrWhiteSpace(request.Name))
             {
                 var term = request.Name.Trim();
-                predicate = predicate.And(d => d.Name.Contains(term));
+                predicate = predicate.And(d => d.Name.Value.Contains(term));
             }
 
             return predicate.IsStarted ? predicate : null;
+        }
+
+        private static string ResolveOrderBy(string orderBy)
+        {
+            if (string.IsNullOrWhiteSpace(orderBy))
+            {
+                return "Name.Value";
+            }
+
+            return orderBy switch
+            {
+                "Name" => "Name.Value",
+                _ => orderBy
+            };
         }
     }
 }

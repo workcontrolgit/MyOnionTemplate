@@ -13,19 +13,16 @@
             RuleFor(p => p.Id, f => Guid.NewGuid());
 
             // Rule for generating a random FirstName
-            RuleFor(p => p.FirstName, f => f.Name.FirstName());
-
-            // Rule for generating a random MiddleName
-            RuleFor(p => p.MiddleName, f => f.Name.FirstName());
-
-            // Rule for generating a random LastName
-            RuleFor(p => p.LastName, f => f.Name.LastName());
+            RuleFor(p => p.Name, f => new PersonName(
+                f.Name.FirstName(),
+                f.Name.FirstName(),
+                f.Name.LastName()));
 
             // Rule for generating a random prefix (e.g., Mr., Ms.)
             RuleFor(p => p.Prefix, f => f.Name.Prefix());
 
             // Rule for generating an email address using FirstName and LastName
-            RuleFor(p => p.Email, (f, p) => f.Internet.Email(p.FirstName, p.LastName));
+            RuleFor(p => p.Email, (f, p) => f.Internet.Email(p.Name.FirstName, p.Name.LastName));
 
             // Rule for generating a birthdate at least 18 years in the past
             RuleFor(p => p.Birthday, f => f.Date.Past(18));
