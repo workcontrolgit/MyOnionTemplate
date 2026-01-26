@@ -196,7 +196,6 @@ $templateRoot = Join-Path $repoRoot "artifacts\\TemplateOnionAPI"
 $vsixProjectDir = Join-Path $repoRoot "vsix\\VSIXTemplateOnionAPI"
 $projectTemplatesDir = Join-Path $vsixProjectDir "ProjectTemplates\\CSharp\\1033"
 $zipPath = Join-Path $projectTemplatesDir "TemplateOnionAPI.zip"
-$legacyZipPath = Join-Path $vsixProjectDir "ProjectTemplates\\TemplateOnionAPI.zip"
 New-Item -ItemType Directory -Path (Split-Path $templateRoot) -ErrorAction SilentlyContinue | Out-Null
 New-Item -ItemType Directory -Path $projectTemplatesDir -ErrorAction SilentlyContinue | Out-Null
 
@@ -380,12 +379,6 @@ if (Test-Path $zipPath) {
 }
 Compress-Archive -Path (Join-Path $templateRoot "*") -DestinationPath $zipPath -Force
 Write-Info "Template zip created at $zipPath"
-
-if (Test-Path $legacyZipPath) {
-    Remove-Item -Force $legacyZipPath
-}
-Copy-Item -Path $zipPath -Destination $legacyZipPath
-Write-Info "Template zip copied to legacy path $legacyZipPath"
 
 if ($SkipVsix) {
     Write-Info "SkipVsix specified; skipping VSIX build."
