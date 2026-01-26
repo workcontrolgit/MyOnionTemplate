@@ -194,7 +194,7 @@ function Get-TargetProjectName {
 $repoRoot = Split-Path -Parent $PSScriptRoot
 $templateRoot = Join-Path $repoRoot "artifacts\\TemplateOnionAPI"
 $vsixProjectDir = Join-Path $repoRoot "vsix\\VSIXTemplateOnionAPI"
-$projectTemplatesDir = Join-Path $vsixProjectDir "ProjectTemplates\\CSharp\\1033"
+$projectTemplatesDir = Join-Path $vsixProjectDir "ProjectTemplates"
 $zipPath = Join-Path $projectTemplatesDir "TemplateOnionAPI.zip"
 New-Item -ItemType Directory -Path (Split-Path $templateRoot) -ErrorAction SilentlyContinue | Out-Null
 New-Item -ItemType Directory -Path $projectTemplatesDir -ErrorAction SilentlyContinue | Out-Null
