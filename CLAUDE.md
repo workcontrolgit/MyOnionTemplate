@@ -165,32 +165,56 @@ var result = await _mediator.Send(new CreateEmployeeCommand { ... }, cancellatio
 Key methods:
 - `GetByIdAsync(Guid id)` - Single entity retrieval
 - `GetPagedReponseAsync(int pageNumber, int pageSize)` - Basic pagination
-- `GetPagedAdvancedReponseAsync(...)` - Advanced filtering with data shaping
 - `GetAllShapeAsync(string fields, string orderBy)` - Dynamic field selection
 - `ListAsync(ISpecification<T>)` - Query by specification
+- `FirstOrDefaultAsync(ISpecification<T>)` - Single entity by specification
+- `CountAsync(ISpecification<T>)` - Count entities matching specification
 - `BulkInsertAsync(IEnumerable<T>)` - Batch operations
 
-**Specification Pattern:** `MyOnion/src/MyOnion.Application/Specifications/BaseSpecification.cs`
+**Specification Pattern:** Uses Ardalis.Specification library
 
-Specifications encapsulate query logic:
+MyOnion uses the battle-tested [Ardalis.Specification](https://github.com/ardalis/Specification) library (v9.3.1) for implementing the Specification pattern. Specifications are located in `MyOnion/src/MyOnion.Application/Specifications/<EntityName>/`.
+
+Specifications encapsulate query logic using a fluent builder API:
 ```csharp
-public class SalaryRangesByFiltersSpecification : BaseSpecification<SalaryRange>
+public class SalaryRangesByFiltersSpecification : Specification<SalaryRange>
 {
-    public SalaryRangesByFiltersSpecification(GetSalaryRangesQuery request)
-        : base(BuildFilterExpression(request))
+    public SalaryRangesByFiltersSpecification(GetSalaryRangesQuery request, bool applyPaging = true)
     {
-        ApplyOrderBy(request.OrderBy ?? "Name");
-        if (request.PageSize > 0)
-            ApplyPaging((request.PageNumber - 1) * request.PageSize, request.PageSize);
+        // Filtering - type-safe with compile-time validation
+        if (!string.IsNullOrWhiteSpace(request.Name))
+        {
+            var term = request.Name.Trim();
+            Query.Where(s => s.Name.Contains(term));
+        }
+
+        // Ordering - expression-based
+        Query.OrderBy(s => s.Name);
+
+        // Pagination
+        if (applyPaging && request.PageSize > 0)
+        {
+            Query.Skip((request.PageNumber - 1) * request.PageSize)
+                 .Take(request.PageSize);
+        }
+
+        // EF Core optimizations
+        Query.AsNoTracking()
+             .TagWith("GetSalaryRangesByFilters");
     }
 }
 ```
 
 Specifications support:
-- Filter criteria (`Expression<Func<T, bool>>`)
-- Eager loading (`Include()`)
-- Pagination (`Take`/`Skip`)
-- Ordering (`OrderBy` string with System.Linq.Dynamic.Core)
+- **Type-safe filtering:** `Query.Where(e => e.Name.Contains("Smith"))`
+- **Expression-based ordering:** `Query.OrderBy(e => e.LastName)`
+- **Eager loading:** `Query.Include(e => e.Position).ThenInclude(p => p.Department)`
+- **Pagination:** `Query.Skip(10).Take(20)`
+- **EF Core features:** `AsNoTracking()`, `AsSplitQuery()`, `TagWith()`, `IgnoreQueryFilters()`
+- **Single result marker:** Inherit from `SingleResultSpecification<T>` for queries returning one entity
+- **Search helper:** `Query.Search(e => e.Email, $"%{term}%")`
+
+The repository uses `Ardalis.Specification.EntityFrameworkCore`'s `SpecificationEvaluator` to translate specifications into EF Core queries.
 
 ### Mapster Configuration
 

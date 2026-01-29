@@ -38,6 +38,7 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Docs", "Docs", "{50A5EEAC-F7BC-4A33-8708-BA75054DC7C7}"
 	ProjectSection(SolutionItems) = preProject
 		MyOnion\docs\.NET10 Upgrade Plan.md = MyOnion\docs\.NET10 Upgrade Plan.md
+		MyOnion\docs\Ardalis_Specification_Upgrade_Plan.md = MyOnion\docs\Ardalis_Specification_Upgrade_Plan.md
 		MyOnion\docs\Automapper Replacment with Mapster Plan.md = MyOnion\docs\Automapper Replacment with Mapster Plan.md
 		MyOnion\docs\Dashboard API Plan.md = MyOnion\docs\Dashboard API Plan.md
 		MyOnion\docs\DataShapingBlog.md = MyOnion\docs\DataShapingBlog.md

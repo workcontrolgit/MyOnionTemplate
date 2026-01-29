@@ -1,61 +1,46 @@
+using Ardalis.Specification;
+
 namespace MyOnion.Application.Specifications.Positions
 {
-    public class PositionsByFiltersSpecification : BaseSpecification<Position>
+    public class PositionsByFiltersSpecification : Specification<Position>
     {
         public PositionsByFiltersSpecification(GetPositionsQuery request, bool applyPaging = true)
-            : base(BuildFilterExpression(request))
         {
-            AddInclude(p => p.Department);
-            AddInclude(p => p.SalaryRange);
+            // OR logic - combine in single Where expression
+            var hasPositionNumber = !string.IsNullOrWhiteSpace(request.PositionNumber);
+            var hasPositionTitle = !string.IsNullOrWhiteSpace(request.PositionTitle);
+            var hasDepartment = !string.IsNullOrWhiteSpace(request.Department);
 
-            var orderBy = ResolveOrderBy(request.OrderBy);
-            ApplyOrderBy(orderBy);
+            if (hasPositionNumber || hasPositionTitle || hasDepartment)
+            {
+                var positionNumber = request.PositionNumber?.Trim() ?? string.Empty;
+                var positionTitle = request.PositionTitle?.Trim() ?? string.Empty;
+                var department = request.Department?.Trim() ?? string.Empty;
 
+                Query.Where(p =>
+                    (hasPositionNumber && p.PositionNumber.Contains(positionNumber)) ||
+                    (hasPositionTitle && p.PositionTitle.Value.Contains(positionTitle)) ||
+                    (hasDepartment && p.Department != null && p.Department.Name.Value.Contains(department))
+                );
+            }
+
+            // Type-safe includes!
+            Query.Include(p => p.Department)
+                 .Include(p => p.SalaryRange);
+
+            // Expression-based ordering
+            Query.OrderBy(p => p.PositionNumber);
+
+            // Pagination
             if (applyPaging && request.PageSize > 0)
             {
-                ApplyPaging((request.PageNumber - 1) * request.PageSize, request.PageSize);
-            }
-        }
-
-        private static Expression<Func<Position, bool>> BuildFilterExpression(GetPositionsQuery request)
-        {
-            var predicate = PredicateBuilder.New<Position>();
-
-            if (!string.IsNullOrWhiteSpace(request.PositionNumber))
-            {
-                var term = request.PositionNumber.Trim();
-                predicate = predicate.Or(p => p.PositionNumber.Contains(term));
+                Query.Skip((request.PageNumber - 1) * request.PageSize)
+                     .Take(request.PageSize);
             }
 
-            if (!string.IsNullOrWhiteSpace(request.PositionTitle))
-            {
-                var term = request.PositionTitle.Trim();
-                predicate = predicate.Or(p => p.PositionTitle.Value.Contains(term));
-            }
-
-            if (!string.IsNullOrWhiteSpace(request.Department))
-            {
-                var term = request.Department.Trim();
-                predicate = predicate.Or(p => p.Department.Name.Value.Contains(term));
-            }
-
-            return predicate.IsStarted ? predicate : null;
-        }
-
-        private static string ResolveOrderBy(string orderBy)
-        {
-            if (string.IsNullOrWhiteSpace(orderBy))
-            {
-                return "PositionNumber";
-            }
-
-            return orderBy switch
-            {
-                "PositionTitle" => "PositionTitle.Value",
-                "Department" => "Department.Name.Value",
-                _ => orderBy
-            };
+            // EF Core optimizations
+            Query.AsNoTracking()
+                 .TagWith("GetPositionsByFilters");
         }
     }
-
 }
