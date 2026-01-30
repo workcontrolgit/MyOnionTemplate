@@ -9,7 +9,6 @@ global using System.Threading;
 global using System.Threading.Tasks;
 global using FluentValidation;
 global using FluentValidation.Results;
-global using LinqKit;
 global using Mapster;
 global using MapsterMapper;
 global using Microsoft.Extensions.DependencyInjection;

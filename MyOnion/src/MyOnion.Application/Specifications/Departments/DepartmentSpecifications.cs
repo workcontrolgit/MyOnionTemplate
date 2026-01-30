@@ -1,44 +1,31 @@
+using Ardalis.Specification;
+
 namespace MyOnion.Application.Specifications.Departments
 {
-    public class DepartmentsByFiltersSpecification : BaseSpecification<Department>
+    public class DepartmentsByFiltersSpecification : Specification<Department>
     {
         public DepartmentsByFiltersSpecification(GetDepartmentsQuery request, bool applyPaging = true)
-            : base(BuildFilterExpression(request))
         {
-            var orderBy = ResolveOrderBy(request.OrderBy);
-            ApplyOrderBy(orderBy);
-
-            if (applyPaging && request.PageSize > 0)
-            {
-                ApplyPaging((request.PageNumber - 1) * request.PageSize, request.PageSize);
-            }
-        }
-
-        private static Expression<Func<Department, bool>> BuildFilterExpression(GetDepartmentsQuery request)
-        {
-            var predicate = PredicateBuilder.New<Department>(true);
-
+            // Filtering - type-safe with compile-time validation
             if (!string.IsNullOrWhiteSpace(request.Name))
             {
                 var term = request.Name.Trim();
-                predicate = predicate.And(d => d.Name.Value.Contains(term));
+                Query.Where(d => d.Name.Value.Contains(term));
             }
 
-            return predicate.IsStarted ? predicate : null;
-        }
+            // Ordering - expression-based, no string mapping needed!
+            Query.OrderBy(d => d.Name.Value);
 
-        private static string ResolveOrderBy(string orderBy)
-        {
-            if (string.IsNullOrWhiteSpace(orderBy))
+            // Pagination
+            if (applyPaging && request.PageSize > 0)
             {
-                return "Name.Value";
+                Query.Skip((request.PageNumber - 1) * request.PageSize)
+                     .Take(request.PageSize);
             }
 
-            return orderBy switch
-            {
-                "Name" => "Name.Value",
-                _ => orderBy
-            };
+            // EF Core optimizations
+            Query.AsNoTracking()
+                 .TagWith("GetDepartmentsByFilters");
         }
     }
 }

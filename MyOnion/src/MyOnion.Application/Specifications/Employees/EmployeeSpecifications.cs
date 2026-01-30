@@ -1,82 +1,64 @@
+using Ardalis.Specification;
+
 namespace MyOnion.Application.Specifications.Employees
 {
-    public class EmployeesByFiltersSpecification : BaseSpecification<Employee>
+    public class EmployeesByFiltersSpecification : Specification<Employee>
     {
         public EmployeesByFiltersSpecification(GetEmployeesQuery request, bool applyPaging = true)
-            : base(BuildFilterExpression(request))
         {
-            AddInclude(e => e.Position);
-            var orderBy = ResolveOrderBy(request.OrderBy);
-            ApplyOrderBy(orderBy);
+            // OR logic across multiple fields
+            var hasLastName = !string.IsNullOrWhiteSpace(request.LastName);
+            var hasFirstName = !string.IsNullOrWhiteSpace(request.FirstName);
+            var hasEmail = !string.IsNullOrWhiteSpace(request.Email);
+            var hasEmployeeNumber = !string.IsNullOrWhiteSpace(request.EmployeeNumber);
+            var hasPositionTitle = !string.IsNullOrWhiteSpace(request.PositionTitle);
 
+            if (hasLastName || hasFirstName || hasEmail || hasEmployeeNumber || hasPositionTitle)
+            {
+                var lastName = request.LastName?.ToLower().Trim() ?? string.Empty;
+                var firstName = request.FirstName?.ToLower().Trim() ?? string.Empty;
+                var email = request.Email?.ToLower().Trim() ?? string.Empty;
+                var employeeNumber = request.EmployeeNumber?.ToLower().Trim() ?? string.Empty;
+                var positionTitle = request.PositionTitle?.ToLower().Trim() ?? string.Empty;
+
+                Query.Where(e =>
+                    (hasLastName && e.Name.LastName.ToLower().Contains(lastName)) ||
+                    (hasFirstName && e.Name.FirstName.ToLower().Contains(firstName)) ||
+                    (hasEmail && e.Email.ToLower().Contains(email)) ||
+                    (hasEmployeeNumber && e.EmployeeNumber.ToLower().Contains(employeeNumber)) ||
+                    (hasPositionTitle && e.Position.PositionTitle.Value.ToLower().Contains(positionTitle))
+                );
+            }
+
+            // Type-safe includes
+            Query.Include(e => e.Position);
+
+            // Expression-based ordering
+            Query.OrderBy(e => e.Name.LastName);
+
+            // Pagination
             if (applyPaging && request.PageSize > 0)
             {
-                ApplyPaging((request.PageNumber - 1) * request.PageSize, request.PageSize);
-            }
-        }
-
-        private static Expression<Func<Employee, bool>> BuildFilterExpression(GetEmployeesQuery request)
-        {
-            var predicate = PredicateBuilder.New<Employee>();
-
-            if (!string.IsNullOrWhiteSpace(request.LastName))
-            {
-                var term = request.LastName.ToLower().Trim();
-                predicate = predicate.Or(p => p.Name.LastName.ToLower().Contains(term));
+                Query.Skip((request.PageNumber - 1) * request.PageSize)
+                     .Take(request.PageSize);
             }
 
-            if (!string.IsNullOrWhiteSpace(request.FirstName))
-            {
-                var term = request.FirstName.ToLower().Trim();
-                predicate = predicate.Or(p => p.Name.FirstName.ToLower().Contains(term));
-            }
-
-            if (!string.IsNullOrWhiteSpace(request.Email))
-            {
-                var term = request.Email.ToLower().Trim();
-                predicate = predicate.Or(p => p.Email.ToLower().Contains(term));
-            }
-
-            if (!string.IsNullOrWhiteSpace(request.EmployeeNumber))
-            {
-                var term = request.EmployeeNumber.ToLower().Trim();
-                predicate = predicate.Or(p => p.EmployeeNumber.ToLower().Contains(term));
-            }
-
-            if (!string.IsNullOrWhiteSpace(request.PositionTitle))
-            {
-                var term = request.PositionTitle.ToLower().Trim();
-                predicate = predicate.Or(p => p.Position.PositionTitle.Value.ToLower().Contains(term));
-            }
-
-            return predicate.IsStarted ? predicate : null;
-        }
-
-        private static string ResolveOrderBy(string orderBy)
-        {
-            if (string.IsNullOrWhiteSpace(orderBy))
-            {
-                return "Name.LastName";
-            }
-
-            return orderBy switch
-            {
-                "FirstName" => "Name.FirstName",
-                "MiddleName" => "Name.MiddleName",
-                "LastName" => "Name.LastName",
-                _ => orderBy
-            };
+            // EF Core optimizations
+            Query.AsNoTracking()
+                 .TagWith("GetEmployeesByFilters");
         }
     }
 
-    public class EmployeeByIdWithPositionSpecification : BaseSpecification<Employee>
+    public class EmployeeByIdWithPositionSpecification : SingleResultSpecification<Employee>
     {
         public EmployeeByIdWithPositionSpecification(Guid id)
-            : base(e => e.Id == id)
         {
-            AddInclude(e => e.Position);
-            AddInclude("Position.Department");
-            AddInclude(e => e.Department);
+            Query.Where(e => e.Id == id)
+                 .Include(e => e.Position)
+                    .ThenInclude(p => p.Department)
+                 .Include(e => e.Department)
+                 .AsNoTracking()
+                 .TagWith($"GetEmployeeById:{id}");
         }
     }
 }

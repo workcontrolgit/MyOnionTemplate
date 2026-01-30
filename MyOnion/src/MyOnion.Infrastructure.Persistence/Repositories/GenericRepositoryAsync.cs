@@ -1,3 +1,6 @@
+using Ardalis.Specification;
+using Ardalis.Specification.EntityFrameworkCore;
+
 namespace MyOnion.Infrastructure.Persistence.Repository
 {
     public class GenericRepositoryAsync<T> : IGenericRepositoryAsync<T> where T : class
@@ -54,18 +57,6 @@ namespace MyOnion.Infrastructure.Persistence.Repository
                 .ToListAsync();
         }
 
-        public async Task<IEnumerable<T>> GetPagedAdvancedReponseAsync(int pageNumber, int pageSize, string orderBy, string fields, ExpressionStarter<T> predicate)
-        {
-            return await _dbSet
-                .Skip((pageNumber - 1) * pageSize)
-                .Take(pageSize)
-                .Select<T>("new(" + fields + ")")
-                .OrderBy(orderBy)
-                .AsNoTracking()
-                .Where(predicate)
-                .ToListAsync();
-        }
-
         public async Task<IEnumerable<T>> GetAllShapeAsync(string orderBy, string fields)
         {
             return await _dbSet
@@ -77,25 +68,26 @@ namespace MyOnion.Infrastructure.Persistence.Repository
 
         public async Task<IReadOnlyList<T>> ListAsync(ISpecification<T> specification)
         {
-            var queryable = ApplySpecification(specification);
-            return await queryable.AsNoTracking().ToListAsync();
+            // Use Ardalis evaluator - tracking is controlled by specification
+            return await SpecificationEvaluator.Default
+                .GetQuery(_dbSet.AsQueryable(), specification)
+                .ToListAsync();
         }
 
         public async Task<T> FirstOrDefaultAsync(ISpecification<T> specification)
         {
-            var queryable = ApplySpecification(specification);
-            return await queryable.AsNoTracking().FirstOrDefaultAsync();
+            // Use Ardalis evaluator - tracking is controlled by specification
+            return await SpecificationEvaluator.Default
+                .GetQuery(_dbSet.AsQueryable(), specification)
+                .FirstOrDefaultAsync();
         }
 
         public async Task<int> CountAsync(ISpecification<T> specification)
         {
-            var queryable = ApplySpecification(specification);
-            return await queryable.CountAsync();
-        }
-
-        private IQueryable<T> ApplySpecification(ISpecification<T> specification)
-        {
-            return SpecificationEvaluator<T>.GetQuery(_dbSet.AsQueryable(), specification);
+            // Use Ardalis evaluator
+            return await SpecificationEvaluator.Default
+                .GetQuery(_dbSet.AsQueryable(), specification)
+                .CountAsync();
         }
     }
 }

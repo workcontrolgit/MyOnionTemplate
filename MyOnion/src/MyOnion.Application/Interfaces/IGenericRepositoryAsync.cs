@@ -1,3 +1,5 @@
+using Ardalis.Specification;
+
 namespace MyOnion.Application.Interfaces
 {
     /// <summary>
@@ -18,8 +20,6 @@ namespace MyOnion.Application.Interfaces
         Task BulkInsertAsync(IEnumerable<T> entities);
 
         Task<IEnumerable<T>> GetPagedReponseAsync(int pageNumber, int pageSize);
-
-        Task<IEnumerable<T>> GetPagedAdvancedReponseAsync(int pageNumber, int pageSize, string orderBy, string fields, ExpressionStarter<T> predicate);
 
         Task<IEnumerable<T>> GetAllShapeAsync(string orderBy, string fields);
 
