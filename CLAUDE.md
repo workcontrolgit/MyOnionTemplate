@@ -395,3 +395,30 @@ Follow imperative commit message style (examples from git log):
 - "Minor update to blog"
 
 Keep subject under 72 characters, start with a verb, and add scope if needed. PRs should include summary, validation steps, and screenshots/sample responses for API contract changes.
+
+### Documentation Naming Convention
+
+All documentation files in `MyOnion/docs/` follow a consistent kebab-case naming convention with category prefixes:
+
+**Format:** `{category}-{descriptive-name}.md`
+
+**Categories:**
+- `plan-` - Planning documents for features, migrations, and upgrades
+- `blog-` - Blog posts and articles (published or draft)
+- `design-` - Technical design and architecture documentation
+- `release-notes-` - Release notes for versioned releases
+- `github-release-` - GitHub-specific release content
+- `test-` - Testing plans and test strategy documents
+
+**Examples:**
+- `plan-net10-upgrade.md` - .NET 10 upgrade planning document
+- `blog-template-onion-api-net10.md` - Blog post about .NET 10 template
+- `design-value-object.md` - Value object design documentation
+- `release-notes-10.1.3.md` - Release notes for v10.1.3
+- `test-coverage-100-percent.md` - Test coverage planning
+
+**Benefits:**
+- Alphabetically groups by category when sorted
+- Consistent lowercase for git-friendliness
+- Easy to search and filter by category
+- URL-friendly for potential wiki/docs sites
