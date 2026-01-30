@@ -1,8 +1,8 @@
-# Feature Management in Template OnionAPI v10.1.3
+﻿# Feature Management in Template OnionAPI v10.2.0
 
-Template OnionAPI ships as a Visual Studio template and stays committed to flexible, environment-aware configuration. Download the template here: https://marketplace.visualstudio.com/items?itemName=workcontrol.VSIXTemplateOnionAPI
+Template OnionAPI ships as a Visual Studio template and stays committed to flexible, environment-aware configuration. Download the template here: https://marketplace.visualstudio.com/items?itemName=workcontrol.VSIXTemplateOnionAPI. For the Template OnionAPI complete sourc code visit https://github.com/workcontrolgit/MyOnionTemplate
 
-Version 10.1.3 introduces `Microsoft.FeatureManagement` to enable runtime feature toggles across authentication, caching, and execution timing. This allows developers to run the template in tutorial mode without JWT configuration while keeping production secured, and provides granular control over diagnostic features without redeployment.
+Version 10.2.0 introduces `Microsoft.FeatureManagement` to enable runtime feature toggles across authentication, caching, and execution timing. This allows developers to run the template in tutorial mode without JWT configuration while keeping production secured, and provides granular control over diagnostic features without redeployment.
 
 ## What Feature Management Does
 
@@ -13,7 +13,7 @@ Version 10.1.3 introduces `Microsoft.FeatureManagement` to enable runtime featur
 
 ## Implemented Feature Flags
 
-Template OnionAPI v10.1.3 includes the following feature flags in `appsettings.json`:
+Template OnionAPI v10.2.0 includes the following feature flags in `appsettings.json`:
 
 ```json
 {
@@ -213,7 +213,7 @@ All endpoints become accessible without authentication, perfect for demos, learn
 
 ## Blog Summary
 
-- Template OnionAPI v10.1.3 introduces `Microsoft.FeatureManagement` for runtime feature toggles.
+- Template OnionAPI v10.2.0 introduces `Microsoft.FeatureManagement` for runtime feature toggles.
 - Eight feature flags control authentication, caching, diagnostics, and execution timing.
 - Tutorial mode allows anonymous access for learning without JWT configuration.
 - Feature flags integrate with authorization policies, middleware, and service registration.
