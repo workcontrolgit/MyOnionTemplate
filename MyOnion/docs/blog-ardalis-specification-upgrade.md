@@ -2,6 +2,14 @@
 
 Template OnionAPI v10.2.0 updates the specification pattern to use Ardalis.Specification. The goal is simple: remove custom infrastructure, gain type-safe includes and ordering, and unlock EF Core features like split queries and query tags. This post summarizes the upgrade plan, why it matters, and what the migration looks like in practice.
 
+Ardalis.Specification is a NuGet package that formalizes the specification pattern for .NET, giving teams a consistent way to compose query filters, includes, sorting, and projection in one place. It reduces repository boilerplate, improves refactor safety with expression-based APIs, and makes advanced EF Core behaviors (tracking, split queries, query tags) easy to opt into per use case. GitHub repo:
+
+```
+https://github.com/ardalis/Specification
+```
+
+It is actively maintained and has about 2.2k GitHub stars, which signals broad community adoption.
+
 ## What Changes in v10.2.0
 
 The existing solution uses a custom `BaseSpecification<T>` and a `SpecificationEvaluator` that rely on string-based ordering and string includes for nested navigation. The upgrade replaces those with Ardalis.Specification's fluent API.
