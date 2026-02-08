@@ -15,3 +15,5 @@ global using MyOnion.Domain.ValueObjects;
 global using MyOnion.Infrastructure.Persistence.Contexts;
 global using MyOnion.Infrastructure.Persistence.Repositories;
 global using MyOnion.Infrastructure.Shared.Services;
+global using MyOnion.Application.DTOs.Email;
+global using MyOnion.Domain.Settings;

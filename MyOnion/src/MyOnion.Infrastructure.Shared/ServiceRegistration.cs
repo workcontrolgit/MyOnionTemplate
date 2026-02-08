@@ -7,6 +7,7 @@
             services.Configure<MailSettings>(_config.GetSection("MailSettings"));
             services.AddTransient<IDateTimeService, DateTimeService>();
             services.AddTransient<IEmailService, EmailService>();
+            services.AddSingleton<IEmailTemplateService, EmailTemplateService>();
             services.AddTransient<IMockService, MockService>();
         }
     }

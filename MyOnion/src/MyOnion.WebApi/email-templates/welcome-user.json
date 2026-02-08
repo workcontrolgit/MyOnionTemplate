@@ -1,0 +1,24 @@
+{
+  "id": "welcome-user",
+  "name": "Welcome New User",
+  "description": "Welcome email sent to newly registered users",
+  "category": "Transactional",
+  "subjectTemplate": "Welcome to {{ company_name }}, {{ user.first_name }}!",
+  "bodyTemplate": "<!DOCTYPE html>\n<html>\n<head>\n  <style>\n    body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }\n    .header { background-color: #4CAF50; color: white; padding: 20px; text-align: center; }\n    .content { padding: 20px; }\n    .button { background-color: #4CAF50; color: white; padding: 12px 24px; text-decoration: none; border-radius: 4px; display: inline-block; margin: 20px 0; }\n    .footer { background-color: #f4f4f4; padding: 20px; text-align: center; font-size: 12px; color: #666; }\n  </style>\n</head>\n<body>\n  <div class=\"header\">\n    <h1>Welcome to {{ company_name }}!</h1>\n  </div>\n  <div class=\"content\">\n    <p>Hi {{ user.first_name }},</p>\n    <p>Thank you for signing up! We're excited to have you as a member of our community.</p>\n    <p>Your account has been successfully created with the email: <strong>{{ user.email }}</strong></p>\n    <p>To get started, click the button below:</p>\n    <a href=\"{{ activation_url }}\" class=\"button\">Activate Your Account</a>\n    <p>If you have any questions, feel free to reach out to our support team.</p>\n    <p>Best regards,<br>The {{ company_name }} Team</p>\n  </div>\n  <div class=\"footer\">\n    <p>&copy; {{ current_year }} {{ company_name }}. All rights reserved.</p>\n    <p>{{ company_address }}</p>\n  </div>\n</body>\n</html>",
+  "from": null,
+  "requiredVariables": [
+    "company_name",
+    "user.first_name",
+    "user.email",
+    "activation_url",
+    "current_year"
+  ],
+  "exampleVariables": {
+    "company_name": "MyOnion Corp",
+    "user.first_name": "John",
+    "user.email": "john.doe@example.com",
+    "activation_url": "https://example.com/activate/abc123",
+    "current_year": "2026",
+    "company_address": "123 Main St, San Francisco, CA 94105"
+  }
+}

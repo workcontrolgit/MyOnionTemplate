@@ -10,8 +10,10 @@
     <PackageReference Include="Ardalis.Specification" Version="9.3.1" />
     <PackageReference Include="FluentValidation" Version="12.1.1" />
     <PackageReference Include="FluentValidation.DependencyInjectionExtensions" Version="12.1.1" />
+    <PackageReference Include="HtmlSanitizer" Version="9.0.892" />
     <PackageReference Include="Mapster" Version="7.4.0" />
     <PackageReference Include="Mapster.DependencyInjection" Version="1.0.0" />
+    <PackageReference Include="Scriban" Version="6.5.2" />
     <PackageReference Include="Scrutor" Version="7.0.0" />
   </ItemGroup>
 

@@ -27,8 +27,25 @@
                 var email = new MimeMessage();
                 // Set the sender email address, use default if not provided
                 email.Sender = MailboxAddress.Parse(request.From ?? _mailSettings.EmailFrom);
-                // Add recipient email address
-                email.To.Add(MailboxAddress.Parse(request.To));
+
+                // Add primary recipients (To)
+                foreach (var recipient in request.To)
+                {
+                    email.To.Add(MailboxAddress.Parse(recipient));
+                }
+
+                // Add carbon copy recipients (CC)
+                foreach (var recipient in request.Cc)
+                {
+                    email.Cc.Add(MailboxAddress.Parse(recipient));
+                }
+
+                // Add blind carbon copy recipients (BCC)
+                foreach (var recipient in request.Bcc)
+                {
+                    email.Bcc.Add(MailboxAddress.Parse(recipient));
+                }
+
                 // Assign subject to the email
                 email.Subject = request.Subject;
 
