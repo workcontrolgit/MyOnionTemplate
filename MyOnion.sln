@@ -1,6 +1,6 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 17
-VisualStudioVersion = 17.14.36811.4
+# Visual Studio Version 18
+VisualStudioVersion = 18.2.11415.280 d18.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Presentation", "Presentation", "{02EA681E-C7D8-13C7-8484-4AC65E1B71E8}"
 EndProject
@@ -48,6 +48,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Docs", "Docs", "{50A5EEAC-F
 		MyOnion\docs\blog-specification-pattern.md = MyOnion\docs\blog-specification-pattern.md
 		MyOnion\docs\blog-template-onion-api-net10.md = MyOnion\docs\blog-template-onion-api-net10.md
 		MyOnion\docs\design-email-multiple-recipients.md = MyOnion\docs\design-email-multiple-recipients.md
+		MyOnion\docs\design-email-templates.md = MyOnion\docs\design-email-templates.md
 		MyOnion\docs\design-guid-assignment.md = MyOnion\docs\design-guid-assignment.md
 		MyOnion\docs\design-result-pattern.md = MyOnion\docs\design-result-pattern.md
 		MyOnion\docs\design-value-object.md = MyOnion\docs\design-value-object.md
@@ -71,6 +72,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Docs", "Docs", "{50A5EEAC-F
 		MyOnion\README.md = MyOnion\README.md
 		MyOnion\docs\release-notes-10.1.3.md = MyOnion\docs\release-notes-10.1.3.md
 		MyOnion\docs\test-coverage-100-percent.md = MyOnion\docs\test-coverage-100-percent.md
+		MyOnion\docs\test-email-feature.md = MyOnion\docs\test-email-feature.md
 		MyOnion\docs\test-positions-unit-testing.md = MyOnion\docs\test-positions-unit-testing.md
 		MyOnion\docs\test-unit-tests-enhancement.md = MyOnion\docs\test-unit-tests-enhancement.md
 	EndProjectSection
