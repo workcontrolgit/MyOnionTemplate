@@ -1,0 +1,37 @@
+{
+  "id": "employee-invitation",
+  "name": "Employee Invitation",
+  "description": "Invitation email for new employees to join the system",
+  "category": "HR",
+  "subjectTemplate": "Welcome to {{ company_name }} - Your Employee Account",
+  "bodyTemplate": "<!DOCTYPE html>\n<html>\n<head>\n  <style>\n    body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }\n    .header { background-color: #2196F3; color: white; padding: 20px; text-align: center; }\n    .content { padding: 20px; }\n    .info-box { background-color: #e3f2fd; border-left: 4px solid #2196F3; padding: 15px; margin: 20px 0; }\n    .button { background-color: #2196F3; color: white; padding: 12px 24px; text-decoration: none; border-radius: 4px; display: inline-block; margin: 20px 0; }\n    .footer { background-color: #f4f4f4; padding: 20px; text-align: center; font-size: 12px; color: #666; }\n    table { width: 100%; border-collapse: collapse; margin: 20px 0; }\n    td { padding: 8px; border-bottom: 1px solid #ddd; }\n    td:first-child { font-weight: bold; width: 150px; }\n  </style>\n</head>\n<body>\n  <div class=\"header\">\n    <h1>Welcome to the Team!</h1>\n  </div>\n  <div class=\"content\">\n    <p>Hi {{ employee.first_name }},</p>\n    <p>Congratulations on joining {{ company_name }}! We're thrilled to have you as part of our {{ department.name }} team.</p>\n    \n    <div class=\"info-box\">\n      <h3>Your Employment Details</h3>\n      <table>\n        <tr>\n          <td>Position:</td>\n          <td>{{ position.title }}</td>\n        </tr>\n        <tr>\n          <td>Department:</td>\n          <td>{{ department.name }}</td>\n        </tr>\n        <tr>\n          <td>Start Date:</td>\n          <td>{{ employee.start_date }}</td>\n        </tr>\n        <tr>\n          <td>Employee Number:</td>\n          <td>{{ employee.employee_number }}</td>\n        </tr>\n        <tr>\n          <td>Email:</td>\n          <td>{{ employee.email }}</td>\n        </tr>\n      </table>\n    </div>\n\n    <p>To set up your account, please click the button below:</p>\n    <a href=\"{{ setup_url }}\" class=\"button\">Set Up My Account</a>\n\n    <h3>Next Steps:</h3>\n    <ul>\n      <li>Complete your account setup</li>\n      <li>Review the employee handbook</li>\n      <li>Schedule your orientation with HR</li>\n      <li>Set up direct deposit information</li>\n    </ul>\n\n    <p>If you have any questions, please contact HR at {{ hr_email }} or call {{ hr_phone }}.</p>\n\n    <p>We look forward to working with you!</p>\n    <p>Best regards,<br>{{ hr_contact_name }}<br>Human Resources</p>\n  </div>\n  <div class=\"footer\">\n    <p>&copy; {{ current_year }} {{ company_name }}. All rights reserved.</p>\n  </div>\n</body>\n</html>",
+  "from": "hr@myonion.com",
+  "requiredVariables": [
+    "employee.first_name",
+    "employee.email",
+    "employee.employee_number",
+    "employee.start_date",
+    "position.title",
+    "department.name",
+    "company_name",
+    "setup_url",
+    "hr_email",
+    "hr_phone",
+    "hr_contact_name",
+    "current_year"
+  ],
+  "exampleVariables": {
+    "employee.first_name": "Michael",
+    "employee.email": "michael.johnson@myonion.com",
+    "employee.employee_number": "EMP-12345",
+    "employee.start_date": "March 1, 2026",
+    "position.title": "Senior Software Engineer",
+    "department.name": "Engineering",
+    "company_name": "MyOnion Corp",
+    "setup_url": "https://hr.myonion.com/setup/token123",
+    "hr_email": "hr@myonion.com",
+    "hr_phone": "(555) 123-4567",
+    "hr_contact_name": "Sarah Williams",
+    "current_year": "2026"
+  }
+}

@@ -36,6 +36,33 @@
             </summary>
             <param name="id">Department identifier.</param>
         </member>
+        <member name="M:MyOnion.WebApi.Controllers.v1.EmailsController.Send(MyOnion.Application.Features.Emails.Commands.SendEmail.SendEmailCommand)">
+            <summary>
+            Send an email to one or more recipients with optional CC and BCC
+            </summary>
+            <param name="command">Email details including recipients (To, CC, BCC), subject, and body</param>
+            <returns>Email send result with message ID, timestamp, and recipient counts</returns>
+        </member>
+        <member name="M:MyOnion.WebApi.Controllers.v1.EmailsController.SendTemplated(MyOnion.Application.Features.Emails.Commands.SendTemplatedEmail.SendTemplatedEmailCommand)">
+            <summary>
+            Send an email using a predefined template with variable substitution
+            </summary>
+            <param name="command">Template ID, variables, and recipient details</param>
+            <returns>Email send result with message ID, timestamp, and recipient counts</returns>
+        </member>
+        <member name="M:MyOnion.WebApi.Controllers.v1.EmailsController.GetTemplates">
+            <summary>
+            Get all available email templates
+            </summary>
+            <returns>List of email templates</returns>
+        </member>
+        <member name="M:MyOnion.WebApi.Controllers.v1.EmailsController.GetTemplate(System.String)">
+            <summary>
+            Get a specific email template by ID
+            </summary>
+            <param name="templateId">Template identifier</param>
+            <returns>Email template details</returns>
+        </member>
         <member name="M:MyOnion.WebApi.Controllers.v1.EmployeesController.Get(MyOnion.Application.Features.Employees.Queries.GetEmployees.GetEmployeesQuery)">
             <summary>
             Gets a list of employees based on the specified filter.

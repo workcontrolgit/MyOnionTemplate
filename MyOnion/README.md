@@ -2,6 +2,7 @@
 
 MyOnion is a .NET 10 clean architecture reference API that demonstrates Domain-Driven Design patterns using ASP.NET Core, Mapster, a lightweight in-house mediator, FluentValidation, and EF Core. The solution is organized into Domain, Application, Infrastructure.Persistence, Infrastructure.Shared, and WebApi projects, keeping dependencies flowing inward so UI concerns never reference infrastructure details directly.
 
+
 ## Project Layout
 - `MyOnion.Domain` - Entities, enums, shared value objects, and domain abstractions.
 - `MyOnion.Application` - DTOs, Behaviours, Mapster mappings, mediator request/handler pipelines, validators, and service interfaces.

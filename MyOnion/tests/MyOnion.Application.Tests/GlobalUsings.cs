@@ -30,3 +30,5 @@ global using MyOnion.Application.Specifications.Departments;
 global using MyOnion.Application.Specifications.Positions;
 global using MyOnion.Domain.Entities;
 global using MyOnion.Domain.ValueObjects;
+global using MyOnion.Application.DTOs.Email;
+global using MyOnion.Application.Features.Emails.Commands.SendEmail;
