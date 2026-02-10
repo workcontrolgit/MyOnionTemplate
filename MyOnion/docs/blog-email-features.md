@@ -1,6 +1,6 @@
 # SMTP Email Features in Template OnionAPI v10.3.0
 
-Template OnionAPI is a VSIX template that bundles a prewired .NET 10 Clean Architecture Web API solution: `Domain`, `Application`, `Infrastructure.Persistence`, `Infrastructure.Shared`, and `WebApi` hosts with matching test projects. It is already configured with a lightweight mediator, FluentValidation, EF Core, Swagger, Serilog, sample CQRS features, database seeding, and DI extensions so teams can scaffold a production-ready API stack in Visual Studio with one click.
+Template OnionAPI is a Visual Studio template that bundles a prewired .NET 10 Clean Architecture Web API solution: `Domain`, `Application`, `Infrastructure.Persistence`, `Infrastructure.Shared`, and `WebApi` hosts with matching test projects. It is already configured with a lightweight mediator, FluentValidation, EF Core, Swagger, Serilog, sample CQRS features, database seeding, and DI extensions so teams can scaffold a production-ready API stack in Visual Studio with one click.
 
 Download the template for free from Visual Studio Marketplace: https://marketplace.visualstudio.com/items?itemName=workcontrol.VSIXTemplateOnionAPI. For Template OnionAPI source code, visit https://github.com/workcontrolgit/MyOnionTemplate.
 
@@ -99,9 +99,17 @@ Use the `MailSettings` block shown above.
 dotnet run --project .\MyOnion\src\MyOnion.WebApi\MyOnion.WebApi.csproj
 ```
 
-### 3. Authorize in Swagger
+### 3. Disable Auth for Test SMTP in Development
 
-Open Swagger and provide a Bearer token in `Authorize`.
+Set the feature flag in `MyOnion/src/MyOnion.WebApi/appsettings.Development.json`:
+
+```json
+"FeatureManagement": {
+  "AuthEnabled": false
+}
+```
+
+This allows Swagger test calls to bypass the Access Token requirement in development for SMTP testing.
 
 ### 4. Send a Templated Email
 
@@ -148,4 +156,5 @@ Sign in with your Ethereal account and verify subject, recipients, and rendered 
 - MailKit with STARTTLS secures SMTP transport.
 - Ethereal provides a quick way to verify email delivery during development.
 - The implementation is layered, testable, and ready for transactional workflows.
+
 
