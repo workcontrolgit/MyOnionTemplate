@@ -40,6 +40,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Docs", "Docs", "{50A5EEAC-F
 		MyOnion\docs\blog-ardalis-specification-upgrade.md = MyOnion\docs\blog-ardalis-specification-upgrade.md
 		MyOnion\docs\blog-data-shaping.md = MyOnion\docs\blog-data-shaping.md
 		MyOnion\docs\blog-easycaching.md = MyOnion\docs\blog-easycaching.md
+		MyOnion\docs\blog-email-test-script.md = MyOnion\docs\blog-email-test-script.md
+		MyOnion\docs\blog-email-features.md = MyOnion\docs\blog-email-features.md
 		MyOnion\docs\blog-endpoint-timing.md = MyOnion\docs\blog-endpoint-timing.md
 		MyOnion\docs\blog-feature-management.md = MyOnion\docs\blog-feature-management.md
 		MyOnion\docs\blog-mediator-mapster-replacement.md = MyOnion\docs\blog-mediator-mapster-replacement.md
@@ -217,3 +219,5 @@ Global
 		SolutionGuid = {1E08DDF8-AD1A-431B-A227-0D56CEC880E1}
 	EndGlobalSection
 EndGlobal
+
+
