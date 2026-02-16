@@ -40,7 +40,19 @@ namespace MyOnion.Application.Mappings
                 .Map(dest => dest.Name, src => new DepartmentName(src.Name));
             // Maps a CreateEmployeeCommand to an Employee entity.
             config.NewConfig<CreateEmployeeCommand, Employee>()
-                .Map(dest => dest.Name, src => new PersonName(src.FirstName, src.MiddleName, src.LastName));
+                .MapWith(src => new Employee
+                {
+                    Name = new PersonName(src.FirstName, src.MiddleName, src.LastName),
+                    PositionId = src.PositionId,
+                    DepartmentId = src.DepartmentId,
+                    Salary = src.Salary,
+                    Birthday = src.Birthday,
+                    Email = src.Email,
+                    Gender = src.Gender,
+                    EmployeeNumber = src.EmployeeNumber,
+                    Prefix = src.Prefix,
+                    Phone = src.Phone
+                });
             // Maps a CreateSalaryRangeCommand to a SalaryRange entity.
             config.NewConfig<CreateSalaryRangeCommand, SalaryRange>();
         }
