@@ -1,6 +1,6 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 18
-VisualStudioVersion = 18.2.11415.280 d18.0
+VisualStudioVersion = 18.2.11415.280
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Presentation", "Presentation", "{02EA681E-C7D8-13C7-8484-4AC65E1B71E8}"
 EndProject
@@ -40,8 +40,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Docs", "Docs", "{50A5EEAC-F
 		MyOnion\docs\blog-ardalis-specification-upgrade.md = MyOnion\docs\blog-ardalis-specification-upgrade.md
 		MyOnion\docs\blog-data-shaping.md = MyOnion\docs\blog-data-shaping.md
 		MyOnion\docs\blog-easycaching.md = MyOnion\docs\blog-easycaching.md
-		MyOnion\docs\blog-email-test-script.md = MyOnion\docs\blog-email-test-script.md
 		MyOnion\docs\blog-email-features.md = MyOnion\docs\blog-email-features.md
+		MyOnion\docs\blog-email-test-script.md = MyOnion\docs\blog-email-test-script.md
 		MyOnion\docs\blog-endpoint-timing.md = MyOnion\docs\blog-endpoint-timing.md
 		MyOnion\docs\blog-feature-management.md = MyOnion\docs\blog-feature-management.md
 		MyOnion\docs\blog-mediator-mapster-replacement.md = MyOnion\docs\blog-mediator-mapster-replacement.md
@@ -219,5 +219,3 @@ Global
 		SolutionGuid = {1E08DDF8-AD1A-431B-A227-0D56CEC880E1}
 	EndGlobalSection
 EndGlobal
-
-

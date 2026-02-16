@@ -34,15 +34,43 @@ namespace MyOnion.Application.Mappings
             config.NewConfig<SalaryRange, GetSalaryRangesViewModel>().TwoWays();
             // Maps a CreatePositionCommand to a Position entity.
             config.NewConfig<CreatePositionCommand, Position>()
-                .Map(dest => dest.PositionTitle, src => new PositionTitle(src.PositionTitle));
+                .MapWith(src => new Position
+                {
+                    PositionTitle = new PositionTitle(src.PositionTitle),
+                    PositionNumber = src.PositionNumber,
+                    PositionDescription = src.PositionDescription,
+                    DepartmentId = src.DepartmentId,
+                    SalaryRangeId = src.SalaryRangeId
+                });
             // Maps a CreateDepartmentCommand to a Department entity.
             config.NewConfig<CreateDepartmentCommand, Department>()
-                .Map(dest => dest.Name, src => new DepartmentName(src.Name));
+                .MapWith(src => new Department
+                {
+                    Name = new DepartmentName(src.Name)
+                });
             // Maps a CreateEmployeeCommand to an Employee entity.
             config.NewConfig<CreateEmployeeCommand, Employee>()
-                .Map(dest => dest.Name, src => new PersonName(src.FirstName, src.MiddleName, src.LastName));
+                .MapWith(src => new Employee
+                {
+                    Name = new PersonName(src.FirstName, src.MiddleName, src.LastName),
+                    PositionId = src.PositionId,
+                    DepartmentId = src.DepartmentId,
+                    Salary = src.Salary,
+                    Birthday = src.Birthday,
+                    Email = src.Email,
+                    Gender = src.Gender,
+                    EmployeeNumber = src.EmployeeNumber,
+                    Prefix = src.Prefix,
+                    Phone = src.Phone
+                });
             // Maps a CreateSalaryRangeCommand to a SalaryRange entity.
-            config.NewConfig<CreateSalaryRangeCommand, SalaryRange>();
+            config.NewConfig<CreateSalaryRangeCommand, SalaryRange>()
+                .MapWith(src => new SalaryRange
+                {
+                    Name = src.Name,
+                    MinSalary = src.MinSalary,
+                    MaxSalary = src.MaxSalary
+                });
         }
     }
 }

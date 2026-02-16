@@ -55,8 +55,8 @@
                         break;
                 }
 
-                // Log the exception message using ILogger
-                _logger.LogError(error.Message);
+                // Log full exception details for troubleshooting.
+                _logger.LogError(error, "Unhandled exception");
 
                 // Serialize the response model to a JSON string
                 var result = JsonSerializer.Serialize(responseModel);

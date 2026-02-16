@@ -41,7 +41,10 @@ namespace MyOnion.Application.Features.Positions.Commands.UpdatePosition
                 {
                     // Update the position with the new values from the command
                     position.PositionTitle = new PositionTitle(command.PositionTitle);
+                    position.PositionNumber = command.PositionNumber;
                     position.PositionDescription = command.PositionDescription;
+                    position.DepartmentId = command.DepartmentId;
+                    position.SalaryRangeId = command.SalaryRangeId;
 
                     await _repository.UpdateAsync(position); // Save the updated position to the repository
                     await _eventDispatcher.PublishAsync(new PositionChangedEvent(position.Id), cancellationToken);
