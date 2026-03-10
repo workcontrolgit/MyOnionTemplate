@@ -1,5 +1,6 @@
 using NSwag;
 using NSwag.Generation.Processors.Security;
+using System.Net.Http;
 using MyOnion.WebApi.Filters;
 using MyOnion.WebApi.Options;
 
@@ -139,9 +140,18 @@ namespace MyOnion.WebApi.Extensions
                 .AddJwtBearer(options =>
                 {
                     options.RequireHttpsMetadata = true;
+                    options.IncludeErrorDetails = true;
                     options.Authority = authority;
                     options.Audience = audience;
                     options.SaveToken = true;
+                    var ignoreCertificateErrors = configuration.GetValue<bool>("Sts:IgnoreCertificateErrors");
+                    if (ignoreCertificateErrors)
+                    {
+                        options.BackchannelHttpHandler = new HttpClientHandler
+                        {
+                            ServerCertificateCustomValidationCallback = HttpClientHandler.DangerousAcceptAnyServerCertificateValidator
+                        };
+                    }
 
                     var explicitIssuer = configuration["Sts:ValidIssuer"];
                     options.TokenValidationParameters = new TokenValidationParameters
@@ -153,6 +163,39 @@ namespace MyOnion.WebApi.Extensions
                         ValidateIssuerSigningKey = true,
                         ValidateLifetime = true,
                         ClockSkew = TimeSpan.FromMinutes(2)
+                    };
+
+                    // TEMPORARY diagnostic logging for JWT troubleshooting.
+                    options.Events = new JwtBearerEvents
+                    {
+                        OnAuthenticationFailed = context =>
+                        {
+                            Log.Error(
+                                context.Exception,
+                                "JWT authentication failed. Authority={Authority}, Audience={Audience}",
+                                options.Authority,
+                                options.Audience);
+                            return Task.CompletedTask;
+                        },
+                        OnTokenValidated = context =>
+                        {
+                            var issuer = context.SecurityToken?.Issuer;
+                            var subject = context.Principal?.FindFirst("sub")?.Value;
+                            Log.Information(
+                                "JWT token validated. Issuer={Issuer}, Subject={Subject}, Audience={Audience}",
+                                issuer,
+                                subject,
+                                options.Audience);
+                            return Task.CompletedTask;
+                        },
+                        OnChallenge = context =>
+                        {
+                            Log.Warning(
+                                "JWT challenge triggered. Error={Error}, ErrorDescription={ErrorDescription}",
+                                context.Error,
+                                context.ErrorDescription);
+                            return Task.CompletedTask;
+                        }
                     };
                 });
         }

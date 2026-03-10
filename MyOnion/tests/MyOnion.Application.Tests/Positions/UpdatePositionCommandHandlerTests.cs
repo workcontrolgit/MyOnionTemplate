@@ -8,14 +8,27 @@ public class UpdatePositionCommandHandlerTests
     [Fact]
     public async Task Handle_ShouldUpdatePosition()
     {
+        var departmentId = Guid.NewGuid();
+        var salaryRangeId = Guid.NewGuid();
         var command = new UpdatePositionCommand
         {
             Id = Guid.NewGuid(),
             PositionTitle = "Updated",
-            PositionDescription = "Updated description"
+            PositionNumber = "POS-002",
+            PositionDescription = "Updated description",
+            DepartmentId = departmentId,
+            SalaryRangeId = salaryRangeId
         };
 
-        var position = new Position { Id = command.Id, PositionTitle = new PositionTitle("Old"), PositionDescription = "Old desc" };
+        var position = new Position
+        {
+            Id = command.Id,
+            PositionTitle = new PositionTitle("Old"),
+            PositionNumber = "POS-001",
+            PositionDescription = "Old desc",
+            DepartmentId = Guid.NewGuid(),
+            SalaryRangeId = Guid.NewGuid()
+        };
         _repositoryMock.Setup(r => r.GetByIdAsync(command.Id)).ReturnsAsync(position);
 
         var handler = new UpdatePositionCommand.UpdatePositionCommandHandler(
@@ -26,6 +39,10 @@ public class UpdatePositionCommandHandlerTests
 
         result.IsSuccess.Should().BeTrue();
         position.PositionTitle.Value.Should().Be("Updated");
+        position.PositionNumber.Should().Be("POS-002");
+        position.PositionDescription.Should().Be("Updated description");
+        position.DepartmentId.Should().Be(departmentId);
+        position.SalaryRangeId.Should().Be(salaryRangeId);
         _repositoryMock.Verify(r => r.UpdateAsync(position), Times.Once);
         _eventDispatcherMock.Verify(s => s.PublishAsync(
             It.Is<PositionChangedEvent>(e => e.PositionId == position.Id),
